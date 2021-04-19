@@ -52,6 +52,7 @@ const Cart = ({
                 {products &&
                   products.map((product) => (
                     <CartItem
+                      key={product.id}
                       product={product}
                       onUpdateQuantity={onUpdateQuantity}
                       onRemoveFromCart={onRemoveFromCart}
@@ -80,8 +81,7 @@ const Cart = ({
                 type="button"
                 variant="contained"
                 color="secondary"
-                onClick={() => onEmptyCart()}
-              >
+                onClick={() => onEmptyCart()}>
                 Empty Cart
               </Button>
               <Button
@@ -91,8 +91,7 @@ const Cart = ({
                 variant="contained"
                 color="primary"
                 component={Link}
-                to="/checkout"
-              >
+                to="/checkout">
                 Checkout
               </Button>
             </div>

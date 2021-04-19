@@ -16,21 +16,19 @@ const CartItem = ({ product, onUpdateQuantity, onRemoveFromCart }) => {
   return (
     <TableRow key={product.id}>
       <TableCell component="th" scope="row">
-        <img className={classes.img} src={product.media.source} />
+        <img className={classes.img} src={product.media.source} alt="" />
         <p className={classes.productName}>{product.name}</p>
       </TableCell>
       <TableCell align="center">
         <IconButton
-          onClick={() => onRemoveFromCart(product.id, product.quantity)}
-        >
+          onClick={() => onRemoveFromCart(product.id, product.quantity)}>
           <DeleteForever />
         </IconButton>
         <Button
           onClick={() => onUpdateQuantity(product.id, product.quantity - 1)}
           type="button"
           size="small"
-          color="secondary"
-        >
+          color="secondary">
           -
         </Button>
         {product.quantity}
@@ -38,8 +36,7 @@ const CartItem = ({ product, onUpdateQuantity, onRemoveFromCart }) => {
           onClick={() => onUpdateQuantity(product.id, product.quantity + 1)}
           type="button"
           size="small"
-          color="secondary"
-        >
+          color="secondary">
           +
         </Button>
       </TableCell>

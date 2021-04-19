@@ -58,10 +58,10 @@ const AddressForm = () => {
       .then((result) => {
         isMounted && setKecamatan(result.kecamatan);
       });
-    console.log(kecamatan);
 
     return () => (isMounted = false);
   }, [selectedKab]);
+  console.log(kecamatan);
 
   return (
     <>
@@ -73,8 +73,7 @@ const AddressForm = () => {
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}
-          >
+            spacing={3}>
             <FormInput required name="Nama lengkap" label="first name" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
@@ -87,11 +86,10 @@ const AddressForm = () => {
                 fullWidth
                 onChange={(e) => {
                   setSelectedProv(e.target.value);
-                }}
-              >
+                }}>
                 {provinsi
                   ? provinsi.map((data) => (
-                      <MenuItem key={data.id} value={data.id}>
+                      <MenuItem xs={12} key={data.id} value={data.id}>
                         {data.nama}
                       </MenuItem>
                     ))
@@ -106,8 +104,7 @@ const AddressForm = () => {
                 fullWidth
                 onChange={(e) => {
                   setSelectedKab(e.target.value);
-                }}
-              >
+                }}>
                 {kabupaten &&
                   kabupaten.map((data) => (
                     <MenuItem key={data.id} value={data.id}>
@@ -119,8 +116,18 @@ const AddressForm = () => {
 
             <Grid item xs={10} sm={5}>
               <InputLabel>kecamatan</InputLabel>
-              <Select value="" fullWidth onChange={() => {}}>
-                <MenuItem>Pilih kecamatan</MenuItem>
+              <Select
+                value={selectedKec}
+                fullWidth
+                onChange={(e) => {
+                  setSelectedKec(e.target.value);
+                }}>
+                {kecamatan &&
+                  kecamatan.map((data) => (
+                    <MenuItem key={data.id} value={data.id}>
+                      {data.nama}
+                    </MenuItem>
+                  ))}
               </Select>
             </Grid>
 
