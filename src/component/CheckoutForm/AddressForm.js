@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import {
   InputLabel,
@@ -17,11 +17,11 @@ const AddressForm = () => {
   const method = useForm();
 
   const [provinsi, setProvinsi] = useState([]);
-  const [selectedProv, setSelectedProv] = useState("");
+  const [selectedProv, setSelectedProv] = useState();
   const [kabupaten, setKabupaten] = useState([]);
-  const [selectedKab, setSelectedKab] = useState("");
+  const [selectedKab, setSelectedKab] = useState();
   const [kecamatan, setKecamatan] = useState([]);
-  const [selectedKec, setSelectedKec] = useState("");
+  const [selectedKec, setSelectedKec] = useState();
 
   useEffect(() => {
     let isMounted = true;
@@ -34,34 +34,52 @@ const AddressForm = () => {
     return () => (isMounted = false);
   }, []);
 
-  console.log(selectedKab);
+  const kabupatenHandler = async (id) => {
+    const fetchData = await fetch(
+      `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${id}`
+    );
+    const response = await fetchData.json();
+    setKabupaten(response.kota_kabupaten);
+    setSelectedProv(id);
+    console.log(response);
+  };
 
-  useEffect(() => {
-    let isMounted = true;
-    fetch(
-      `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${selectedProv}`
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        isMounted && setKabupaten(result.kota_kabupaten);
-      });
+  const kecamatanHandler = async (id) => {
+    const fetchData = await fetch(
+      `https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=${id}`
+    );
+    const response = await fetchData.json();
+    setKecamatan(response.kecamatan);
+    setSelectedKab(id);
+  };
 
-    return () => (isMounted = false);
-  }, [selectedProv]);
+  const Provinsi = provinsi
+    ? provinsi.map((data) => (
+        <MenuItem xs={12} key={data.id} value={data.id}>
+          {data.nama}
+        </MenuItem>
+      ))
+    : null;
 
-  useEffect(() => {
-    let isMounted = true;
-    fetch(
-      `https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=${selectedKab}`
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        isMounted && setKecamatan(result.kecamatan);
-      });
+  const Kabupaten = kabupaten.length ? (
+    kabupaten.map((data) => (
+      <MenuItem key={data.id} value={data.id}>
+        {data.nama}
+      </MenuItem>
+    ))
+  ) : (
+    <MenuItem>pilih provinsi terlebih dahulu</MenuItem>
+  );
 
-    return () => (isMounted = false);
-  }, [selectedKab]);
-  console.log(kecamatan);
+  const Kecamatan = kecamatan.length ? (
+    kecamatan.map((data) => (
+      <MenuItem key={data.id} value={data.id}>
+        {data.nama}
+      </MenuItem>
+    ))
+  ) : (
+    <MenuItem>pilih kabupaten terlebih dahulu</MenuItem>
+  );
 
   return (
     <>
@@ -73,7 +91,8 @@ const AddressForm = () => {
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}>
+            spacing={3}
+          >
             <FormInput required name="Nama lengkap" label="first name" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
@@ -85,15 +104,10 @@ const AddressForm = () => {
                 value={selectedProv}
                 fullWidth
                 onChange={(e) => {
-                  setSelectedProv(e.target.value);
-                }}>
-                {provinsi
-                  ? provinsi.map((data) => (
-                      <MenuItem xs={12} key={data.id} value={data.id}>
-                        {data.nama}
-                      </MenuItem>
-                    ))
-                  : null}
+                  kabupatenHandler(e.target.value);
+                }}
+              >
+                {Provinsi}
               </Select>
             </Grid>
 
@@ -103,14 +117,10 @@ const AddressForm = () => {
                 value={selectedKab}
                 fullWidth
                 onChange={(e) => {
-                  setSelectedKab(e.target.value);
-                }}>
-                {kabupaten &&
-                  kabupaten.map((data) => (
-                    <MenuItem key={data.id} value={data.id}>
-                      {data.nama}
-                    </MenuItem>
-                  ))}
+                  kecamatanHandler(e.target.value);
+                }}
+              >
+                {Kabupaten}
               </Select>
             </Grid>
 
@@ -121,13 +131,9 @@ const AddressForm = () => {
                 fullWidth
                 onChange={(e) => {
                   setSelectedKec(e.target.value);
-                }}>
-                {kecamatan &&
-                  kecamatan.map((data) => (
-                    <MenuItem key={data.id} value={data.id}>
-                      {data.nama}
-                    </MenuItem>
-                  ))}
+                }}
+              >
+                {Kecamatan}
               </Select>
             </Grid>
 
