@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 import {
   InputLabel,
@@ -17,68 +18,68 @@ const AddressForm = () => {
   const method = useForm();
 
   const [provinsi, setProvinsi] = useState([]);
-  const [selectedProv, setSelectedProv] = useState();
+  const [selectedProv, setSelectedProv] = useState("");
   const [kabupaten, setKabupaten] = useState([]);
-  const [selectedKab, setSelectedKab] = useState();
-  const [kecamatan, setKecamatan] = useState([]);
-  const [selectedKec, setSelectedKec] = useState();
+  const [selectedKab, setSelectedKab] = useState("");
+  const [pengiriman, setPengiriman] = useState([]);
+  const [selectedPengiriman, setSelectedPengiriman] = useState("");
 
   useEffect(() => {
     let isMounted = true;
-    fetch("https://dev.farizdotid.com/api/daerahindonesia/provinsi")
-      .then((response) => response.json())
-      .then((result) => {
-        isMounted && setProvinsi(result.provinsi);
-      });
+    axios.get("http://localhost:9000/ongkir/province").then((response) => {
+      const dataProv = response.data.rajaongkir.results;
+      isMounted && setProvinsi(dataProv);
+    });
 
     return () => (isMounted = false);
   }, []);
 
-  const kabupatenHandler = async (id) => {
-    const fetchData = await fetch(
-      `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${id}`
+  const kabupatenHandler = async (e) => {
+    const fetchData = await axios.get(
+      `http://localhost:9000/ongkir/city/prov_id=${e.target.value}`
     );
-    const response = await fetchData.json();
-    setKabupaten(response.kota_kabupaten);
-    setSelectedProv(id);
-    console.log(response);
+    const response = await fetchData;
+    const dataKabupaten = response.data.rajaongkir.results;
+    setKabupaten(dataKabupaten);
+    setSelectedProv(e.target.value);
+    console.log(e.target);
   };
 
-  const kecamatanHandler = async (id) => {
-    const fetchData = await fetch(
-      `https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=${id}`
-    );
-    const response = await fetchData.json();
-    setKecamatan(response.kecamatan);
+  const pengirimanHandler = async (id) => {
+    const fetchData = await axios(`http://localhost:9000/ongkir/cost/${id}`);
+    const response = await fetchData;
+    const ongkir = response.data.rajaongkir.results[0].costs;
+    setPengiriman(ongkir);
     setSelectedKab(id);
   };
+  console.log(selectedPengiriman);
 
   const Provinsi = provinsi
     ? provinsi.map((data) => (
-        <MenuItem xs={12} key={data.id} value={data.id}>
-          {data.nama}
+        <MenuItem key={data.province_id} value={data.province_id}>
+          {data.province}
         </MenuItem>
       ))
     : null;
 
   const Kabupaten = kabupaten.length ? (
     kabupaten.map((data) => (
-      <MenuItem key={data.id} value={data.id}>
-        {data.nama}
+      <MenuItem key={data.city_id} value={data.city_id}>
+        {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
   ) : (
     <MenuItem>pilih provinsi terlebih dahulu</MenuItem>
   );
 
-  const Kecamatan = kecamatan.length ? (
-    kecamatan.map((data) => (
-      <MenuItem key={data.id} value={data.id}>
-        {data.nama}
+  const Pengiriman = pengiriman.length ? (
+    pengiriman.map((data) => (
+      <MenuItem key={data.service} value={data.cost[0].value}>
+        {`JNE - ${data.service} (Rp. ${data.cost[0].value})`}
       </MenuItem>
     ))
   ) : (
-    <MenuItem>pilih kabupaten terlebih dahulu</MenuItem>
+    <MenuItem>isi alamat terlebih dahulu</MenuItem>
   );
 
   return (
@@ -93,7 +94,7 @@ const AddressForm = () => {
             container
             spacing={3}
           >
-            <FormInput required name="Nama lengkap" label="first name" />
+            <FormInput required name="nama" label="nama" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
             <FormInput required name="alamat" label="alamat" />
@@ -102,9 +103,10 @@ const AddressForm = () => {
               <InputLabel>provinsi</InputLabel>
               <Select
                 value={selectedProv}
+                name=""
                 fullWidth
                 onChange={(e) => {
-                  kabupatenHandler(e.target.value);
+                  kabupatenHandler(e);
                 }}
               >
                 {Provinsi}
@@ -117,7 +119,7 @@ const AddressForm = () => {
                 value={selectedKab}
                 fullWidth
                 onChange={(e) => {
-                  kecamatanHandler(e.target.value);
+                  pengirimanHandler(e.target.value);
                 }}
               >
                 {Kabupaten}
@@ -125,15 +127,15 @@ const AddressForm = () => {
             </Grid>
 
             <Grid item xs={10} sm={5}>
-              <InputLabel>kecamatan</InputLabel>
+              <InputLabel>opsi pengiriman</InputLabel>
               <Select
-                value={selectedKec}
+                value={selectedPengiriman}
                 fullWidth
                 onChange={(e) => {
-                  setSelectedKec(e.target.value);
+                  setSelectedPengiriman(e.target.value);
                 }}
               >
-                {Kecamatan}
+                {Pengiriman}
               </Select>
             </Grid>
 
