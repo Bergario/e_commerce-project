@@ -45,14 +45,16 @@ const AddressForm = () => {
     console.log(e.target);
   };
 
-  const pengirimanHandler = async (id) => {
-    const fetchData = await axios(`http://localhost:9000/ongkir/cost/${id}`);
+  const pengirimanHandler = async (e) => {
+    const fetchData = await axios(
+      `http://localhost:9000/ongkir/cost/${e.target.value}`
+    );
     const response = await fetchData;
     const ongkir = response.data.rajaongkir.results[0].costs;
     setPengiriman(ongkir);
-    setSelectedKab(id);
+    setSelectedKab(e.target.value);
   };
-  console.log(selectedPengiriman);
+  console.log(selectedKab);
 
   const Provinsi = provinsi
     ? provinsi.map((data) => (
@@ -105,9 +107,7 @@ const AddressForm = () => {
                 value={selectedProv}
                 name=""
                 fullWidth
-                onChange={(e) => {
-                  kabupatenHandler(e);
-                }}
+                onChange={kabupatenHandler}
               >
                 {Provinsi}
               </Select>
@@ -118,9 +118,7 @@ const AddressForm = () => {
               <Select
                 value={selectedKab}
                 fullWidth
-                onChange={(e) => {
-                  pengirimanHandler(e.target.value);
-                }}
+                onChange={pengirimanHandler}
               >
                 {Kabupaten}
               </Select>
