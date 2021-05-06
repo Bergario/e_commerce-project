@@ -34,6 +34,8 @@ const AddressForm = () => {
     return () => (isMounted = false);
   }, []);
 
+  console.log(method);
+
   const kabupatenHandler = async (e) => {
     const fetchData = await axios.get(
       `http://localhost:9000/ongkir/city/prov_id=${e.target.value}`
@@ -90,12 +92,19 @@ const AddressForm = () => {
         Shipping Address
       </Typography>
       <FormProvider {...method}>
-        <form onSubmit={() => {}}>
+        <form
+          onSubmit={method.handleSubmit((data) =>
+            console.log({
+              ...data,
+              selectedProv,
+              selectedKab,
+              selectedPengiriman,
+            })
+          )}>
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}
-          >
+            spacing={3}>
             <FormInput required name="nama" label="nama" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
@@ -107,8 +116,7 @@ const AddressForm = () => {
                 value={selectedProv}
                 name=""
                 fullWidth
-                onChange={kabupatenHandler}
-              >
+                onChange={kabupatenHandler}>
                 {Provinsi}
               </Select>
             </Grid>
@@ -118,8 +126,7 @@ const AddressForm = () => {
               <Select
                 value={selectedKab}
                 fullWidth
-                onChange={pengirimanHandler}
-              >
+                onChange={pengirimanHandler}>
                 {Kabupaten}
               </Select>
             </Grid>
@@ -131,24 +138,23 @@ const AddressForm = () => {
                 fullWidth
                 onChange={(e) => {
                   setSelectedPengiriman(e.target.value);
-                }}
-              >
+                }}>
                 {Pengiriman}
               </Select>
             </Grid>
 
             <FormInput required name="kode pos" label="kode pos" />
           </Grid>
+          <Grid container className={classes.button}>
+            <Button type="button" variant="contained">
+              Back
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
+              Next
+            </Button>
+          </Grid>
         </form>
       </FormProvider>
-      <Grid container className={classes.button}>
-        <Button type="button" variant="contained">
-          Back
-        </Button>
-        <Button type="button" variant="contained" color="primary">
-          Next
-        </Button>
-      </Grid>
     </>
   );
 };
