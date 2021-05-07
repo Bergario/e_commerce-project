@@ -34,33 +34,33 @@ const AddressForm = () => {
     return () => (isMounted = false);
   }, []);
 
-  console.log(method);
-
-  const kabupatenHandler = async (e) => {
+  const kabupatenHandler = async (id, prov) => {
     const fetchData = await axios.get(
-      `http://localhost:9000/ongkir/city/prov_id=${e.target.value}`
+      `http://localhost:9000/ongkir/city/prov_id=${id}`
     );
     const response = await fetchData;
     const dataKabupaten = response.data.rajaongkir.results;
     setKabupaten(dataKabupaten);
-    setSelectedProv(e.target.value);
-    console.log(e.target);
+    setSelectedProv(prov);
+    console.log(prov);
+    return prov;
   };
 
-  const pengirimanHandler = async (e) => {
-    const fetchData = await axios(
-      `http://localhost:9000/ongkir/cost/${e.target.value}`
-    );
+  const pengirimanHandler = async (id, kab) => {
+    const fetchData = await axios(`http://localhost:9000/ongkir/cost/${id}`);
     const response = await fetchData;
     const ongkir = response.data.rajaongkir.results[0].costs;
     setPengiriman(ongkir);
-    setSelectedKab(e.target.value);
+    setSelectedKab(kab);
   };
-  console.log(selectedKab);
 
   const Provinsi = provinsi
     ? provinsi.map((data) => (
-        <MenuItem key={data.province_id} value={data.province_id}>
+        <MenuItem
+          key={data.province_id}
+          value={data.province}
+          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
+        >
           {data.province}
         </MenuItem>
       ))
@@ -68,7 +68,11 @@ const AddressForm = () => {
 
   const Kabupaten = kabupaten.length ? (
     kabupaten.map((data) => (
-      <MenuItem key={data.city_id} value={data.city_id}>
+      <MenuItem
+        key={data.city_id}
+        value={data.city_name}
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
+      >
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -92,31 +96,24 @@ const AddressForm = () => {
         Shipping Address
       </Typography>
       <FormProvider {...method}>
-        <form
-          onSubmit={method.handleSubmit((data) =>
-            console.log({
-              ...data,
-              selectedProv,
-              selectedKab,
-              selectedPengiriman,
-            })
-          )}>
+        <form onSubmit={method.handleSubmit((data) => console.log(data))}>
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}>
-            <FormInput required name="nama" label="nama" />
+            spacing={3}
+          >
+            <FormInput required name="name" label="nama" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
-            <FormInput required name="alamat" label="alamat" />
+            <FormInput required name="address" label="alamat" />
 
             <Grid item xs={10} sm={5}>
               <InputLabel>provinsi</InputLabel>
               <Select
                 value={selectedProv}
-                name=""
                 fullWidth
-                onChange={kabupatenHandler}>
+                {...method.register("provinsi")}
+              >
                 {Provinsi}
               </Select>
             </Grid>
@@ -126,7 +123,8 @@ const AddressForm = () => {
               <Select
                 value={selectedKab}
                 fullWidth
-                onChange={pengirimanHandler}>
+                {...method.register("kabupaten")}
+              >
                 {Kabupaten}
               </Select>
             </Grid>
@@ -136,9 +134,11 @@ const AddressForm = () => {
               <Select
                 value={selectedPengiriman}
                 fullWidth
+                {...method.register("ongkir")}
                 onChange={(e) => {
                   setSelectedPengiriman(e.target.value);
-                }}>
+                }}
+              >
                 {Pengiriman}
               </Select>
             </Grid>
