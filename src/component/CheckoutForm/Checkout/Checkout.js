@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import useStyles from "./styles";
 
 import {
@@ -18,10 +18,20 @@ const steps = ["Shippping Address", "Payment Detail"];
 
 const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [shippingData, setShippingData] = useState({});
 
   const classes = useStyles();
 
   const Form = !activeStep ? <AddressForm /> : <PaymentForm />;
+
+  const nextStep = () => {
+    setActiveStep((prevState) => prevState + 1);
+  };
+
+  const next = (data) => {
+    setShippingData(data);
+    nextStep();
+  };
 
   return (
     <div className={classes.form}>
