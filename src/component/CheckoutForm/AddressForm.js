@@ -13,7 +13,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "./FormInput";
 import useStyles from "./styles";
 
-const AddressForm = () => {
+const AddressForm = ({ next }) => {
   const classes = useStyles();
   const method = useForm();
 
@@ -42,6 +42,8 @@ const AddressForm = () => {
     const dataKabupaten = response.data.rajaongkir.results;
     setKabupaten(dataKabupaten);
     setSelectedProv(prov);
+    // setSelectedKab(dataKabupaten[0].city_name);
+
     console.log(prov);
     return prov;
   };
@@ -59,8 +61,11 @@ const AddressForm = () => {
         <MenuItem
           key={data.province_id}
           value={data.province}
-          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
-        >
+          onClick={kabupatenHandler.bind(
+            this,
+            data.province_id,
+            data.province
+          )}>
           {data.province}
         </MenuItem>
       ))
@@ -71,8 +76,7 @@ const AddressForm = () => {
       <MenuItem
         key={data.city_id}
         value={data.city_name}
-        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
-      >
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}>
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -96,12 +100,11 @@ const AddressForm = () => {
         Shipping Address
       </Typography>
       <FormProvider {...method}>
-        <form onSubmit={method.handleSubmit((data) => console.log(data))}>
+        <form onSubmit={method.handleSubmit((data) => next(data))}>
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}
-          >
+            spacing={3}>
             <FormInput required name="name" label="nama" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
@@ -112,8 +115,7 @@ const AddressForm = () => {
               <Select
                 value={selectedProv}
                 fullWidth
-                {...method.register("provinsi")}
-              >
+                {...method.register("provinsi")}>
                 {Provinsi}
               </Select>
             </Grid>
@@ -123,8 +125,7 @@ const AddressForm = () => {
               <Select
                 value={selectedKab}
                 fullWidth
-                {...method.register("kabupaten")}
-              >
+                {...method.register("kabupaten")}>
                 {Kabupaten}
               </Select>
             </Grid>
@@ -137,8 +138,7 @@ const AddressForm = () => {
                 {...method.register("ongkir")}
                 onChange={(e) => {
                   setSelectedPengiriman(e.target.value);
-                }}
-              >
+                }}>
                 {Pengiriman}
               </Select>
             </Grid>
