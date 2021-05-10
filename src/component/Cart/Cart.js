@@ -38,7 +38,7 @@ const Cart = ({
   const FilledCart = () => {
     return (
       <>
-        <Grid className={classes.boxTable} container xxs={12} sm={12}>
+        <Grid item className={classes.boxTable} container xxs={12} sm={12}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
@@ -81,7 +81,8 @@ const Cart = ({
                 type="button"
                 variant="contained"
                 color="secondary"
-                onClick={() => onEmptyCart()}>
+                onClick={() => onEmptyCart()}
+              >
                 Empty Cart
               </Button>
               <Button
@@ -91,7 +92,8 @@ const Cart = ({
                 variant="contained"
                 color="primary"
                 component={Link}
-                to="/checkout">
+                to="/checkout"
+              >
                 Checkout
               </Button>
             </div>

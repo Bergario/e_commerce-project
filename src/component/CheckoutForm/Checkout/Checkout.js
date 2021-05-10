@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { commerce } from "../../../lib/commerce";
 import useStyles from "./styles";
 
 import {
@@ -16,22 +17,48 @@ import PaymentForm from "../PaymentForm";
 
 const steps = ["Shippping Address", "Payment Detail"];
 
-const Checkout = () => {
+const Checkout = ({ cart }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
+  const [checkoutToken, setCheckoutToken] = useState({});
 
   const classes = useStyles();
 
-  const Form = !activeStep ? <AddressForm /> : <PaymentForm />;
+  useEffect(() => {
+    const generateToken = async () => {
+      try {
+        const token = await commerce.checkout.generateToken(cart.id, {
+          type: "cart",
+        });
+        setCheckoutToken(token);
+        console.log(token);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    generateToken();
+  }, [cart]);
 
   const nextStep = () => {
     setActiveStep((prevState) => prevState + 1);
+  };
+
+  const backStep = () => {
+    setActiveStep((prevState) => prevState - 1);
   };
 
   const next = (data) => {
     setShippingData(data);
     nextStep();
   };
+
+  console.log(shippingData);
+
+  const Form = !activeStep ? (
+    <AddressForm next={next} />
+  ) : (
+    <PaymentForm checkoutToken={checkoutToken} backStep={backStep} />
+  );
 
   return (
     <div className={classes.form}>

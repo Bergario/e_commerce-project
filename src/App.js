@@ -70,7 +70,7 @@ const App = () => {
             />
           )}
         />
-        <Route path="/checkout" component={() => <Checkout />} />
+        <Route path="/checkout" component={() => <Checkout cart={cart} />} />
       </Switch>
       {/* <Products product={products} onAddToCart={addToCartHanlder} /> */}
     </div>
