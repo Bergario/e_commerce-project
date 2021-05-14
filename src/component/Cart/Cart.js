@@ -35,10 +35,12 @@ const Cart = ({
     );
   };
 
+  console.log(cartProduct);
+
   const FilledCart = () => {
     return (
       <>
-        <Grid className={classes.boxTable} container xxs={12} sm={12}>
+        <Grid item className={classes.boxTable} container xxs={12} sm={12}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
               <TableHead>
