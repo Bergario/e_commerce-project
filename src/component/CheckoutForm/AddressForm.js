@@ -16,7 +16,6 @@ import useStyles from "./styles";
 const AddressForm = ({ next }) => {
   const classes = useStyles();
   const method = useForm();
-  console.log(method.formState.errors.kabupaten);
 
   const [provinsi, setProvinsi] = useState([]);
   const [selectedProv, setSelectedProv] = useState("");
@@ -59,8 +58,11 @@ const AddressForm = ({ next }) => {
         <MenuItem
           key={data.province_id}
           value={data.province}
-          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
-        >
+          onClick={kabupatenHandler.bind(
+            this,
+            data.province_id,
+            data.province
+          )}>
           {data.province}
         </MenuItem>
       ))
@@ -72,8 +74,7 @@ const AddressForm = ({ next }) => {
         key={data.city_id}
         value={data.city_name}
         required
-        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
-      >
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}>
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -101,8 +102,7 @@ const AddressForm = ({ next }) => {
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}
-          >
+            spacing={3}>
             <FormInput required="true" name="name" label="nama" />
             <FormInput required name="telepon" label="telepon" />
             <FormInput required name="email" label="email" />
@@ -113,8 +113,7 @@ const AddressForm = ({ next }) => {
               <Select
                 value={selectedProv}
                 fullWidth
-                {...method.register("provinsi")}
-              >
+                {...method.register("provinsi")}>
                 {Provinsi}
               </Select>
             </Grid>
@@ -124,8 +123,7 @@ const AddressForm = ({ next }) => {
               <Select
                 value={selectedKab}
                 fullWidth
-                {...method.register("kabupaten", { required: true })}
-              >
+                {...method.register("kabupaten", { required: true })}>
                 {Kabupaten}
               </Select>
             </Grid>
@@ -138,13 +136,12 @@ const AddressForm = ({ next }) => {
                 {...method.register("ongkir", { required: true })}
                 onChange={(e) => {
                   setSelectedPengiriman(e.target.value);
-                }}
-              >
+                }}>
                 {Pengiriman}
               </Select>
             </Grid>
 
-            <FormInput required name="kode pos" label="kode pos" />
+            <FormInput required name="kode_pos" label="kode pos" />
           </Grid>
           <Grid container className={classes.button}>
             <Button type="button" variant="contained">

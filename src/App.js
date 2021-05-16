@@ -7,6 +7,7 @@ import Cart from "./component/Cart/Cart";
 
 import { Switch, Route } from "react-router-dom";
 import Checkout from "./component/CheckoutForm/Checkout/Checkout";
+import Login from "./component/Auth/Login";
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -46,11 +47,16 @@ const App = () => {
     fetchcart();
   }, []);
 
+  const refreshCart = async () => {
+    const newCart = await commerce.cart.refresh();
+    setCart(newCart);
+  };
+
   console.log(cart);
 
   return (
     <div>
-      <Navbar totalItems={cart.total_items} />
+      <Navbar totalItems={cart.total_unique_items} />
       <Switch>
         <Route
           exact
@@ -71,6 +77,7 @@ const App = () => {
           )}
         />
         <Route path="/checkout" component={() => <Checkout cart={cart} />} />
+        <Route path="/login" component={() => <Login />} />
       </Switch>
       {/* <Products product={products} onAddToCart={addToCartHanlder} /> */}
     </div>

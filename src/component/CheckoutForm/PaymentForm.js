@@ -1,49 +1,51 @@
 import React from "react";
-import { Typography, Button, Divider } from "@material-ui/core";
-import {
-  Elements,
-  CardElement,
-  ElementsConsumer,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { Button, Divider } from "@material-ui/core";
 
 import Review from "./Review";
 
-const PaymentForm = ({ checkoutToken, backStep }) => {
-  const stripePromise = loadStripe("...");
-  console.log(stripePromise);
+const PaymentForm = ({
+  checkoutToken,
+  backStep,
+  shippingData,
+  onPaymentHandler,
+}) => {
+  const itemDetails = checkoutToken.live.line_items.map((product) => {
+    return {
+      id: product.id,
+      price: product.price.raw,
+      quantity: product.quantity,
+      name: product.product_name,
+    };
+  });
+  console.log(itemDetails);
+
+  const dataCustomer = {
+    order_id: checkoutToken.id,
+    gross_amount: checkoutToken.live.subtotal.raw,
+    itemDetails,
+    first_name: shippingData.name,
+    email: shippingData.email,
+    phone: shippingData.telepon,
+    address: shippingData.address,
+    city: shippingData.kabupaten,
+    provinces: shippingData.provinsi,
+    postal_code: shippingData.kode_pos,
+  };
 
   return (
     <>
       <Review checkoutToken={checkoutToken} />
       <Divider />
-      <Typography variant="h6" gutterBottom style={{ margin: "20px 0" }}>
-        {" "}
-        payment
-      </Typography>
-      <Elements stripe={stripePromise}>
-        <ElementsConsumer>
-          {({ elements, stripe }) => {
-            return (
-              <form>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}>
-                  <Button variant="outline" onClick={backStep}>
-                    Back
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disable={!stripe}
-                    color="primary">
-                    Pay
-                  </Button>
-                </div>
-              </form>
-            );
-          }}
-        </ElementsConsumer>
-      </Elements>
+      <form onSubmit={() => onPaymentHandler(dataCustomer)}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Button variant="outline" onClick={() => backStep()}>
+            Back
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            Pay
+          </Button>
+        </div>
+      </form>
     </>
   );
 };
