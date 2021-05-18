@@ -52,7 +52,7 @@ const App = () => {
     setCart(newCart);
   };
 
-  console.log(cart);
+  console.log(products);
 
   return (
     <div>
