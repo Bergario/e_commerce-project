@@ -7,7 +7,7 @@ import Cart from "./component/Cart/Cart";
 
 import { Switch, Route } from "react-router-dom";
 import Checkout from "./component/CheckoutForm/Checkout/Checkout";
-import Login from "./component/Auth/Login";
+import Auth from "./component/Auth/Auth";
 
 const App = () => {
   const [products, setProducts] = useState([]);
@@ -77,7 +77,7 @@ const App = () => {
           )}
         />
         <Route path="/checkout" component={() => <Checkout cart={cart} />} />
-        <Route path="/login" component={() => <Login />} />
+        <Route path="/auth" component={() => <Auth />} />
       </Switch>
       {/* <Products product={products} onAddToCart={addToCartHanlder} /> */}
     </div>

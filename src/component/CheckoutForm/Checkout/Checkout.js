@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { commerce } from "../../../lib/commerce";
 import useStyles from "./styles";
 
@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import AddressForm from "../AddressForm";
 import PaymentForm from "../PaymentForm";
+import { validationHandler } from "../../../Utils/Utilities";
 import axios from "axios";
 
 const steps = ["Shippping Address", "Payment Detail"];
@@ -22,6 +23,7 @@ const Checkout = ({ cart }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
   const [checkoutToken, setCheckoutToken] = useState({});
+  const [isValid, setIsValid] = useState();
 
   const classes = useStyles();
 
@@ -61,16 +63,23 @@ const Checkout = ({ cart }) => {
   const backStep = () => {
     setActiveStep((prevState) => prevState - 1);
   };
+  // console.log(Object.keys(isValid).length);
 
-  const next = (data) => {
-    setShippingData(data);
-    nextStep();
-  };
+  console.log("validate", isValid);
+  const next = useCallback(
+    (data) => {
+      // console.log(validationHandler(data));
+      validationHandler(data);
+      setIsValid(validationHandler(data));
 
-  console.log(shippingData);
+      // setShippingData(data);
+      // nextStep();
+    },
+    [validationHandler]
+  );
 
   const Form = !activeStep ? (
-    <AddressForm next={next} />
+    <AddressForm next={next} isValid={isValid} />
   ) : (
     <PaymentForm
       checkoutToken={checkoutToken}

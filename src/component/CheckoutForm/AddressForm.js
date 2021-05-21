@@ -13,7 +13,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "./FormInput";
 import useStyles from "./styles";
 
-const AddressForm = ({ next }) => {
+const AddressForm = ({ next, isValid }) => {
   const classes = useStyles();
   const method = useForm();
 
@@ -58,11 +58,8 @@ const AddressForm = ({ next }) => {
         <MenuItem
           key={data.province_id}
           value={data.province}
-          onClick={kabupatenHandler.bind(
-            this,
-            data.province_id,
-            data.province
-          )}>
+          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
+        >
           {data.province}
         </MenuItem>
       ))
@@ -74,7 +71,8 @@ const AddressForm = ({ next }) => {
         key={data.city_id}
         value={data.city_name}
         required
-        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}>
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
+      >
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -102,10 +100,20 @@ const AddressForm = ({ next }) => {
           <Grid
             style={{ justifyContent: "space-around" }}
             container
-            spacing={3}>
-            <FormInput required="true" name="name" label="nama" />
+            spacing={3}
+          >
+            <FormInput
+              name="name"
+              label="nama"
+              error={isValid && isValid.name}
+            />
             <FormInput required name="telepon" label="telepon" />
-            <FormInput required name="email" label="email" />
+            <FormInput
+              required
+              name="email"
+              label="email"
+              error={isValid && isValid.email}
+            />
             <FormInput required name="address" label="alamat" />
 
             <Grid item xs={10} sm={5}>
@@ -113,7 +121,8 @@ const AddressForm = ({ next }) => {
               <Select
                 value={selectedProv}
                 fullWidth
-                {...method.register("provinsi")}>
+                {...method.register("provinsi")}
+              >
                 {Provinsi}
               </Select>
             </Grid>
@@ -123,7 +132,8 @@ const AddressForm = ({ next }) => {
               <Select
                 value={selectedKab}
                 fullWidth
-                {...method.register("kabupaten", { required: true })}>
+                {...method.register("kabupaten", { required: true })}
+              >
                 {Kabupaten}
               </Select>
             </Grid>
@@ -136,7 +146,8 @@ const AddressForm = ({ next }) => {
                 {...method.register("ongkir", { required: true })}
                 onChange={(e) => {
                   setSelectedPengiriman(e.target.value);
-                }}>
+                }}
+              >
                 {Pengiriman}
               </Select>
             </Grid>
