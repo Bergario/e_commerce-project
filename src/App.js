@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "./component/Navigation/Navbar";
 import { commerce } from "./lib/commerce";
+import { useDispatch, useSelector } from "react-redux";
 
 import Products from "./component/products/Products";
 import Cart from "./component/Cart/Cart";
 
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import Checkout from "./component/CheckoutForm/Checkout/Checkout";
 import Auth from "./component/Auth/Auth";
+import * as actions from "./store/actions/index";
 
 const App = () => {
+  //REDUX
+  const dispatch = useDispatch();
+  const onAuthCheckState = () => dispatch(actions.authCheckState);
+  const { isAuth } = useSelector((state) => ({
+    isAuth: state.auth.token !== null,
+  }));
+
+  console.log(isAuth);
+
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
 
@@ -45,6 +56,7 @@ const App = () => {
   useEffect(() => {
     fetchProducts();
     fetchcart();
+    dispatch(onAuthCheckState());
   }, []);
 
   const refreshCart = async () => {
@@ -52,8 +64,13 @@ const App = () => {
     setCart(newCart);
   };
 
-  console.log(products);
+  let routes = <Route path="/auth" component={() => <Auth />} />;
 
+  if (isAuth) {
+    routes = (
+      <Route path="/checkout" component={() => <Checkout cart={cart} />} />
+    );
+  }
   return (
     <div>
       <Navbar totalItems={cart.total_unique_items} />
@@ -76,10 +93,9 @@ const App = () => {
             />
           )}
         />
-        <Route path="/checkout" component={() => <Checkout cart={cart} />} />
-        <Route path="/auth" component={() => <Auth />} />
+        {routes}
+        <Redirect to="/" />
       </Switch>
-      {/* <Products product={products} onAddToCart={addToCartHanlder} /> */}
     </div>
   );
 };

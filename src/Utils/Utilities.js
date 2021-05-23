@@ -1,5 +1,4 @@
 export const validationHandler = (data) => {
-  let formIsValid = true;
   let errors = {};
   if (data.name.length > 0) {
     if (!data.name.match(/^[a-zA-Z]+[a-zA-Z]/)) {
@@ -27,4 +26,11 @@ export const validationHandler = (data) => {
   }
 
   return errors;
+};
+
+export const objectUpdate = (oldState, updateState) => {
+  return {
+    ...oldState,
+    ...updateState,
+  };
 };
