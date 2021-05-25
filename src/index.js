@@ -7,9 +7,11 @@ import thunk from "redux-thunk";
 
 import App from "./App";
 import authReducer from "./store/reducer/auth";
+import cartReducer from "./store/reducer/cart";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  cart: cartReducer,
 });
 
 const logger = (store) => {

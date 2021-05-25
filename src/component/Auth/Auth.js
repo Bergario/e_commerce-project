@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { LockOutlined, Copyright } from "@material-ui/icons";
 import {
@@ -29,15 +29,16 @@ const Auth = () => {
   const method = useForm();
   const classes = useStyles();
   const [isLogin, setIsLogin] = useState(true);
+  const [cart, setCart] = useState([]);
 
-  const AuthStatus = (token, customerId) =>
+  //REDUX
+  const onAuthSignupStart = () => dispatch(actions.authSignupStart());
+  const onAuthSignupSuccess = () => dispatch(actions.authSignupSuccess());
+  const onAuthSignupFail = (error) => dispatch(actions.authSignupFail(error));
+  const onAuthStart = () => dispatch(actions.authStart);
+  const onAuthSuccess = (token, customerId) =>
     dispatch(actions.authSuccess(token, customerId));
-
-  const state = useSelector((state) => ({
-    authStatus: state.auth.token !== null,
-  }));
-
-  console.log(state.authStatus);
+  const onAuthFail = (error) => dispatch(actions.authFail(error));
 
   const changeLoginHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -50,19 +51,20 @@ const Auth = () => {
         .then((response) => {
           const user = response.data;
           const expiredDate = new Date(new Date().getTime() + 3600000);
+          localStorage.setItem("expiredTime", expiredDate);
           localStorage.setItem("customer_id", user.customer_id);
           localStorage.setItem("customer_token", user.jwt);
-          localStorage.setItem("expiresTime", expiredDate);
-          dispatch(AuthStatus(user.jwt, user.customer_id));
+          dispatch(onAuthSuccess(user.jwt, user.customer_id));
           history.push("/");
         });
     } catch (err) {
-      console.log(err);
+      dispatch(onAuthFail(err));
     }
   };
 
   const onLogin = async (data) => {
     try {
+      dispatch(onAuthStart());
       await axios
         .post("http://localhost:9000/auth/login", data)
         .then((response) => {
@@ -75,14 +77,21 @@ const Auth = () => {
     console.log("asu");
   };
 
-  const onSignup = (data) => {
+  const onSignup = async (data) => {
+    const carId = await commerce.cart.refresh().then((cart) => cart.id);
+    const dataUser = { ...data, meta: carId };
+
     try {
-      axios.post("http://localhost:9000/auth/signup", data).then((response) => {
-        response.status !== 204 && setIsLogin(true);
-        console.log(response);
-      });
+      dispatch(onAuthSignupStart());
+      axios
+        .post("http://localhost:9000/auth/signup", dataUser)
+        .then((response) => {
+          response.status !== 204 && setIsLogin(true);
+          console.log(response);
+          dispatch(onAuthSignupSuccess());
+        });
     } catch (error) {
-      return error;
+      dispatch(onAuthSignupFail(error));
     }
   };
 
@@ -99,7 +108,10 @@ const Auth = () => {
         <FormProvider {...method}>
           <form
             className={classes.form}
-            onSubmit={method.handleSubmit((data) => onLogin(data))}>
+            onSubmit={method.handleSubmit((data) =>
+              isLogin ? onLogin(data) : onSignup(data)
+            )}
+          >
             {/* FORM LOGIN & SIGNUP */}
             {isLogin ? <Login /> : <SignUp />}
 
@@ -108,7 +120,8 @@ const Auth = () => {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}>
+              className={classes.submit}
+            >
               {isLogin ? " Sign in" : "Sign up"}
             </Button>
             <Grid container>

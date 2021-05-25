@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Navbar from "./component/Navigation/Navbar";
 import { commerce } from "./lib/commerce";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import Products from "./component/products/Products";
 import Cart from "./component/Cart/Cart";
@@ -14,15 +15,30 @@ import * as actions from "./store/actions/index";
 const App = () => {
   //REDUX
   const dispatch = useDispatch();
+
   const onAuthCheckState = () => dispatch(actions.authCheckState);
-  const { isAuth } = useSelector((state) => ({
+
+  const { isAuth, cartId, cart } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
+    cartId: state.cart.cartId,
+    cart: state.cart.cart,
   }));
 
-  console.log(isAuth);
-
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [carti, setCart] = useState([]);
+
+  // const userLoad = () => {
+  //   const customerId = localStorage.getItem("customer_id");
+  //   axios
+  //     .get(`http://localhost:9000/user/cart/${customerId}`)
+  //     .then((response) => {
+  //       const cartID = response.data.meta.cartId;
+  //       console.log(cartID);
+
+  //       dispatch(onCartId(cartID, dispatch));
+  //     })
+  //     .catch((err) => err);
+  // };
 
   const fetchProducts = async () => {
     const { data } = await commerce.products.list();
@@ -30,7 +46,7 @@ const App = () => {
   };
 
   const fetchcart = async () => {
-    setCart(await commerce.cart.retrieve());
+    setCart(await commerce.cart.retrieve(cartId));
   };
 
   const addToCartHanlder = async (productId, quantity) => {
@@ -73,7 +89,7 @@ const App = () => {
   }
   return (
     <div>
-      <Navbar totalItems={cart.total_unique_items} />
+      <Navbar totalItems={cart && cart.total_unique_items} />
       <Switch>
         <Route
           exact
