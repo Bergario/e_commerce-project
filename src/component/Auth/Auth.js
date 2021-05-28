@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { LockOutlined, Copyright } from "@material-ui/icons";
 import {
@@ -22,6 +22,7 @@ import { commerce } from "../../lib/commerce";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import * as actions from "../../store/actions/";
+import Spinner from "../../Utils/Spinner";
 
 const Auth = () => {
   const history = useHistory();
@@ -39,6 +40,13 @@ const Auth = () => {
   const onAuthSuccess = (token, customerId) =>
     dispatch(actions.authSuccess(token, customerId));
   const onAuthFail = (error) => dispatch(actions.authFail(error));
+
+  //REDUCER
+  const { isLoading } = useSelector((state) => ({
+    isLoading: state.auth.loading,
+  }));
+
+  console.log("Loading", isLoading);
 
   const changeLoginHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -95,7 +103,9 @@ const Auth = () => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>

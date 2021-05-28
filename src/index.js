@@ -8,10 +8,12 @@ import thunk from "redux-thunk";
 import App from "./App";
 import authReducer from "./store/reducer/auth";
 import cartReducer from "./store/reducer/cart";
+import productReducer from "./store/reducer/product";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   cart: cartReducer,
+  product: productReducer,
 });
 
 const logger = (store) => {

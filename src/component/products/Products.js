@@ -1,10 +1,16 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
 import Product from "./product/Product";
 import useStyles from "./styles";
 
-const Products = ({ product, onAddToCart }) => {
+const Products = ({ onAddToCart }) => {
+  //REDUCER
+  const { product } = useSelector((state) => ({
+    product: state.product.product,
+  }));
+
   const classes = useStyles();
   return (
     <main className={classes.content}>

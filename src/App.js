@@ -17,6 +17,8 @@ const App = () => {
   const dispatch = useDispatch();
 
   const onAuthCheckState = () => dispatch(actions.authCheckState);
+  const onProductFetch = () => dispatch(actions.product);
+  const onFetchCart = () => dispatch(actions.fetchCart);
 
   const { isAuth, cartId, cart } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
@@ -24,30 +26,9 @@ const App = () => {
     cart: state.cart.cart,
   }));
 
-  const [products, setProducts] = useState([]);
+  console.log(cart);
+
   const [carti, setCart] = useState([]);
-
-  // const userLoad = () => {
-  //   const customerId = localStorage.getItem("customer_id");
-  //   axios
-  //     .get(`http://localhost:9000/user/cart/${customerId}`)
-  //     .then((response) => {
-  //       const cartID = response.data.meta.cartId;
-  //       console.log(cartID);
-
-  //       dispatch(onCartId(cartID, dispatch));
-  //     })
-  //     .catch((err) => err);
-  // };
-
-  const fetchProducts = async () => {
-    const { data } = await commerce.products.list();
-    setProducts(data);
-  };
-
-  const fetchcart = async () => {
-    setCart(await commerce.cart.retrieve(cartId));
-  };
 
   const addToCartHanlder = async (productId, quantity) => {
     const { cart } = await commerce.cart.add(productId, quantity);
@@ -70,8 +51,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchcart();
+    dispatch(onFetchCart());
+    dispatch(onProductFetch());
     dispatch(onAuthCheckState());
   }, []);
 
@@ -94,9 +75,7 @@ const App = () => {
         <Route
           exact
           path="/"
-          component={() => (
-            <Products product={products} onAddToCart={addToCartHanlder} />
-          )}
+          component={() => <Products onAddToCart={addToCartHanlder} />}
         />
         <Route
           path="/cart"

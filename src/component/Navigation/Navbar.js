@@ -14,6 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import useStyles from "./styles";
 
 import logo from "../../assets/logo.png";
+import AccountNav from "./AccountNav";
 
 const NavBar = ({ totalItems }) => {
   const classes = useStyles();
@@ -39,6 +40,7 @@ const NavBar = ({ totalItems }) => {
             Ripai Shop
           </Typography>
           <div className={classes.grow} />
+          <AccountNav />
           <div className={classes.menuButton}>
             {Location.pathname === "/" && (
               <IconButton
