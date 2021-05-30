@@ -9,7 +9,14 @@ export {
   logout,
 } from "./auth";
 
-export { fetchCart, cartLoad } from "./cart";
+export {
+  fetchCart,
+  cartLoad,
+  addCart,
+  updateCart,
+  deleteCart,
+  emptyCart,
+} from "./cart";
 
 export {
   productFecthStart,

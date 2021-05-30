@@ -120,8 +120,7 @@ const Auth = () => {
             className={classes.form}
             onSubmit={method.handleSubmit((data) =>
               isLogin ? onLogin(data) : onSignup(data)
-            )}
-          >
+            )}>
             {/* FORM LOGIN & SIGNUP */}
             {isLogin ? <Login /> : <SignUp />}
 
@@ -130,8 +129,7 @@ const Auth = () => {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
-            >
+              className={classes.submit}>
               {isLogin ? " Sign in" : "Sign up"}
             </Button>
             <Grid container>

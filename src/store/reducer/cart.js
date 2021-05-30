@@ -4,46 +4,59 @@ import { objectUpdate } from "../../Utils/Utilities";
 const initialState = {
   cartId: null,
   cart: [],
+  loading: false,
 };
 
-const fetchCart = (state, action) => {
+const fetchCartStart = (state, action) => {
+  return objectUpdate(state, {
+    loading: true,
+  });
+};
+const fetchCartSuccess = (state, action) => {
   return objectUpdate(state, {
     cartId: action.cartId,
     cart: action.cart,
+    loading: false,
   });
 };
 const addCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
+    loading: false,
   });
 };
 const updatehCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
+    loading: false,
   });
 };
 const deletehCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
+    loading: false,
   });
 };
 const emptyCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
+    loading: false,
   });
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.FETCH_CART:
-      return fetchCart(state, action);
-    case actionTypes.ADD_CART:
+    case actionTypes.FETCH_CART_START:
+      return fetchCartStart(state, action);
+    case actionTypes.FETCH_CART_SUCCESS:
+      return fetchCartSuccess(state, action);
+    case actionTypes.ADD_CART_SUCCESS:
       return addCart(state, action);
-    case actionTypes.UPDATE_CART:
+    case actionTypes.UPDATE_CART_SUCCESS:
       return updatehCart(state, action);
-    case actionTypes.DELETE_CART:
+    case actionTypes.DELETE_CART_SUCCESS:
       return deletehCart(state, action);
-    case actionTypes.EMPTY_CART:
+    case actionTypes.EMPTY_CART_SUCCESS:
       return emptyCart(state, action);
 
     default:

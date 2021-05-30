@@ -4,14 +4,18 @@ import { useSelector } from "react-redux";
 
 import Product from "./product/Product";
 import useStyles from "./styles";
+import Spinner from "../../Utils/Spinner";
 
-const Products = ({ onAddToCart }) => {
+const Products = () => {
   //REDUCER
-  const { product } = useSelector((state) => ({
+  const { product, isLoading } = useSelector((state) => ({
     product: state.product.product,
+    isLoading: state.product.loading,
   }));
 
   const classes = useStyles();
+
+  if (isLoading) return <Spinner />;
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
@@ -19,7 +23,7 @@ const Products = ({ onAddToCart }) => {
         {product.map((product) => {
           return (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <Product product={product} onAddToCart={onAddToCart} />
+              <Product product={product} />
             </Grid>
           );
         })}

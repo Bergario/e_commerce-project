@@ -9,9 +9,26 @@ import {
   Typography,
 } from "@material-ui/core";
 import { DeleteForever } from "@material-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
 
-const CartItem = ({ product, onUpdateQuantity, onRemoveFromCart }) => {
+import * as actions from "../../../store/actions/";
+
+const CartItem = React.memo(({ product }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  //REDUX
+  const onUpdateQuantity = (productId, qty) =>
+    dispatch(actions.updateCart(productId, qty));
+
+  const onRemoveFromCart = (productId) =>
+    dispatch(actions.deleteCart(productId));
+
+  //REDUCER
+  const { cartId } = useSelector((state) => ({
+    cartId: state.cart.cartId,
+  }));
+  console.log(product);
 
   return (
     <TableRow key={product.id}>
@@ -20,8 +37,7 @@ const CartItem = ({ product, onUpdateQuantity, onRemoveFromCart }) => {
         <p className={classes.productName}>{product.name}</p>
       </TableCell>
       <TableCell align="center">
-        <IconButton
-          onClick={() => onRemoveFromCart(product.id, product.quantity)}>
+        <IconButton onClick={() => onRemoveFromCart(product.id)}>
           <DeleteForever />
         </IconButton>
         <Button
@@ -43,6 +59,6 @@ const CartItem = ({ product, onUpdateQuantity, onRemoveFromCart }) => {
       <TableCell align="right">Rp. {product.line_total.formatted}</TableCell>
     </TableRow>
   );
-};
+});
 
 export default CartItem;

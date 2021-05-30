@@ -18,7 +18,7 @@ const App = () => {
 
   const onAuthCheckState = () => dispatch(actions.authCheckState);
   const onProductFetch = () => dispatch(actions.product);
-  const onFetchCart = () => dispatch(actions.fetchCart);
+  const onFetchCart = (cartId) => dispatch(actions.fetchCart(cartId));
 
   const { isAuth, cartId, cart } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
@@ -26,35 +26,16 @@ const App = () => {
     cart: state.cart.cart,
   }));
 
-  console.log(cart);
-
   const [carti, setCart] = useState([]);
 
-  const addToCartHanlder = async (productId, quantity) => {
-    const { cart } = await commerce.cart.add(productId, quantity);
-    setCart(cart);
-  };
-
-  const updateQuantityHandler = async (productId, quantity) => {
-    const { cart } = await commerce.cart.update(productId, { quantity });
-    setCart(cart);
-  };
-
-  const removeFromCartHandler = async (productId) => {
-    const { cart } = await commerce.cart.remove(productId);
-    setCart(cart);
-  };
-
-  const emptyCartHandler = async () => {
-    const { cart } = await commerce.cart.empty();
-    setCart(cart);
-  };
-
   useEffect(() => {
-    dispatch(onFetchCart());
     dispatch(onProductFetch());
     dispatch(onAuthCheckState());
   }, []);
+
+  useEffect(() => {
+    onFetchCart(cartId);
+  }, [isAuth, cartId]);
 
   const refreshCart = async () => {
     const newCart = await commerce.cart.refresh();
@@ -72,22 +53,8 @@ const App = () => {
     <div>
       <Navbar totalItems={cart && cart.total_unique_items} />
       <Switch>
-        <Route
-          exact
-          path="/"
-          component={() => <Products onAddToCart={addToCartHanlder} />}
-        />
-        <Route
-          path="/cart"
-          component={() => (
-            <Cart
-              cartProduct={cart}
-              onUpdateQuantity={updateQuantityHandler}
-              onRemoveFromCart={removeFromCartHandler}
-              onEmptyCart={emptyCartHandler}
-            />
-          )}
-        />
+        <Route exact path="/" component={() => <Products />} />
+        <Route path="/cart" component={() => <Cart cartProduct={cart} />} />
         {routes}
         <Redirect to="/" />
       </Switch>
