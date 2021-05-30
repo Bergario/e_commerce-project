@@ -39,8 +39,8 @@ export const authFail = (error) => {
 };
 
 export const authTimeout = (timeout) => {
-  setTimeout((dispatch) => {
-    dispatch(logout());
+  setTimeout(() => {
+    // window.location.reload();
   }, timeout);
   return {
     type: actionTypes.INIT_TIMEOUT,
@@ -71,6 +71,7 @@ export const logout = () => {
   localStorage.removeItem("customer_token");
   localStorage.removeItem("customer_id");
   localStorage.removeItem("expiredTime");
+
   return {
     type: actionTypes.AUTH_LOGOUT,
   };
