@@ -11,6 +11,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Checkout from "./component/CheckoutForm/Checkout/Checkout";
 import Auth from "./component/Auth/Auth";
 import * as actions from "./store/actions/index";
+import Orders from "./component/Order/Orders";
 
 const App = () => {
   //REDUX
@@ -56,6 +57,7 @@ const App = () => {
         <Route exact path="/" component={() => <Products />} />
         <Route path="/cart" component={() => <Cart cartProduct={cart} />} />
         {routes}
+        <Route path="/order" component={() => <Orders />} />
         <Redirect to="/" />
       </Switch>
     </div>

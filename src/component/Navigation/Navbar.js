@@ -40,7 +40,6 @@ const NavBar = ({ totalItems }) => {
             Ripai Shop
           </Typography>
           <div className={classes.grow} />
-          <AccountNav />
           <div className={classes.menuButton}>
             {Location.pathname === "/" && (
               <IconButton
@@ -55,6 +54,7 @@ const NavBar = ({ totalItems }) => {
               </IconButton>
             )}
           </div>
+          <AccountNav />
         </Toolbar>
       </AppBar>
     </>

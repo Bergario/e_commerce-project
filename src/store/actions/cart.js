@@ -24,6 +24,11 @@ export const addCartSuccess = (cart) => {
   };
 };
 
+export const actionCartStart = () => {
+  return {
+    type: actionTypes.ACTION_CART_START,
+  };
+};
 export const updateCartSuccess = (cart) => {
   return {
     type: actionTypes.UPDATE_CART_SUCCESS,
@@ -82,6 +87,7 @@ export const addCart = (productId, quantity) => {
 
 export const updateCart = (productId, quantity) => {
   return (dispatch) => {
+    dispatch(actionCartStart());
     const cart = async () =>
       commerce.cart
         .update(productId, { quantity })
@@ -93,6 +99,7 @@ export const updateCart = (productId, quantity) => {
 
 export const deleteCart = (productId) => {
   return (dispatch) => {
+    dispatch(actionCartStart());
     const cart = async () =>
       await commerce.cart
         .remove(productId)
@@ -104,6 +111,7 @@ export const deleteCart = (productId) => {
 
 export const emptyCart = () => {
   return (dispatch) => {
+    dispatch(actionCartStart());
     const cart = async () =>
       await commerce.cart
         .empty()

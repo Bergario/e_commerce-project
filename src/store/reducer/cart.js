@@ -25,6 +25,11 @@ const addCart = (state, action) => {
     loading: false,
   });
 };
+const actionhCartStart = (state, action) => {
+  return objectUpdate(state, {
+    loading: true,
+  });
+};
 const updatehCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
@@ -46,6 +51,8 @@ const emptyCart = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.ACTION_CART_START:
+      return actionhCartStart(state, action);
     case actionTypes.FETCH_CART_START:
       return fetchCartStart(state, action);
     case actionTypes.FETCH_CART_SUCCESS:

@@ -30,10 +30,10 @@ const Product = ({ product }) => {
       />
       <CardContent>
         {/* <div className={classes.cardContent}> */}
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h6" gutterBottom>
           {product.name}
         </Typography>
-        <Typography variant="h5">Rp. {product.price.formatted}</Typography>
+        <Typography variant="p">Rp. {product.price.formatted}</Typography>
         {/* </div> */}
         <Typography
           dangerouslySetInnerHTML={{ __html: product.description }}
@@ -44,7 +44,8 @@ const Product = ({ product }) => {
       <CardActions disableSpacing className={classes.cardActions}>
         <IconButton
           aria-label="Add to cart"
-          onClick={() => onAddToCart(product.id, 1)}>
+          onClick={() => onAddToCart(product.id, 1)}
+        >
           <AddShoppingCart />
         </IconButton>
       </CardActions>

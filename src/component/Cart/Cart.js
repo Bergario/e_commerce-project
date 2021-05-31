@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useStyles from "./styles";
 import { Link } from "react-router-dom";
 import {
@@ -15,6 +15,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  CircularProgress,
 } from "@material-ui/core";
 
 import CartItem from "./CartItem/CartItem";
@@ -26,6 +27,11 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
 
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  //REDUCER
+  const { onLoading } = useSelector((state) => ({
+    onLoading: state.cart.loading,
+  }));
 
   //REDUX ACTIONS
   const onEmptyCart = () => dispatch(actions.emptyCart);
@@ -64,7 +70,7 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
                 ))}
               <TableRow>
                 <TableCell component="th" scope="row">
-                  {" "}
+                  {onLoading && <CircularProgress />}
                 </TableCell>
                 <TableCell align="left">
                   <Typography variant="h6">SUBTOTAL</Typography>
@@ -85,7 +91,8 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
               type="button"
               variant="contained"
               color="secondary"
-              onClick={() => dispatch(onEmptyCart())}>
+              onClick={() => dispatch(onEmptyCart())}
+            >
               Empty Cart
             </Button>
             <Button
@@ -95,7 +102,8 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/checkout">
+              to="/checkout"
+            >
               Checkout
             </Button>
           </div>
