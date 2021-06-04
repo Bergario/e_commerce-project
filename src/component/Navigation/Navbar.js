@@ -49,7 +49,7 @@ const NavBar = ({ totalItems }) => {
                 color="inherit"
               >
                 <Badge badgeContent={totalItems} color="secondary">
-                  <ShoppingCart />
+                  <ShoppingCart color="action" />
                 </Badge>
               </IconButton>
             )}

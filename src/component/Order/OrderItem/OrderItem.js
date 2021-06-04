@@ -1,13 +1,15 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, CardMedia, Link, Button } from "@material-ui/core";
+import { LocalMall } from "@material-ui/icons/";
 
 import useStyle from "../styles";
 
 const OrderItem = () => {
   const classes = useStyle();
   return (
-    <Grid spacing={4} className={classes.orderItemBox}>
-      <Grid>
+    <Grid className={classes.orderItemBox}>
+      <Grid align-items="center" style={{ display: "flex" }}>
+        <LocalMall fontSize="small" style={{ marginRight: "5px" }} />
         <Typography variant="subtitle2" style={{ display: "inline-block" }}>
           Belanja 29 Mei 2021
         </Typography>
@@ -17,23 +19,37 @@ const OrderItem = () => {
         <div className={classes.itemContentCol}>
           <div style={{ display: "flex" }}>
             <div>
-              <img
+              <CardMedia
                 className={classes.imgOrder}
-                src="https://ecs7-p.tokopedia.net/img/cache/200-square/VqbcmM/2021/3/1/7c795e57-e204-404d-b166-b92cd6298d10.jpg"
+                image="https://ecs7-p.tokopedia.net/img/cache/200-square/VqbcmM/2021/3/1/7c795e57-e204-404d-b166-b92cd6298d10.jpg"
               />
             </div>
-            <div style={{ width: "100%" }}>
-              <div>
-                <h4>Laptop Dewa</h4>
-              </div>
-              <div>
-                <p>Judul belum ada</p>
-              </div>
+            <div style={{ width: "100%", padding: "10px" }}>
+              <Grid>
+                <h4 style={{ marginBottom: "5px" }}>Laptop Dewa</h4>
+              </Grid>
+              <Grid>
+                <Typography variant="caption">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  Asperiores ea eligendi cumque illo atque nesciunt deserunt
+                  sequi eveniet earum similique itaque repellendus consectetur
+                </Typography>
+              </Grid>
             </div>
           </div>
         </div>
-        <Grid>test</Grid>
+        <Grid className={classes.priceDetail}>
+          <Grid>
+            <Typography variant="body2">Total Belanja</Typography>
+          </Grid>
+          <Grid>
+            <Typography variant="body2">Rp 50.000</Typography>
+          </Grid>
+        </Grid>
       </div>
+      <Button className={classes.buttonDetailTransaksi}>
+        Lihat Detail Transaksi
+      </Button>
     </Grid>
   );
 };

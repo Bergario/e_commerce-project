@@ -33,7 +33,9 @@ const Product = ({ product }) => {
         <Typography variant="h6" gutterBottom>
           {product.name}
         </Typography>
-        <Typography variant="p">Rp. {product.price.formatted}</Typography>
+        <Typography variant="subtitle2">
+          Rp. {product.price.formatted}
+        </Typography>
         {/* </div> */}
         <Typography
           dangerouslySetInnerHTML={{ __html: product.description }}

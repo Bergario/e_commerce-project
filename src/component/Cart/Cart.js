@@ -48,7 +48,7 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
 
   const FilledCart = () => {
     return (
-      <Grid item className={classes.boxTable} container xxs={12} sm={8}>
+      <Grid item className={classes.boxTable} container xxs={12} sm={12}>
         <TableContainer component={Paper}>
           <TableContainer className={classes.table} aria-label="simple table">
             <TableHead>

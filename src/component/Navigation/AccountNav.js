@@ -53,8 +53,9 @@ const AccountNav = () => {
       <IconButton
         aria-label="Show cart item"
         color="inherit"
-        onClick={handleClick}>
-        <AccountCircle />
+        onClick={handleClick}
+      >
+        <AccountCircle color="action" />
       </IconButton>
       <Menu
         id="simple-menu"
@@ -62,7 +63,8 @@ const AccountNav = () => {
         style={{ top: "30px" }}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}>
+        onClose={handleClose}
+      >
         {menuItem}
       </Menu>
     </div>

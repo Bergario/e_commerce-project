@@ -36,11 +36,10 @@ const PaymentForm = ({
     <>
       <Review checkoutToken={checkoutToken} />
       <Divider />
-      <form onSubmit={() => onPaymentHandler(dataCustomer)}>
+      <form onSubmit={(event) => onPaymentHandler(event, dataCustomer)}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Button variant="outline" onClick={() => backStep()}>
-            Back
-          </Button>
+          {/* <Button variant="outline" onClick={() => backStep()}> */}
+          <Button variant="outline">Back</Button>
           <Button type="submit" variant="contained" color="primary">
             Pay
           </Button>

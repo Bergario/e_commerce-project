@@ -13,13 +13,27 @@ export default makeStyles((theme) => ({
     minHeight: " 300px",
   },
   button: {
-    margin: "10px",
+    margin: theme.spacing(1),
+    [theme.breakpoints.down("sm")]: {
+      minWidth: 32,
+      paddingLeft: 8,
+      paddingRight: 8,
+      borderRadius: 20,
+      color: "forestgreen",
+    },
+  },
+  buttonText: {
+    [theme.breakpoints.down("sm")]: {
+      textTransform: "initial",
+    },
   },
   orderItemBox: {
-    border: "1px solid #dddd",
+    border: "1px solid #f3f3f3dd",
     padding: "10px",
     borderRadius: "10px",
     marginTop: "10px",
+    boxShadow: "4px 5px 10px #eeee",
+    color: "#585353",
   },
   labelStatus: {
     padding: "3px",
@@ -39,5 +53,19 @@ export default makeStyles((theme) => ({
   },
   itemContentCol: {
     width: "calc(100% - 180px)",
+    borderRight: "1px solid #eeee",
+  },
+  priceDetail: {
+    display: "flex",
+    flexDirection: "column",
+    alignSelf: "center",
+    margin: "10px auto",
+  },
+  buttonDetailTransaksi: {
+    textTransform: "initial",
+    width: "100%",
+    justifyContent: "center",
+    color: "forestgreen",
+    fontWeight: "700",
   },
 }));

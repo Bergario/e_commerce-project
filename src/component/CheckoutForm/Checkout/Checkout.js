@@ -44,10 +44,15 @@ const Checkout = ({ cart }) => {
     return () => (isMounted = false);
   }, [cart]);
 
-  const paymentHandler = (customerData) => {
+  const paymentHandler = (e, customerData) => {
+    console.log(customerData);
+    e.preventDefault();
+
     axios
       .post("http://localhost:9000/snap", customerData)
       .then((res) => {
+        console.log(res);
+
         const url = res.data.redirect_url;
         window.location.replace(url);
       })
@@ -72,8 +77,8 @@ const Checkout = ({ cart }) => {
       validationHandler(data);
       setIsValid(validationHandler(data));
 
-      // setShippingData(data);
-      // nextStep();
+      setShippingData(data);
+      nextStep();
     },
     [validationHandler]
   );
