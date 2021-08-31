@@ -1,7 +1,13 @@
 import React from "react";
 import FormInput from "../CheckoutForm/FormInput";
+import { Grid, Button, Link } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
-const Login = () => {
+import useStyles from "./styles";
+
+const Login = ({ error }) => {
+  const classes = useStyles();
+  const history = useHistory();
   return (
     <>
       <FormInput
@@ -14,6 +20,7 @@ const Login = () => {
         name="email"
         autoComplete="email"
         autoFocus
+        error={error && error.email}
       />
       <FormInput
         variant="outlined"
@@ -26,6 +33,21 @@ const Login = () => {
         id="password"
         autoComplete="current-password"
       />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}>
+        Sign in
+      </Button>
+      <Grid container>
+        <Grid item>
+          <Link onClick={() => history.push("/auth/signup")} variant="body2">
+            Don't have an account? Sign Up
+          </Link>
+        </Grid>
+      </Grid>
     </>
   );
 };

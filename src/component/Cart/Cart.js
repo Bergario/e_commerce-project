@@ -8,7 +8,6 @@ import {
   Typography,
   Button,
   Grid,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -16,21 +15,29 @@ import {
   TableRow,
   Paper,
   CircularProgress,
+  Toolbar,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 
 import CartItem from "./CartItem/CartItem";
+import CartItemMobile from "./CartItem/CartItemMobile";
 import * as actions from "../../store/actions/index";
 import Spinner from "../../Utils/Spinner";
+import { priceFormat } from "../../Utils/Utilities";
 
-const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
+const Cart = ({ cartProduct }) => {
   const products = cartProduct.line_items;
 
   const classes = useStyles();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMatch = useMediaQuery(theme.breakpoints.only("xs"));
 
   //REDUCER
-  const { onLoading } = useSelector((state) => ({
+  const { onLoading, isAuth } = useSelector((state) => ({
     onLoading: state.cart.loading,
+    isAuth: state.auth.token !== null,
   }));
 
   //REDUX ACTIONS
@@ -46,41 +53,48 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
 
   console.log(cartProduct);
 
-  const FilledCart = () => {
+  const FilledCart = useMemo(() => {
     return (
-      <Grid item className={classes.boxTable} container xxs={12} sm={12}>
-        <TableContainer component={Paper}>
-          <TableContainer className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nama Product</TableCell>
-                <TableCell align="center">Qty</TableCell>
-                <TableCell align="right">Harga</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {products &&
-                products.map((product) => (
-                  <CartItem
-                    key={product.id}
-                    product={product}
-                    onUpdateQuantity={onUpdateQuantity}
-                    onRemoveFromCart={onRemoveFromCart}
-                  />
-                ))}
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  {onLoading && <CircularProgress />}
-                </TableCell>
-                <TableCell align="left">
-                  <Typography variant="h6">SUBTOTAL</Typography>
-                </TableCell>
-                <TableCell align="right">
-                  Rp. {cartProduct.subtotal.formatted}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </TableContainer>
+      <Grid
+        item
+        className={classes.boxTable}
+        container
+        xxs={12}
+        sm={12}
+        md={12}
+        lg={12}>
+        <TableContainer
+          className={classes.table}
+          aria-label="simple table"
+          component={Paper}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Product</TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center">Qty</TableCell>
+              <TableCell align="right">Harga</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products &&
+              products.map((product) => (
+                <CartItem key={product.id} products={product} />
+              ))}
+            <TableRow>
+              <TableCell component="th" scope="row">
+                {onLoading && <CircularProgress />}
+              </TableCell>
+              <TableCell></TableCell>
+              <TableCell align="center">
+                <Typography className={classes.subtotal}>
+                  Total Harga
+                </Typography>
+              </TableCell>
+              <TableCell className={classes.subtotal} align="right">
+                {priceFormat(cartProduct.total_price)}
+              </TableCell>
+            </TableRow>
+          </TableBody>
         </TableContainer>
 
         <div className={classes.button}>
@@ -91,8 +105,7 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
               type="button"
               variant="contained"
               color="secondary"
-              onClick={() => dispatch(onEmptyCart())}
-            >
+              onClick={() => dispatch(onEmptyCart())}>
               Empty Cart
             </Button>
             <Button
@@ -102,29 +115,58 @@ const Cart = ({ cartProduct, onUpdateQuantity, onRemoveFromCart }) => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/checkout"
-            >
+              to="/checkout">
               Checkout
             </Button>
           </div>
         </div>
       </Grid>
     );
-  };
+  });
+
+  const filledCartMobile = useMemo(() => {
+    return (
+      <React.Fragment>
+        {products &&
+          products.map((product) => (
+            <CartItemMobile key={product.id} products={product} />
+          ))}
+        <Toolbar className={classes.navBottom}>
+          <Grid>
+            <Typography className={classes.total}>Total Harga</Typography>
+            <Typography className={classes.total}>
+              {priceFormat(cartProduct ? cartProduct.total_price : 0)}
+            </Typography>
+          </Grid>
+          <Grid>
+            <Button
+              component={Link}
+              to={isAuth ? "/checkout" : "/auth/login"}
+              color="primary"
+              type="button"
+              size="small"
+              variant="contained">
+              {isAuth ? "beli" : "login untuk Beli"}
+            </Button>
+          </Grid>
+        </Toolbar>
+      </React.Fragment>
+    );
+  }, []);
 
   if (!cartProduct.line_items) return <Spinner />;
   return (
-    <Container>
+    <Container className={classes.root}>
       <div className={classes.toolbar} />
-      <Typography className={classes.title} variant="h4">
-        Your Shopping Cart
-      </Typography>
+      <Typography className={classes.title}>Your Shopping Cart</Typography>
       {!cartProduct.line_items ? (
         <Spinner />
       ) : !cartProduct.line_items.length ? (
         <EmptyCart />
+      ) : isMatch ? (
+        filledCartMobile
       ) : (
-        <FilledCart />
+        FilledCart
       )}
     </Container>
   );

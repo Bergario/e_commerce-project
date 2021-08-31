@@ -9,11 +9,14 @@ import App from "./App";
 import authReducer from "./store/reducer/auth";
 import cartReducer from "./store/reducer/cart";
 import productReducer from "./store/reducer/product";
+import modalReducer from "./store/reducer/modal";
+import Modal from "./Utils/modal";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   cart: cartReducer,
   product: productReducer,
+  modal: modalReducer,
 });
 
 const logger = (store) => {
@@ -40,6 +43,7 @@ const store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
+      <Modal />
       <App />
     </BrowserRouter>
   </Provider>,

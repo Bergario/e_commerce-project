@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Button, Container, Grid } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 import OrderItem from "./OrderItem/OrderItem";
 import useStyle from "./styles";
@@ -17,14 +18,19 @@ const Orders = () => {
   const q = query();
   const id = q.get("order_id");
 
-  console.log(transaction);
+  console.log("status", transaction);
 
   useEffect(() => {
     console.log("2");
-    fetch("http://localhost:9000/testApi/" + id)
-      .then((response) => response.json())
-      .then((response) => setTransaction(response))
+    let isMounted = true;
+    axios
+      .get("http://localhost:9000/testApi/" + id, {
+        withCredentials: true,
+      })
+      .then((response) => isMounted && setTransaction(response))
       .catch((err) => console.log(err));
+
+    return () => (isMounted = false);
   }, [id]);
 
   return (
@@ -37,8 +43,7 @@ const Orders = () => {
             sm={12}
             style={{ display: "flex" }}
             alignItems="center"
-            justify="flex-start"
-          >
+            justify="flex-start">
             <Typography variant="h6" style={{ display: "inline-block" }}>
               Status
             </Typography>
@@ -49,8 +54,7 @@ const Orders = () => {
                   className={classes.button}
                   variant="outlined"
                   color="primary"
-                  size="medium"
-                >
+                  size="medium">
                   <span className={classes.buttonText}>{btn}</span>
                 </Button>
               );

@@ -5,9 +5,8 @@ export default makeStyles(() => ({
     width: "50px",
     marginRight: "10px",
   },
-  productName: {
-    display: "inline-block",
-    lineHeight: "20px",
-    verticalAlign: "bottom",
+  product: {
+    display: "flex",
+    alignItems: "center",
   },
 }));

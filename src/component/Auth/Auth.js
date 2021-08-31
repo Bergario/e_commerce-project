@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, Route } from "react-router-dom";
 import { LockOutlined, Copyright } from "@material-ui/icons";
 import {
   Button,
@@ -21,6 +21,7 @@ import useStyles from "./styles";
 import { commerce } from "../../lib/commerce";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import Snackbar from "../Snackbar/Snackbar";
 import * as actions from "../../store/actions/";
 import Spinner from "../../Utils/Spinner";
 
@@ -29,8 +30,9 @@ const Auth = () => {
   const dispatch = useDispatch();
   const method = useForm();
   const classes = useStyles();
-  const [isLogin, setIsLogin] = useState(true);
-  const [cart, setCart] = useState([]);
+  const [singupError, setSingupError] = useState();
+  const [loginError, setLoginError] = useState();
+  const path = history.location.pathname;
 
   //REDUX
   const onAuthSignupStart = () => dispatch(actions.authSignupStart());
@@ -42,66 +44,57 @@ const Auth = () => {
   const onAuthFail = (error) => dispatch(actions.authFail(error));
 
   //REDUCER
-  const { isLoading } = useSelector((state) => ({
+  const { isLoading, error } = useSelector((state) => ({
     isLoading: state.auth.loading,
+    error: state.auth.error,
   }));
-
-  console.log("Loading", isLoading);
-
-  const changeLoginHandler = () => {
-    setIsLogin((prevState) => !prevState);
-  };
-
-  const verifyLogin = async (token) => {
-    try {
-      axios
-        .get(`http://localhost:9000/auth/commerce/${token}`)
-        .then((response) => {
-          const user = response.data;
-          const expiredDate = new Date(new Date().getTime() + 3600000);
-          localStorage.setItem("expiredTime", expiredDate);
-          localStorage.setItem("customer_id", user.customer_id);
-          localStorage.setItem("customer_token", user.jwt);
-          dispatch(onAuthSuccess(user.jwt, user.customer_id));
-          history.push("/");
-        });
-    } catch (err) {
-      dispatch(onAuthFail(err));
-    }
-  };
 
   const onLogin = async (data) => {
     try {
       dispatch(onAuthStart());
       await axios
-        .post("http://localhost:9000/auth/login", data)
+        .post("http://localhost:9000/auth/login", data, {
+          withCredentials: true,
+        })
         .then((response) => {
           const token = response.data.token;
-          verifyLogin(token);
-        });
-    } catch (err) {
-      console.log(err.message);
-    }
-    console.log("asu");
-  };
-
-  const onSignup = async (data) => {
-    const carId = await commerce.cart.refresh().then((cart) => cart.id);
-    const dataUser = { ...data, meta: carId };
-
-    try {
-      dispatch(onAuthSignupStart());
-      axios
-        .post("http://localhost:9000/auth/signup", dataUser)
-        .then((response) => {
-          response.status !== 204 && setIsLogin(true);
-          console.log(response);
-          dispatch(onAuthSignupSuccess());
+          const expiredDate = new Date(new Date().getTime() + 3600000);
+          localStorage.setItem("expiredTime", expiredDate);
+          // localStorage.setItem("customer_id", user.customer_id);
+          localStorage.setItem("customer_token", token);
+          dispatch(onAuthSuccess(token));
+          history.push("/");
         });
     } catch (error) {
-      dispatch(onAuthSignupFail(error));
+      const err = error.response.data.errors;
+      setLoginError(err);
+      dispatch(onAuthFail(err));
     }
   };
+
+  const onSignup = (data) => {
+    // const carId = await commerce.cart.refresh().then((cart) => cart.id);
+    // const dataUser = { ...data, meta: carId };
+    axios
+      .post("http://localhost:9000/auth/signup", data, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        dispatch(onAuthSignupStart());
+        console.log(response);
+        dispatch(onAuthSignupSuccess());
+      })
+      .catch((error) => {
+        const err = error.response.data.errors;
+        console.log(err);
+        setSingupError("Jancok");
+        dispatch(onAuthSignupFail(err));
+      });
+  };
+
+  const signup = useMemo(() => {
+    return <SignUp error={singupError} />;
+  }, []);
 
   return isLoading ? (
     <Spinner />
@@ -113,34 +106,22 @@ const Auth = () => {
           <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {isLogin ? " Sign in" : "Sign up"}
+          {path === "/auth/login" ? " Sign in" : "Sign up"}
         </Typography>
+        {/* <Snackbar error={error} /> */}
         <FormProvider {...method}>
           <form
             className={classes.form}
             onSubmit={method.handleSubmit((data) =>
-              isLogin ? onLogin(data) : onSignup(data)
+              path === "/auth/login" ? onLogin(data) : onSignup(data)
             )}>
             {/* FORM LOGIN & SIGNUP */}
-            {isLogin ? <Login /> : <SignUp />}
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}>
-              {isLogin ? " Sign in" : "Sign up"}
-            </Button>
-            <Grid container>
-              <Grid item>
-                <Link onClick={changeLoginHandler} variant="body2">
-                  {isLogin
-                    ? "Don't have an account? Sign Up"
-                    : "Sudah punya akun? Masuk"}
-                </Link>
-              </Grid>
-            </Grid>
+            <Route
+              path="/auth/login"
+              component={() => <Login error={loginError} />}
+            />
+            <Route path="/auth/signup" component={() => signup} />
           </form>
         </FormProvider>
       </div>

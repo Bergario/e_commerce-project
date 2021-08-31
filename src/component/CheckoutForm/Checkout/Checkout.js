@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { commerce } from "../../../lib/commerce";
-import useStyles from "./styles";
-
+import cookie from "js-cookie";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import {
   Paper,
   Stepper,
@@ -11,11 +11,13 @@ import {
   CircularProgress,
   Divider,
   Button,
+  Container,
 } from "@material-ui/core";
+
 import AddressForm from "../AddressForm";
 import PaymentForm from "../PaymentForm";
 import { validationHandler } from "../../../Utils/Utilities";
-import axios from "axios";
+import useStyles from "./styles";
 
 const steps = ["Shippping Address", "Payment Detail"];
 
@@ -26,43 +28,52 @@ const Checkout = ({ cart }) => {
   const [isValid, setIsValid] = useState();
 
   const classes = useStyles();
+  const { checkoutCart } = useSelector((state) => ({
+    checkoutCart: state.cart.cart,
+  }));
+  console.log(activeStep);
 
-  useEffect(() => {
-    let isMounted = true;
-    const generateToken = async () => {
-      try {
-        const token = await commerce.checkout.generateToken(cart.id, {
-          type: "cart",
-        });
-        isMounted && setCheckoutToken(token);
-        console.log(token);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    generateToken();
-    return () => (isMounted = false);
-  }, [cart]);
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   const generateToken = async () => {
+  //     try {
+  //       const token = await commerce.checkout.generateToken(cart.id, {
+  //         type: "cart",
+  //       });
+  //       isMounted && setCheckoutToken(token);
+  //       console.log(token);
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+  //   generateToken();
+  //   return () => (isMounted = false);
+  // }, [cart]);
 
   const paymentHandler = (e, customerData) => {
-    console.log(customerData);
     e.preventDefault();
+    const token = cookie.get("token");
 
     axios
-      .post("http://localhost:9000/snap", customerData)
+      .post("http://localhost:9000/snap", customerData, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      })
       .then((res) => {
         console.log(res);
 
         const url = res.data.redirect_url;
         window.location.replace(url);
+        console.log(url);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   };
 
   const nextStep = () => {
     setActiveStep((prevState) => prevState + 1);
+    console.log(activeStep);
   };
 
   const backStep = () => {
@@ -87,7 +98,7 @@ const Checkout = ({ cart }) => {
     <AddressForm next={next} isValid={isValid} />
   ) : (
     <PaymentForm
-      checkoutToken={checkoutToken}
+      checkoutCart={checkoutCart}
       backStep={backStep}
       shippingData={shippingData}
       onPaymentHandler={paymentHandler}
@@ -95,7 +106,7 @@ const Checkout = ({ cart }) => {
   );
 
   return (
-    <div className={classes.form}>
+    <Container className={classes.form}>
       <main>
         <Paper>
           <Typography variant="h4" align="center">
@@ -108,10 +119,10 @@ const Checkout = ({ cart }) => {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? null : checkoutToken && Form}
+          {activeStep === steps.length ? null : checkoutCart && Form}
         </Paper>
       </main>
-    </div>
+    </Container>
   );
 };
 

@@ -1,51 +1,63 @@
 import React from "react";
-import { Button, Divider } from "@material-ui/core";
+import { Button, Divider, Container } from "@material-ui/core";
 
 import Review from "./Review";
 
 const PaymentForm = ({
-  checkoutToken,
+  checkoutCart,
   backStep,
   shippingData,
   onPaymentHandler,
 }) => {
-  const itemDetails = checkoutToken.live.line_items.map((product) => {
-    return {
-      id: product.id,
-      price: product.price.raw,
-      quantity: product.quantity,
-      name: product.product_name,
-    };
-  });
-  console.log(itemDetails);
+  console.log(checkoutCart);
+  const itemDetails = checkoutCart.line_items.map(
+    ({ product, _id, quantity }) => {
+      return {
+        id: _id,
+        price: product.price,
+        quantity: quantity,
+        name: product.name,
+      };
+    }
+  );
+
+  const ongkir = shippingData.ongkir;
+  const total_price = checkoutCart.total_price + shippingData.ongkir;
+  itemDetails.push({ name: "ongkir", quantity: 1, price: ongkir });
 
   const dataCustomer = {
-    order_id: checkoutToken.id,
-    gross_amount: checkoutToken.live.subtotal.raw,
+    // order_id: checkoutCart.id,
+    gross_amount: total_price,
     itemDetails,
     first_name: shippingData.name,
-    email: shippingData.email,
     phone: shippingData.telepon,
     address: shippingData.address,
     city: shippingData.kabupaten,
     provinces: shippingData.provinsi,
-    postal_code: shippingData.kode_pos,
+    ongkir,
   };
 
   return (
-    <>
-      <Review checkoutToken={checkoutToken} />
-      <Divider />
+    <Container>
+      <Review checkoutCart={{ ...checkoutCart, total_price, ongkir }} />
+      {/* <Divider /> */}
       <form onSubmit={(event) => onPaymentHandler(event, dataCustomer)}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            margin: "20px 10px",
+          }}>
           {/* <Button variant="outline" onClick={() => backStep()}> */}
-          <Button variant="outline">Back</Button>
+          <Button variant="contained" onClick={() => backStep()}>
+            back
+          </Button>
           <Button type="submit" variant="contained" color="primary">
             Pay
           </Button>
         </div>
       </form>
-    </>
+    </Container>
   );
 };
 

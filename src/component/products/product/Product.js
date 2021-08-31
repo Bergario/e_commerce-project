@@ -12,43 +12,42 @@ import { useDispatch } from "react-redux";
 
 import useStyles from "./styles";
 import * as actions from "../../../store/actions/index";
+import { priceFormat } from "../../../Utils/Utilities";
 
 const Product = ({ product }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   //REDUX
-  const onAddToCart = (productId, qty) =>
-    dispatch(actions.addCart(productId, qty));
+  const onAddToCart = (productId) => dispatch(actions.addCart(productId));
 
   return (
     <Card className={classes.root}>
       <CardMedia
         className={classes.media}
-        image={product.media.source}
+        image={product.productImage}
         title={product.name}
       />
       <CardContent>
         {/* <div className={classes.cardContent}> */}
-        <Typography variant="h6" gutterBottom>
+        <Typography className={classes.title} gutterBottom>
           {product.name}
         </Typography>
-        <Typography variant="subtitle2">
-          Rp. {product.price.formatted}
+        <Typography className={classes.price} variant="subtitle2">
+          {priceFormat(product.price)}
         </Typography>
         {/* </div> */}
         <Typography
           dangerouslySetInnerHTML={{ __html: product.description }}
-          variant="body2"
+          className={classes.description}
           color="textSecondary"
         />
       </CardContent>
       <CardActions disableSpacing className={classes.cardActions}>
         <IconButton
           aria-label="Add to cart"
-          onClick={() => onAddToCart(product.id, 1)}
-        >
-          <AddShoppingCart />
+          onClick={() => onAddToCart(product.id)}>
+          <AddShoppingCart fontSize="small" />
         </IconButton>
       </CardActions>
     </Card>

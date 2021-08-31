@@ -12,28 +12,37 @@ const FormInput = ({
   size,
   margin,
   autoComplete,
+  required,
+  children,
+  select,
+  multiline,
 }) => {
   const { control } = useFormContext();
+  const variants = variant && variant;
+  const Margin = margin && margin;
   return (
     // <Grid item xs={10} sm={5}>
     <Controller
-      constrol={control}
+      control={control}
       name={name}
       render={({ field }) => {
         return (
           <TextField
             {...field}
-            required={true}
+            required={required ? true : false}
+            select={select ? true : false}
+            multiline={multiline ? true : false}
             label={label}
-            variant={variant}
+            variant={variants}
             type={type}
             helperText={error ? error : false}
             fullWidth
             size={size}
-            margin={margin}
+            margin={Margin}
             autoComplete={autoComplete}
-            error={error ? true : false}
-          />
+            error={error ? true : false}>
+            {children}
+          </TextField>
         );
       }}
     />

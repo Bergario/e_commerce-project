@@ -1,30 +1,36 @@
 import React from "react";
 import { Typography, List, ListItem, ListItemText } from "@material-ui/core";
 
-const Review = ({ checkoutToken }) => {
-  const products = checkoutToken.live.line_items;
+const Review = ({ checkoutCart }) => {
+  const products = checkoutCart.line_items;
+  console.log("review", checkoutCart);
   return (
     <>
       <Typography variant="h6" gutterBottom>
         Order Summary
       </Typography>
       <List disablePadding>
-        {products.map((product) => (
-          <ListItem style={{ padding: "10px" }} key={product.name}>
+        {products.map(({ product, _id, quantity }) => (
+          <ListItem style={{ padding: "10px" }} key={_id}>
             <ListItemText
               primary={product.name}
-              secondary={`Quantity: ${product.quantity}`}
+              secondary={`Quantity: ${quantity}`}
             />
-            <Typography>{`Rp. ${product.line_total.formatted}`}</Typography>
+            <Typography>{`Rp. ${product.price}`}</Typography>
           </ListItem>
         ))}
+        <ListItem style={{ padding: "10px" }}>
+          <ListItemText primary="Ongkos kirim" />
+          <Typography>{`Rp. ${checkoutCart.ongkir}`}</Typography>
+        </ListItem>
         <hr />
         <ListItem style={{ padding: "10px" }}>
-          <ListItemText primary="Total" />
+          <ListItemText primary="Total Harga" />
           <Typography
             variant="subtitle1"
-            style={{ fontWeight: "700" }}
-          >{`Rp. ${checkoutToken.live.subtotal.formatted}`}</Typography>
+            style={{
+              fontWeight: "700",
+            }}>{`Rp. ${checkoutCart.total_price}`}</Typography>
         </ListItem>
       </List>
     </>

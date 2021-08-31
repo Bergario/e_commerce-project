@@ -2,7 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   token: null,
-  customerId: null,
+  // customerId: null,
   loading: false,
   error: null,
 };
@@ -26,15 +26,21 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         token: action.token,
-        customerId: action.customerId,
+        // customerId: action.customerId,
         loading: false,
       };
 
     case actionTypes.AUTH_FAIL:
       return { ...state, loading: false, error: action.error };
 
+    case actionTypes.START_LOGOUT:
+      return { ...state, loading: true };
+
     case actionTypes.AUTH_LOGOUT:
-      return { ...state, token: null, customerId: null };
+      return { ...state, loading: false, token: null, customerId: null };
+
+    // case actionTypes.INIT_TIMEOUT:
+    //   return {};
 
     default:
       break;

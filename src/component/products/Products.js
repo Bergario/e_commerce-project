@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Container } from "@material-ui/core";
 import { useSelector } from "react-redux";
 
 import Product from "./product/Product";
@@ -13,21 +13,25 @@ const Products = () => {
     isLoading: state.product.loading,
   }));
 
+  console.log(isLoading);
+
   const classes = useStyles();
 
   if (isLoading) return <Spinner />;
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
-      <Grid container justify="left" spacing={4}>
-        {product.map((product) => {
-          return (
-            <Grid item key={product.id} xs={6} sm={4} md={3} lg={2}>
-              <Product product={product} />
-            </Grid>
-          );
-        })}
-      </Grid>
+      <Container>
+        <Grid container justify="left" spacing={2}>
+          {product.map((product) => {
+            return (
+              <Grid item key={product.id} xs={6} sm={4} md={3} lg={2} xl={2}>
+                <Product product={product} />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Container>
     </main>
   );
 };

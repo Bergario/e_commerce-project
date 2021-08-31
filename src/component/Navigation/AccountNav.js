@@ -14,12 +14,15 @@ const AccountNav = () => {
 
   //REDUX
   const onLogout = () => {
-    dispatch(actions.logout);
+    console.log("test");
+    handleClose();
+    return dispatch(actions.logout);
   };
 
   const { isAuth } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
   }));
+  console.log(isAuth);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,7 +33,7 @@ const AccountNav = () => {
   };
 
   let menuItem = (
-    <MenuItem component={Link} to="/auth" onClick={handleClose}>
+    <MenuItem component={Link} to="/auth/login" onClick={handleClose}>
       Login
     </MenuItem>
   );
@@ -40,10 +43,10 @@ const AccountNav = () => {
       <MenuItem key="1" onClick={handleClose}>
         Profile
       </MenuItem>,
-      <MenuItem key="2" onClick={handleClose}>
+      <MenuItem key="2" component={Link} to="/order" onClick={handleClose}>
         My order
       </MenuItem>,
-      <MenuItem key="3" onClick={() => onLogout()}>
+      <MenuItem key="3" onClick={() => dispatch(onLogout())}>
         Logout
       </MenuItem>,
     ];
@@ -53,8 +56,7 @@ const AccountNav = () => {
       <IconButton
         aria-label="Show cart item"
         color="inherit"
-        onClick={handleClick}
-      >
+        onClick={handleClick}>
         <AccountCircle color="action" />
       </IconButton>
       <Menu
@@ -63,8 +65,7 @@ const AccountNav = () => {
         style={{ top: "30px" }}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+        onClose={handleClose}>
         {menuItem}
       </Menu>
     </div>

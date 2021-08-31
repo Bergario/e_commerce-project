@@ -3,10 +3,9 @@ import axios from "axios";
 
 import * as actionTypes from "./actionTypes";
 
-export const Cart = (cartId, cart) => {
+export const Cart = (cart) => {
   return {
     type: actionTypes.FETCH_CART_SUCCESS,
-    cartId,
     cart,
   };
 };
@@ -50,62 +49,76 @@ export const emptyCartSuccess = (cart) => {
   };
 };
 
-export const fetchCart = (cartId) => {
-  const cardID = cartId && cartId;
-  return (dispatch) => {
-    dispatch(cartStart());
-    const cart = async () =>
-      await commerce.cart
-        .retrieve(cardID)
-        .then((cart) => dispatch(Cart(cardID, cart)));
-    cart();
-  };
-};
-
-export const cartLoad = (customerId) => {
+export const fetchCart = () => {
+  console.log("jalan");
   return (dispatch) => {
     axios
-      .get(`http://localhost:9000/user/cart/${customerId}`)
+      .get(`http://localhost:9000/cart/`, { withCredentials: true })
       .then((response) => {
-        const cartID = response.data.meta.cartId;
-        dispatch(fetchCart(cartID));
+        dispatch(Cart(response.data));
       })
       .catch((err) => err);
   };
 };
 
-export const addCart = (productId, quantity) => {
+export const cartLoad = (cartId) => {
   return (dispatch) => {
-    const cart = async () =>
-      await commerce.cart
-        .add(productId, quantity)
-        .then((response) => dispatch(addCartSuccess(response.cart)))
-        .catch((error) => console.log(error));
-    cart();
+    axios
+      .get(`http://localhost:9000/cart/${cartId}`)
+      .then((response) => {
+        dispatch(fetchCart(cartId));
+      })
+      .catch((err) => err);
+  };
+};
+
+export const addCart = (productId) => {
+  console.log("productId", productId);
+  return (dispatch) => {
+    axios
+      .post(
+        `http://localhost:9000/cart/`,
+        { productId },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        dispatch(addCartSuccess(response.data));
+      })
+      .catch((err) => err);
   };
 };
 
 export const updateCart = (productId, quantity) => {
+  console.log("qq", quantity);
   return (dispatch) => {
     dispatch(actionCartStart());
-    const cart = async () =>
-      commerce.cart
-        .update(productId, { quantity })
-        .then((response) => dispatch(updateCartSuccess(response.cart)))
-        .catch((error) => console.log(error));
-    cart();
+    axios
+      .patch(
+        `http://localhost:9000/cart/`,
+        { productId, quantity },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        dispatch(addCartSuccess(response.data));
+      })
+      .catch((err) => err);
   };
 };
 
-export const deleteCart = (productId) => {
+export const deleteCart = (itemId) => {
+  console.log(itemId);
   return (dispatch) => {
     dispatch(actionCartStart());
-    const cart = async () =>
-      await commerce.cart
-        .remove(productId)
-        .then((response) => dispatch(deleteCartSuccess(response.cart)))
-        .catch((error) => console.log(error));
-    cart();
+    axios
+      .patch(
+        `http://localhost:9000/cart/deleteItem`,
+        { itemId },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        dispatch(deleteCartSuccess(response.data));
+      })
+      .catch((err) => err);
   };
 };
 

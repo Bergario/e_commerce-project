@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 import {
   InputLabel,
@@ -8,6 +9,7 @@ import {
   Button,
   Grid,
   Typography,
+  Container,
 } from "@material-ui/core";
 import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "./FormInput";
@@ -27,6 +29,7 @@ const AddressForm = ({ next, isValid }) => {
   useEffect(() => {
     let isMounted = true;
     axios.get("http://localhost:9000/ongkir/province").then((response) => {
+      console.log(response);
       const dataProv = response.data.rajaongkir.results;
       isMounted && setProvinsi(dataProv);
     });
@@ -58,8 +61,11 @@ const AddressForm = ({ next, isValid }) => {
         <MenuItem
           key={data.province_id}
           value={data.province}
-          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
-        >
+          onClick={kabupatenHandler.bind(
+            this,
+            data.province_id,
+            data.province
+          )}>
           {data.province}
         </MenuItem>
       ))
@@ -71,8 +77,7 @@ const AddressForm = ({ next, isValid }) => {
         key={data.city_id}
         value={data.city_name}
         required
-        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
-      >
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}>
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -95,75 +100,78 @@ const AddressForm = ({ next, isValid }) => {
       <Typography variant="h6" align="center" gutterBottom>
         Shipping Address
       </Typography>
-      <FormProvider {...method}>
-        <form onSubmit={method.handleSubmit((data) => next(data))}>
-          <Grid
-            style={{ justifyContent: "space-around" }}
-            container
-            spacing={3}
-          >
-            <FormInput
-              name="name"
-              label="nama"
-              error={isValid && isValid.name}
-            />
-            <FormInput required name="telepon" label="telepon" />
-            <FormInput
-              required
-              name="email"
-              label="email"
-              error={isValid && isValid.email}
-            />
-            <FormInput required name="address" label="alamat" />
+      <Container>
+        <FormProvider {...method}>
+          <form onSubmit={method.handleSubmit((data) => next(data))}>
+            <Grid
+              style={{ justifyContent: "space-around" }}
+              container
+              spacing={2}>
+              <Grid item xs={11} sm={8}>
+                <FormInput
+                  name="name"
+                  label="nama penerima"
+                  required
+                  error={isValid && isValid.name}
+                />
+              </Grid>
 
-            <Grid item xs={10} sm={5}>
-              <InputLabel>provinsi</InputLabel>
-              <Select
-                value={selectedProv}
-                fullWidth
-                {...method.register("provinsi")}
-              >
-                {Provinsi}
-              </Select>
+              <Grid item xs={11} sm={8}>
+                <FormInput required name="telepon" label="telepon" />
+              </Grid>
+
+              <Grid item xs={11} sm={8}>
+                <InputLabel>provinsi</InputLabel>
+                <Select
+                  value={selectedProv}
+                  fullWidth
+                  {...method.register("provinsi")}>
+                  {Provinsi}
+                </Select>
+              </Grid>
+
+              <Grid item xs={11} sm={8}>
+                <InputLabel>kabupaten / kota</InputLabel>
+                <Select
+                  value={selectedKab}
+                  fullWidth
+                  {...method.register("kabupaten", { required: true })}>
+                  {Kabupaten}
+                </Select>
+              </Grid>
+
+              <Grid item xs={11} sm={8}>
+                <FormInput required name="address" label="alamat" />
+              </Grid>
+
+              <Grid item xs={11} sm={8}>
+                <InputLabel>opsi pengiriman</InputLabel>
+                <Select
+                  value={selectedPengiriman}
+                  fullWidth
+                  {...method.register("ongkir", { required: true })}
+                  onChange={(e) => {
+                    setSelectedPengiriman(e.target.value);
+                  }}>
+                  {Pengiriman}
+                </Select>
+              </Grid>
             </Grid>
-
-            <Grid item xs={10} sm={5}>
-              <InputLabel>kabupaten / kota</InputLabel>
-              <Select
-                value={selectedKab}
-                fullWidth
-                {...method.register("kabupaten", { required: true })}
-              >
-                {Kabupaten}
-              </Select>
+            <Grid container className={classes.button}>
+              <Button
+                component={Link}
+                to="/cart"
+                type="button"
+                variant="contained">
+                Back
+              </Button>
+              <Button type="submit" variant="contained" color="primary">
+                Next
+              </Button>
             </Grid>
-
-            <Grid item xs={10} sm={5}>
-              <InputLabel>opsi pengiriman</InputLabel>
-              <Select
-                value={selectedPengiriman}
-                fullWidth
-                {...method.register("ongkir", { required: true })}
-                onChange={(e) => {
-                  setSelectedPengiriman(e.target.value);
-                }}
-              >
-                {Pengiriman}
-              </Select>
-            </Grid>
-
-            <FormInput required name="kode_pos" label="kode pos" />
-          </Grid>
-          <Grid container className={classes.button}>
-            <Button type="button" variant="contained">
-              Back
-            </Button>
-            <Button type="submit" variant="contained" color="primary">
-              Next
-            </Button>
-          </Grid>
-        </form>
-      </FormProvider>
+          </form>
+        </FormProvider>
+      </Container>
     </>
   );
 };

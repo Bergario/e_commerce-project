@@ -2,7 +2,7 @@ import * as actionTypes from "../actions/actionTypes";
 import { objectUpdate } from "../../Utils/Utilities";
 
 const initialState = {
-  cartId: null,
+  // cartId: null,
   cart: [],
   loading: false,
 };
@@ -14,7 +14,6 @@ const fetchCartStart = (state, action) => {
 };
 const fetchCartSuccess = (state, action) => {
   return objectUpdate(state, {
-    cartId: action.cartId,
     cart: action.cart,
     loading: false,
   });

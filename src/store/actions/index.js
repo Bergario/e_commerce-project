@@ -7,6 +7,7 @@ export {
   authSignupSuccess,
   authSignupStart,
   logout,
+  authTimeout,
 } from "./auth";
 
 export {
@@ -24,3 +25,5 @@ export {
   productFecthFail,
   product,
 } from "./product";
+
+export { modalClose, modalOpen } from "./modal";
