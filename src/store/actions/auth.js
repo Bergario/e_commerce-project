@@ -50,6 +50,7 @@ export const logoutSuccess = () => {
   if (token) {
     cookie.remove("cartId");
     cookie.remove("token");
+    cookie.remove("user_id");
   }
   localStorage.removeItem("customer_token");
   localStorage.removeItem("expiredTime");
