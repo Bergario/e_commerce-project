@@ -14,7 +14,8 @@ const CartItemMobile = ({ products }) => {
   //REDUX
   const onUpdateQuantity = (productId, qty) =>
     dispatch(actions.updateCart(productId, qty));
-  const onRemoveFromCart = (itemId) => dispatch(actions.deleteCart(itemId));
+  const onRemoveFromCart = (itemId, productId) =>
+    dispatch(actions.deleteCart(itemId, productId));
 
   const { product, quantity, _id } = products;
 
@@ -44,18 +45,20 @@ const CartItemMobile = ({ products }) => {
           </Grid>
         </Grid>
       </div>
-      <IconButton onClick={() => onRemoveFromCart(_id)}>
+      <IconButton onClick={() => onRemoveFromCart(_id, product._id)}>
         <DeleteForever style={{ marginRight: "15px" }} />
       </IconButton>
       <IconButton
         onClick={() => onUpdateQuantity(product._id, -1)}
-        className={classes.quantityButton}>
+        className={classes.quantityButton}
+      >
         <Remove fontSize="small" />
       </IconButton>
       <span className={classes.quantity}>{quantity}</span>
       <IconButton
         onClick={() => onUpdateQuantity(product._id, +1)}
-        className={classes.quantityButton}>
+        className={classes.quantityButton}
+      >
         <Add fontSize="small" />
       </IconButton>
     </Grid>

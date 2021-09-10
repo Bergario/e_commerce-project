@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import useStyles from "./styles";
@@ -20,6 +20,8 @@ import {
   useMediaQuery,
 } from "@material-ui/core";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 import CartItem from "./CartItem/CartItem";
 import CartItemMobile from "./CartItem/CartItemMobile";
 import * as actions from "../../store/actions/index";
@@ -35,13 +37,23 @@ const Cart = ({ cartProduct }) => {
   const isMatch = useMediaQuery(theme.breakpoints.only("xs"));
 
   //REDUCER
-  const { onLoading, isAuth } = useSelector((state) => ({
+  const { onLoading, isAuth, error } = useSelector((state) => ({
     onLoading: state.cart.loading,
     isAuth: state.auth.token !== null,
+    error: state.cart.error,
   }));
+
+  const [open, setOpen] = useState(error !== null);
 
   //REDUX ACTIONS
   const onEmptyCart = () => dispatch(actions.emptyCart);
+
+  const handleClose = (reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const EmptyCart = () => {
     return (
@@ -50,8 +62,6 @@ const Cart = ({ cartProduct }) => {
       </Typography>
     );
   };
-
-  console.log(cartProduct);
 
   const FilledCart = useMemo(() => {
     return (
@@ -62,11 +72,13 @@ const Cart = ({ cartProduct }) => {
         xxs={12}
         sm={12}
         md={12}
-        lg={12}>
+        lg={12}
+      >
         <TableContainer
           className={classes.table}
           aria-label="simple table"
-          component={Paper}>
+          component={Paper}
+        >
           <TableHead>
             <TableRow>
               <TableCell>Product</TableCell>
@@ -105,7 +117,8 @@ const Cart = ({ cartProduct }) => {
               type="button"
               variant="contained"
               color="secondary"
-              onClick={() => dispatch(onEmptyCart())}>
+              onClick={() => dispatch(onEmptyCart())}
+            >
               Empty Cart
             </Button>
             <Button
@@ -115,7 +128,8 @@ const Cart = ({ cartProduct }) => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/checkout">
+              to="/checkout"
+            >
               Checkout
             </Button>
           </div>
@@ -145,7 +159,8 @@ const Cart = ({ cartProduct }) => {
               color="primary"
               type="button"
               size="small"
-              variant="contained">
+              variant="contained"
+            >
               {isAuth ? "beli" : "login untuk Beli"}
             </Button>
           </Grid>
@@ -168,6 +183,21 @@ const Cart = ({ cartProduct }) => {
       ) : (
         FilledCart
       )}
+      <Snackbar
+        className={classes.snackbar}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <MuiAlert
+          onClose={handleClose}
+          elevation={6}
+          variant="filled"
+          severity="warning"
+        >
+          Stok tidak cukup
+        </MuiAlert>
+      </Snackbar>
     </Container>
   );
 };

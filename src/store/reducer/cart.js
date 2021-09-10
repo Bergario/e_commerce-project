@@ -5,6 +5,7 @@ const initialState = {
   // cartId: null,
   cart: [],
   loading: false,
+  error: null,
 };
 
 const fetchCartStart = (state, action) => {
@@ -22,17 +23,31 @@ const addCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
     loading: false,
+    error: null,
   });
 };
-const actionhCartStart = (state, action) => {
+const addCartError = (state, action) => {
+  return objectUpdate(state, {
+    error: action.error,
+    loading: false,
+  });
+};
+const actionCartStart = (state, action) => {
   return objectUpdate(state, {
     loading: true,
+    error: null,
   });
 };
-const updatehCart = (state, action) => {
+const updateCart = (state, action) => {
   return objectUpdate(state, {
     cart: action.cart,
     loading: false,
+  });
+};
+const updateCartError = (state, action) => {
+  return objectUpdate(state, {
+    loading: false,
+    error: action.error,
   });
 };
 const deletehCart = (state, action) => {
@@ -51,15 +66,19 @@ const emptyCart = (state, action) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ACTION_CART_START:
-      return actionhCartStart(state, action);
+      return actionCartStart(state, action);
     case actionTypes.FETCH_CART_START:
       return fetchCartStart(state, action);
     case actionTypes.FETCH_CART_SUCCESS:
       return fetchCartSuccess(state, action);
     case actionTypes.ADD_CART_SUCCESS:
       return addCart(state, action);
+    case actionTypes.ADD_CART_ERROR:
+      return addCartError(state, action);
     case actionTypes.UPDATE_CART_SUCCESS:
-      return updatehCart(state, action);
+      return updateCart(state, action);
+    case actionTypes.UPDATE_CART_ERROR:
+      return updateCartError(state, action);
     case actionTypes.DELETE_CART_SUCCESS:
       return deletehCart(state, action);
     case actionTypes.EMPTY_CART_SUCCESS:

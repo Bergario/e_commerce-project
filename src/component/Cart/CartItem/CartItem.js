@@ -22,7 +22,8 @@ const CartItem = React.memo(({ products }) => {
   //REDUX
   const onUpdateQuantity = (productId, qty) =>
     dispatch(actions.updateCart(productId, qty));
-  const onRemoveFromCart = (itemId) => dispatch(actions.deleteCart(itemId));
+  const onRemoveFromCart = (itemId, productId) =>
+    dispatch(actions.deleteCart(itemId, productId));
 
   //REDUCER
   const { cartId } = useSelector((state) => ({
@@ -45,7 +46,7 @@ const CartItem = React.memo(({ products }) => {
         </Grid>
       </TableCell>
       <TableCell>
-        <IconButton onClick={() => onRemoveFromCart(_id)}>
+        <IconButton onClick={() => onRemoveFromCart(_id, product._id)}>
           <DeleteForever />
         </IconButton>
       </TableCell>
@@ -54,7 +55,8 @@ const CartItem = React.memo(({ products }) => {
           onClick={() => onUpdateQuantity(product._id, -1)}
           type="button"
           size="small"
-          color="secondary">
+          color="secondary"
+        >
           -
         </Button>
         {quantity}
@@ -62,7 +64,8 @@ const CartItem = React.memo(({ products }) => {
           onClick={() => onUpdateQuantity(product._id, +1)}
           type="button"
           size="small"
-          color="secondary">
+          color="secondary"
+        >
           +
         </Button>
       </TableCell>

@@ -101,4 +101,9 @@ export default makeStyles((theme) => ({
     fontWeight: "600",
     margin: "0 10px",
   },
+  snackbar: {
+    [theme.breakpoints.only("xs")]: {
+      bottom: "10%",
+    },
+  },
 }));

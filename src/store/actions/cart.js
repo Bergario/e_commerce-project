@@ -23,6 +23,13 @@ export const addCartSuccess = (cart) => {
   };
 };
 
+export const addCartError = (error) => {
+  return {
+    type: actionTypes.ADD_CART_ERROR,
+    error,
+  };
+};
+
 export const actionCartStart = () => {
   return {
     type: actionTypes.ACTION_CART_START,
@@ -32,6 +39,13 @@ export const updateCartSuccess = (cart) => {
   return {
     type: actionTypes.UPDATE_CART_SUCCESS,
     cart,
+  };
+};
+
+export const updateCartError = (error) => {
+  return {
+    type: actionTypes.UPDATE_CART_ERROR,
+    error,
   };
 };
 
@@ -50,7 +64,6 @@ export const emptyCartSuccess = (cart) => {
 };
 
 export const fetchCart = () => {
-  console.log("jalan");
   return (dispatch) => {
     axios
       .get(`http://localhost:9000/cart/`, { withCredentials: true })
@@ -84,7 +97,7 @@ export const addCart = (productId) => {
       .then((response) => {
         dispatch(addCartSuccess(response.data));
       })
-      .catch((err) => err);
+      .catch((err) => dispatch(addCartError(err.response.data.err)));
   };
 };
 
@@ -101,18 +114,18 @@ export const updateCart = (productId, quantity) => {
       .then((response) => {
         dispatch(addCartSuccess(response.data));
       })
-      .catch((err) => err);
+      .catch((err) => dispatch(updateCartError(err.response.data)));
   };
 };
 
-export const deleteCart = (itemId) => {
+export const deleteCart = (itemId, productId) => {
   console.log(itemId);
   return (dispatch) => {
     dispatch(actionCartStart());
     axios
       .patch(
         `http://localhost:9000/cart/deleteItem`,
-        { itemId },
+        { itemId, productId },
         { withCredentials: true }
       )
       .then((response) => {

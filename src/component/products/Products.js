@@ -8,12 +8,13 @@ import Spinner from "../../Utils/Spinner";
 
 const Products = () => {
   //REDUCER
-  const { product, isLoading } = useSelector((state) => ({
+  const { product, isLoading, error } = useSelector((state) => ({
     product: state.product.product,
     isLoading: state.product.loading,
+    error: state.cart.error,
   }));
 
-  console.log(isLoading);
+  console.log(error);
 
   const classes = useStyles();
 
