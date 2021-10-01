@@ -14,8 +14,6 @@ const Products = () => {
     error: state.cart.error,
   }));
 
-  console.log(error);
-
   const classes = useStyles();
 
   if (isLoading) return <Spinner />;

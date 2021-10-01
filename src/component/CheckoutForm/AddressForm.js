@@ -45,6 +45,8 @@ const AddressForm = ({ next, isValid }) => {
     const dataKabupaten = response.data.rajaongkir.results;
     setKabupaten(dataKabupaten);
     setSelectedProv(prov);
+    console.log("teszt");
+
     return prov;
   };
 
@@ -61,11 +63,8 @@ const AddressForm = ({ next, isValid }) => {
         <MenuItem
           key={data.province_id}
           value={data.province}
-          onClick={kabupatenHandler.bind(
-            this,
-            data.province_id,
-            data.province
-          )}>
+          onClick={kabupatenHandler.bind(this, data.province_id, data.province)}
+        >
           {data.province}
         </MenuItem>
       ))
@@ -77,7 +76,8 @@ const AddressForm = ({ next, isValid }) => {
         key={data.city_id}
         value={data.city_name}
         required
-        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}>
+        onClick={pengirimanHandler.bind(this, data.city_id, data.city_name)}
+      >
         {`${data.type} ${data.city_name}`}
       </MenuItem>
     ))
@@ -106,7 +106,8 @@ const AddressForm = ({ next, isValid }) => {
             <Grid
               style={{ justifyContent: "space-around" }}
               container
-              spacing={2}>
+              spacing={2}
+            >
               <Grid item xs={11} sm={8}>
                 <FormInput
                   name="name"
@@ -125,7 +126,8 @@ const AddressForm = ({ next, isValid }) => {
                 <Select
                   value={selectedProv}
                   fullWidth
-                  {...method.register("provinsi")}>
+                  {...method.register("provinsi")}
+                >
                   {Provinsi}
                 </Select>
               </Grid>
@@ -135,7 +137,8 @@ const AddressForm = ({ next, isValid }) => {
                 <Select
                   value={selectedKab}
                   fullWidth
-                  {...method.register("kabupaten", { required: true })}>
+                  {...method.register("kabupaten", { required: true })}
+                >
                   {Kabupaten}
                 </Select>
               </Grid>
@@ -152,7 +155,8 @@ const AddressForm = ({ next, isValid }) => {
                   {...method.register("ongkir", { required: true })}
                   onChange={(e) => {
                     setSelectedPengiriman(e.target.value);
-                  }}>
+                  }}
+                >
                   {Pengiriman}
                 </Select>
               </Grid>
@@ -162,7 +166,8 @@ const AddressForm = ({ next, isValid }) => {
                 component={Link}
                 to="/cart"
                 type="button"
-                variant="contained">
+                variant="contained"
+              >
                 Back
               </Button>
               <Button type="submit" variant="contained" color="primary">

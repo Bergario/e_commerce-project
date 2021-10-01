@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as actions from "../../store/actions/index";
@@ -22,7 +22,6 @@ const AccountNav = () => {
   const { isAuth } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
   }));
-  console.log(isAuth);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -56,7 +55,8 @@ const AccountNav = () => {
       <IconButton
         aria-label="Show cart item"
         color="inherit"
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         <AccountCircle color="action" />
       </IconButton>
       <Menu
@@ -65,7 +65,8 @@ const AccountNav = () => {
         style={{ top: "30px" }}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}>
+        onClose={handleClose}
+      >
         {menuItem}
       </Menu>
     </div>

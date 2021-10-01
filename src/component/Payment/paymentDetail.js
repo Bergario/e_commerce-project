@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { Grid, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 // import gambar from "../../assets/bank logo/bca.png";
@@ -53,11 +53,18 @@ const PaymentDetail = () => {
   }, [id]);
 
   if (!transaction) return null;
-  const { order_id, va_numbers } = transaction.data;
+  const { order_id, va_numbers, transaction_status } = transaction.data;
+  const title =
+    transaction_status == "pending" ? (
+      <h3>Menunggu pembayaran</h3>
+    ) : (
+      <h3>Expired</h3>
+    );
+
   return (
     <Container>
       <Grid className={classes.root}>
-        <h3>Menunggu pembayaran</h3>
+        {title}
         <p>Order ID : {transaction && order_id}</p>
         <Grid className={classes.paymentBox}>
           <Grid>

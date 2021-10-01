@@ -1,11 +1,14 @@
 import React from "react";
-import { Grid, Typography, CardMedia, Link, Button } from "@material-ui/core";
+import { Grid, Typography, CardMedia, Button } from "@material-ui/core";
 import { LocalMall } from "@material-ui/icons/";
+import { Link } from "react-router-dom";
 
 import useStyle from "../styles";
 
-const OrderItem = () => {
+const OrderItem = (props) => {
   const classes = useStyle();
+  console.log("prop", props);
+
   return (
     <Grid className={classes.orderItemBox}>
       <Grid align-items="center" style={{ display: "flex" }}>
@@ -47,7 +50,11 @@ const OrderItem = () => {
           </Grid>
         </Grid>
       </div>
-      <Button className={classes.buttonDetailTransaksi}>
+      <Button
+        className={classes.buttonDetailTransaksi}
+        to={"/status?order_id=" + props.orderId}
+        component={Link}
+      >
         Lihat Detail Transaksi
       </Button>
     </Grid>

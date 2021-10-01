@@ -29,7 +29,8 @@ const NavBar = ({ totalItems }) => {
             to="/"
             variant="h6"
             className={classes.title}
-            color="inherit">
+            color="inherit"
+          >
             <img
               src={logo}
               alt="product.js"
@@ -45,7 +46,8 @@ const NavBar = ({ totalItems }) => {
                 component={Link}
                 to="/cart"
                 aria-label="Show cart item"
-                color="inherit">
+                color="inherit"
+              >
                 <Badge badgeContent={totalItems} color="secondary">
                   <ShoppingCart color="action" />
                 </Badge>

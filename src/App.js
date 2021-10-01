@@ -9,7 +9,7 @@ import Cart from "./component/Cart/Cart";
 import Dashboard from "./component/Admin/dashboard/Dashboard";
 import PaymentDetail from "./component/Payment/paymentDetail";
 
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, useLocation } from "react-router-dom";
 import Checkout from "./component/CheckoutForm/Checkout/Checkout";
 import Auth from "./component/Auth/Auth";
 import * as actions from "./store/actions/index";
@@ -18,6 +18,9 @@ import Orders from "./component/Order/Orders";
 const App = () => {
   //REDUX
   const dispatch = useDispatch();
+
+  const location = useLocation();
+  console.log("dadass", location);
 
   const onAuthCheckState = () => dispatch(actions.authCheckState);
   const onProductFetch = () => dispatch(actions.product);
@@ -30,8 +33,6 @@ const App = () => {
     cart: state.cart.cart,
   }));
 
-  console.log(isAuth);
-
   const [carti, setCart] = useState([]);
 
   useEffect(() => {
@@ -39,11 +40,14 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(onAuthCheckState());
     onFetchCart();
+  }, [isAuth]);
+
+  useEffect(() => {
     const expired = new Date(localStorage.getItem("expiredTime")).getTime();
     expired && onAuthTimeout(expired - new Date().getTime());
-  }, [isAuth]);
+    dispatch(onAuthCheckState());
+  }, [location.pathname]);
 
   const refreshCart = async () => {
     const newCart = await commerce.cart.refresh();

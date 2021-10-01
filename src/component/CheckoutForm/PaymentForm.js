@@ -9,17 +9,15 @@ const PaymentForm = ({
   shippingData,
   onPaymentHandler,
 }) => {
-  console.log(checkoutCart);
-  const itemDetails = checkoutCart.line_items.map(
-    ({ product, _id, quantity }) => {
-      return {
-        id: _id,
-        price: product.price,
-        quantity: quantity,
-        name: product.name,
-      };
-    }
-  );
+  console.log("de", checkoutCart);
+  const itemDetails = checkoutCart.line_items.map(({ product, quantity }) => {
+    return {
+      product_id: product._id,
+      price: product.price,
+      quantity,
+      name: product.name,
+    };
+  });
 
   const ongkir = shippingData.ongkir;
   const total_price = checkoutCart.total_price + shippingData.ongkir;
@@ -47,7 +45,8 @@ const PaymentForm = ({
             display: "flex",
             justifyContent: "space-between",
             margin: "20px 10px",
-          }}>
+          }}
+        >
           {/* <Button variant="outline" onClick={() => backStep()}> */}
           <Button variant="contained" onClick={() => backStep()}>
             back
