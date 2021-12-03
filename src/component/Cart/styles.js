@@ -16,8 +16,10 @@ export default makeStyles((theme) => ({
   },
   title: {
     fontSize: "1.5rem",
+    fontFamily: "Lora",
     [theme.breakpoints.only("xs")]: {
       fontSize: "1rem",
+      fontFamily: "Lora",
     },
   },
   emptyButton: {
@@ -105,5 +107,8 @@ export default makeStyles((theme) => ({
     [theme.breakpoints.only("xs")]: {
       bottom: "10%",
     },
+  },
+  emptycart: {
+    fontFamily: "Lora",
   },
 }));

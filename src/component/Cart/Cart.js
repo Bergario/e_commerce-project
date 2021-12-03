@@ -57,7 +57,7 @@ const Cart = ({ cartProduct }) => {
 
   const EmptyCart = () => {
     return (
-      <Typography>
+      <Typography className={classes.emptycart}>
         Keranjang Kosong! <Link to="/">Silahkan pilih barang..</Link>
       </Typography>
     );

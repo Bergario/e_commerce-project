@@ -39,8 +39,12 @@ const App = () => {
     dispatch(onProductFetch());
   }, []);
 
+  console.log(cart);
+
   useEffect(() => {
-    onFetchCart();
+    setTimeout(() => {
+      onFetchCart();
+    }, 2000);
   }, [isAuth]);
 
   useEffect(() => {

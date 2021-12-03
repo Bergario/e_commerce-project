@@ -11,6 +11,7 @@ import cartReducer from "./store/reducer/cart";
 import productReducer from "./store/reducer/product";
 import modalReducer from "./store/reducer/modal";
 import Modal from "./Utils/modal";
+import "./index.css";
 
 const rootReducer = combineReducers({
   auth: authReducer,

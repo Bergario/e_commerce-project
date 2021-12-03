@@ -102,7 +102,7 @@ export const addCart = (productId) => {
 };
 
 export const updateCart = (productId, quantity) => {
-  console.log("qq", quantity);
+  console.log("qq", productId);
   return (dispatch) => {
     dispatch(actionCartStart());
     axios

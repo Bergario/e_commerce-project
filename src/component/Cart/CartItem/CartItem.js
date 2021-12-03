@@ -61,7 +61,7 @@ const CartItem = React.memo(({ products }) => {
         </Button>
         {quantity}
         <Button
-          onClick={() => onUpdateQuantity(product._id, +1)}
+          onClick={() => onUpdateQuantity(product._id, 1)}
           type="button"
           size="small"
           color="secondary"
