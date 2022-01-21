@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
 import { Grid, Button, MenuItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -22,8 +23,12 @@ const AddProductForm = () => {
   const [category, setCategory] = useState();
 
   const fileSelectedHandler = (e) => {
-    setSelectedFile(e.target.files[0]);
+    new Compressor(e.target.files[0], {
+      quality: 0.6,
+      success: (imgFile) => setSelectedFile(imgFile),
+    });
   };
+  console.log(selectedFile);
 
   useEffect(() => {
     let isMounted = true;
@@ -48,7 +53,9 @@ const AddProductForm = () => {
 
     axios
       .post("http://localhost:9000/product/", dataProduct, {
-        headers: `Bearer ${token}`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((response) => {
         method.reset();
@@ -62,7 +69,8 @@ const AddProductForm = () => {
       <form
         id="product-form"
         className={classes.form}
-        onSubmit={method.handleSubmit((data) => uploadProductHandler(data))}>
+        onSubmit={method.handleSubmit((data) => uploadProductHandler(data))}
+      >
         <Title>Tambah product</Title>
 
         <Grid container spacing={3}>
@@ -128,7 +136,8 @@ const AddProductForm = () => {
               select
               name="category"
               autoComplete="category"
-              autoFocus>
+              autoFocus
+            >
               <MenuItem value="">-</MenuItem>
               {category &&
                 category.map((res) => {

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, lazy } from "react";
 import {
   Card,
-  CardMedia,
+  // CardMedia,
   CardContent,
   CardActions,
   Typography,
@@ -15,6 +15,11 @@ import useStyles from "./styles";
 import * as actions from "../../../store/actions/index";
 import { priceFormat } from "../../../Utils/Utilities";
 import DetailProduct from "../detailProduct/detailProduct";
+import { AnimationDiv, AnimationP } from "../../../Utils/animation";
+
+const CardMedia = lazy(() =>
+  import("@material-ui/core").then((mod) => ({ default: mod.CardMedia }))
+);
 
 const Product = ({ product }) => {
   const classes = useStyles();
@@ -28,28 +33,39 @@ const Product = ({ product }) => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Card className={classes.root}>
-      <CardMedia
-        className={classes.media}
-        image={product.productImage}
-        title={product.name}
-        onClick={() => handleToggle()}
-      />
+    // <Card className={classes.root}>
+    <Card>
+      <AnimationDiv
+        // whileHover={{ scale: 1.07 }}
+        transition={{ duration: 0.5 }}
+        classes={classes.animDiv}
+      >
+        <CardMedia
+          className={classes.media}
+          image={product.productImage}
+          title={product.name}
+          onClick={() => handleToggle()}
+        />
+      </AnimationDiv>
+
       <CardContent>
-        {/* <div className={classes.cardContent}> */}
+        {/* <AnimationP classes={classes.animP}> */}
         <Typography className={classes.title} gutterBottom>
           {product.name}
         </Typography>
+
         <Typography className={classes.price} variant="subtitle2">
           {priceFormat(product.price)}
         </Typography>
-        {/* </div> */}
+
         <Typography
           dangerouslySetInnerHTML={{ __html: product.description }}
           className={classes.description}
           color="textSecondary"
         />
+        {/* </AnimationP> */}
       </CardContent>
+
       <CardActions disableSpacing className={classes.cardActions}>
         <IconButton
           aria-label="Add to cart"

@@ -27,6 +27,7 @@ import CartItemMobile from "./CartItem/CartItemMobile";
 import * as actions from "../../store/actions/index";
 import Spinner from "../../Utils/Spinner";
 import { priceFormat } from "../../Utils/Utilities";
+import { AnimationDiv } from "../../Utils/animation";
 
 const Cart = ({ cartProduct }) => {
   const products = cartProduct.line_items;
@@ -57,9 +58,11 @@ const Cart = ({ cartProduct }) => {
 
   const EmptyCart = () => {
     return (
-      <Typography className={classes.emptycart}>
-        Keranjang Kosong! <Link to="/">Silahkan pilih barang..</Link>
-      </Typography>
+      <AnimationDiv>
+        <Typography className={classes.emptycart}>
+          Keranjang Kosong! <Link to="/">Silahkan pilih barang..</Link>
+        </Typography>
+      </AnimationDiv>
     );
   };
 

@@ -16,7 +16,7 @@ const Products = () => {
 
   const classes = useStyles();
 
-  if (isLoading) return <Spinner />;
+  // if (isLoading) return <Spinner />;
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />

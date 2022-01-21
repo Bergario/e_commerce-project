@@ -55,7 +55,7 @@ const DetailProduct = ({ product, open, handleClose }) => {
         }}
       >
         <Fade in={open}>
-          <div className={classes.style}>
+          <Box className={classes.style}>
             <Grid className={classes.card}>
               <Grid item xs={4}>
                 <div className={classes.frame}>
@@ -70,7 +70,7 @@ const DetailProduct = ({ product, open, handleClose }) => {
                 <h3>{product.name}</h3>
               </Grid>
             </Grid>
-          </div>
+          </Box>
         </Fade>
       </Modal>
     </div>
