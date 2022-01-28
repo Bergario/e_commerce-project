@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const DetailProduct = ({ product, open, handleClose }) => {
   const classes = useStyles();
 
-  console.log("12", handleClose);
+  // console.log("detailproduct rendering");
   return (
     <div>
       <Modal
@@ -77,4 +77,4 @@ const DetailProduct = ({ product, open, handleClose }) => {
   );
 };
 
-export default DetailProduct;
+export default React.memo(DetailProduct);

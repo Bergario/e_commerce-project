@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { Grid, Container, Backdrop } from "@material-ui/core";
 import { useSelector } from "react-redux";
 
@@ -8,20 +8,38 @@ import Spinner from "../../Utils/Spinner";
 
 const Products = () => {
   //REDUCER
-  const { product, isLoading, error } = useSelector((state) => ({
-    product: state.product.product,
-    isLoading: state.product.loading,
-    error: state.cart.error,
+  const { products, isLoading, error } = useSelector((state) => ({
+    products: state.product.product,
+    // isLoading: state.product.loading,
+    // error: state.cart.error,
   }));
-
   const classes = useStyles();
 
-  // if (isLoading) return <Spinner />;
+  console.log("dfdsdfs", products);
+
+  const Prod = useMemo(
+    () => (
+      <Grid container justify="left" spacing={2}>
+        {products &&
+          products.map((product) => {
+            console.log("aaa");
+            return (
+              <Grid item key={product.id} xs={6} sm={4} md={3} lg={2} xl={2}>
+                <Product product={product} />
+              </Grid>
+            );
+          })}
+      </Grid>
+    ),
+    [products]
+  );
+
+  if (isLoading) return <Spinner />;
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <Container>
-        <Grid container justify="left" spacing={2}>
+        {/* <Grid container justify="left" spacing={2}>
           {product.map((product) => {
             return (
               <Grid item key={product.id} xs={6} sm={4} md={3} lg={2} xl={2}>
@@ -29,10 +47,11 @@ const Products = () => {
               </Grid>
             );
           })}
-        </Grid>
+        </Grid> */}
+        {Prod}
       </Container>
     </main>
   );
 };
 
-export default Products;
+export default React.memo(Products);

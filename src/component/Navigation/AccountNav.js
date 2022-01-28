@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 import { Link, useHistory, Route } from "react-router-dom";
@@ -13,29 +13,31 @@ const AccountNav = () => {
   const dispatch = useDispatch();
 
   //REDUX
-  const onLogout = () => {
+  const onLogout = useCallback(() => {
     console.log("test");
     handleClose();
     return dispatch(actions.logout);
-  };
+  }, []);
 
   const { isAuth } = useSelector((state) => ({
     isAuth: state.auth.token !== null,
   }));
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, [setAnchorEl]);
 
-  let menuItem = (
-    <MenuItem component={Link} to="/auth/login" onClick={handleClose}>
-      Login
-    </MenuItem>
-  );
+  let menuItem = useMemo(() => {
+    return (
+      <MenuItem component={Link} to="/auth/login" onClick={handleClose}>
+        Login
+      </MenuItem>
+    );
+  }, []);
 
   if (isAuth)
     menuItem = [
@@ -73,4 +75,4 @@ const AccountNav = () => {
   );
 };
 
-export default AccountNav;
+export default React.memo(AccountNav);

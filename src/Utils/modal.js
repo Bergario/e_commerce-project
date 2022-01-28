@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleModal() {
+const SimpleModal = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { modal } = useSelector((state) => ({
@@ -30,7 +30,7 @@ export default function SimpleModal() {
   }));
 
   //REDUX
-  const onModalClose = () => dispatch(actions.modalClose());
+  const onModalClose = useCallback(() => dispatch(actions.modalClose()), []);
 
   const body = (
     <div className={classes.paper}>
@@ -48,9 +48,12 @@ export default function SimpleModal() {
         open={modal}
         onClose={onModalClose}
         aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description">
+        aria-describedby="simple-modal-description"
+      >
         {body}
       </Modal>
     </div>
   );
-}
+};
+
+export default React.memo(SimpleModal);

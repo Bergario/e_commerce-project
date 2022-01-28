@@ -21,7 +21,7 @@ import useStyles from "./styles";
 
 const steps = ["Shippping Address", "Payment Detail"];
 
-const Checkout = ({ cart }) => {
+const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
   const [checkoutToken, setCheckoutToken] = useState({});

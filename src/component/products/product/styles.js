@@ -6,9 +6,17 @@ export default makeStyles((theme) => ({
   },
 
   media: {
-    height: 0,
-    paddingTop: "56.25%",
+    // height: 0,
+    // paddingTop: "56.25%",
     cursor: "pointer",
+    display: "block",
+    margin: "0 auto",
+    maxWidth: "100%",
+    minHeight: "160px",
+    maxHeight: "165px",
+  },
+  lazyImg: {
+    display: "block !important",
   },
 
   // cardContent: {

@@ -29,20 +29,21 @@ import Spinner from "../../Utils/Spinner";
 import { priceFormat } from "../../Utils/Utilities";
 import { AnimationDiv } from "../../Utils/animation";
 
-const Cart = ({ cartProduct }) => {
-  const products = cartProduct.line_items;
-
+const Cart = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMatch = useMediaQuery(theme.breakpoints.only("xs"));
 
   //REDUCER
-  const { onLoading, isAuth, error } = useSelector((state) => ({
+  const { onLoading, isAuth, error, cartProduct } = useSelector((state) => ({
     onLoading: state.cart.loading,
     isAuth: state.auth.token !== null,
     error: state.cart.error,
+    cartProduct: state.cart.cart,
   }));
+
+  const products = cartProduct.line_items;
 
   const [open, setOpen] = useState(error !== null);
 

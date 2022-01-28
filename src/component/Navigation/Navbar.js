@@ -10,15 +10,20 @@ import {
 } from "@material-ui/core";
 import { ShoppingCart } from "@material-ui/icons";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import useStyles from "./styles";
 
 import logo from "../../assets/logo.png";
 import AccountNav from "./AccountNav";
 
-const NavBar = ({ totalItems }) => {
+const NavBar = () => {
   const classes = useStyles();
   const Location = useLocation();
+
+  const { cart } = useSelector((state) => ({
+    cart: state.cart.cart,
+  }));
 
   return (
     <>
@@ -48,7 +53,7 @@ const NavBar = ({ totalItems }) => {
                 aria-label="Show cart item"
                 color="inherit"
               >
-                <Badge badgeContent={totalItems} color="secondary">
+                <Badge badgeContent={cart.total_unique_item} color="secondary">
                   <ShoppingCart color="action" />
                 </Badge>
               </IconButton>
@@ -61,4 +66,4 @@ const NavBar = ({ totalItems }) => {
   );
 };
 
-export default NavBar;
+export default React.memo(NavBar);

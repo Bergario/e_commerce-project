@@ -1,4 +1,4 @@
-import React, { useState, lazy } from "react";
+import React, { useState, lazy, useMemo, useCallback } from "react";
 import {
   Card,
   // CardMedia,
@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 import { AddShoppingCart } from "@material-ui/icons";
 import { useDispatch } from "react-redux";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 import useStyles from "./styles";
 import * as actions from "../../../store/actions/index";
@@ -25,29 +27,51 @@ const Product = ({ product }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  //REDUX
-  const onAddToCart = (productId) => dispatch(actions.addCart(productId));
-
   const [open, setOpen] = useState(false);
-  const handleToggle = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = useCallback(() => setOpen(false), []);
+  const handleToggle = useCallback(() => setOpen(true), []);
+
+  //REDUX
+  const onAddToCart = useCallback(
+    (productId) => dispatch(actions.addCart(productId)),
+    []
+  );
+
+  const LazyImage = useMemo(() => {
+    return (
+      <div>
+        <LazyLoadImage
+          effect="blur"
+          src={product.productImage}
+          alt={product.name}
+          className={classes.media}
+          wrapperClassName={classes.lazyImg}
+          onClick={() => handleToggle()}
+        />
+      </div>
+    );
+  }, []);
+
+  console.log("product rendering");
 
   return (
-    // <Card className={classes.root}>
-    <Card>
-      <AnimationDiv
+    <Card className={classes.root}>
+      {/* // <Card> */}
+      {/* <AnimationDiv
         // whileHover={{ scale: 1.07 }}
         transition={{ duration: 0.5 }}
         classes={classes.animDiv}
-      >
-        <CardMedia
-          className={classes.media}
-          image={product.productImage}
-          title={product.name}
-          onClick={() => handleToggle()}
-        />
-      </AnimationDiv>
+      > */}
 
+      {/* <CardMedia
+        className={classes.media}
+        // image={product.productImage}
+        title={product.name}
+        onClick={() => handleToggle()}
+      /> */}
+      {LazyImage}
+
+      {/* </AnimationDiv> */}
       <CardContent>
         {/* <AnimationP classes={classes.animP}> */}
         <Typography className={classes.title} gutterBottom>
@@ -65,7 +89,6 @@ const Product = ({ product }) => {
         />
         {/* </AnimationP> */}
       </CardContent>
-
       <CardActions disableSpacing className={classes.cardActions}>
         <IconButton
           aria-label="Add to cart"
@@ -79,4 +102,4 @@ const Product = ({ product }) => {
   );
 };
 
-export default Product;
+export default React.memo(Product);
