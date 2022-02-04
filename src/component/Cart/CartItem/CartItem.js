@@ -7,10 +7,9 @@ import {
   Button,
   IconButton,
   Grid,
-  Typography,
 } from "@material-ui/core";
 import { DeleteForever } from "@material-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import * as actions from "../../../store/actions/";
 import { priceFormat } from "../../../Utils/Utilities";
@@ -25,10 +24,6 @@ const CartItem = React.memo(({ products }) => {
   const onRemoveFromCart = (itemId, productId) =>
     dispatch(actions.deleteCart(itemId, productId));
 
-  //REDUCER
-  const { cartId } = useSelector((state) => ({
-    cartId: state.cart.cartId,
-  }));
   const { product, quantity, _id } = products;
   console.log(product);
 

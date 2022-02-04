@@ -1,35 +1,41 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { IconButton, Menu, MenuItem } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
-import { Link, useHistory, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as actions from "../../store/actions/index";
 
-const AccountNav = () => {
+const AccountNav = ({ isAuth }) => {
+  console.log("accNav rendering...");
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const history = useHistory();
   const dispatch = useDispatch();
+
+  const handleClick = useCallback(
+    (event) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [anchorEl]
+  );
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  }, [anchorEl]);
 
   //REDUX
   const onLogout = useCallback(() => {
     console.log("test");
     handleClose();
     return dispatch(actions.logout);
-  }, []);
+  }, [handleClose]);
 
-  const { isAuth } = useSelector((state) => ({
-    isAuth: state.auth.token !== null,
-  }));
-
-  const handleClick = useCallback((event) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, [setAnchorEl]);
+  // const { isAuth } = useCallback(
+  //   useSelector((state) => ({
+  //     isAuth: state.auth.token !== null,
+  //   })),
+  //   [useSelector]
+  // );
 
   let menuItem = useMemo(() => {
     return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Divider, Container } from "@material-ui/core";
+import { Button, Container } from "@material-ui/core";
 
 import Review from "./Review";
 

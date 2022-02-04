@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import cookie from "js-cookie";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -8,9 +8,6 @@ import {
   Step,
   StepLabel,
   Typography,
-  CircularProgress,
-  Divider,
-  Button,
   Container,
 } from "@material-ui/core";
 
@@ -24,7 +21,7 @@ const steps = ["Shippping Address", "Payment Detail"];
 const Checkout = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
-  const [checkoutToken, setCheckoutToken] = useState({});
+  // const [checkoutToken, setCheckoutToken] = useState({});
   const [isValid, setIsValid] = useState();
 
   const classes = useStyles();

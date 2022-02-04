@@ -1,4 +1,4 @@
-import React, { useState, lazy, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   Card,
   // CardMedia,
@@ -6,7 +6,6 @@ import {
   CardActions,
   Typography,
   IconButton,
-  Backdrop,
 } from "@material-ui/core";
 import { AddShoppingCart } from "@material-ui/icons";
 import { useDispatch } from "react-redux";
@@ -17,24 +16,24 @@ import useStyles from "./styles";
 import * as actions from "../../../store/actions/index";
 import { priceFormat } from "../../../Utils/Utilities";
 import DetailProduct from "../detailProduct/detailProduct";
-import { AnimationDiv, AnimationP } from "../../../Utils/animation";
+// import { AnimationDiv, AnimationP } from "../../../Utils/animation";
 
-const CardMedia = lazy(() =>
-  import("@material-ui/core").then((mod) => ({ default: mod.CardMedia }))
-);
+// const CardMedia = lazy(() =>
+//   import("@material-ui/core").then((mod) => ({ default: mod.CardMedia }))
+// );
 
 const Product = ({ product }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
-  const handleClose = useCallback(() => setOpen(false), []);
-  const handleToggle = useCallback(() => setOpen(true), []);
+  const handleClose = useCallback(() => setOpen(false), [open]);
+  const handleToggle = useCallback(() => setOpen(true), [open]);
 
   //REDUX
   const onAddToCart = useCallback(
     (productId) => dispatch(actions.addCart(productId)),
-    []
+    [actions.addCart]
   );
 
   const LazyImage = useMemo(() => {
@@ -50,9 +49,9 @@ const Product = ({ product }) => {
         />
       </div>
     );
-  }, []);
+  }, [handleToggle, product.productImage, product.name]);
 
-  console.log("product rendering");
+  console.log("product rendering...");
 
   return (
     <Card className={classes.root}>

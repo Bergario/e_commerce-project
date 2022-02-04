@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Button, Container, Grid } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 import OrderItem from "./OrderItem/OrderItem";
@@ -8,15 +8,15 @@ import useStyle from "./styles";
 
 const Orders = () => {
   const classes = useStyle();
-  const history = useHistory();
+  // const history = useHistory();
 
   const [order, setOrder] = useState();
 
   const button = ["Semua", "Berlangsung", "Berhasil", "Tidak Berhasil"];
 
-  const query = () => new URLSearchParams(history.location.search);
-  const q = query();
-  const id = q.get("order_id");
+  // const query = () => new URLSearchParams(history.location.search);
+  // const q = query();
+  // const id = q.get("order_id");
 
   console.log("status", order);
 

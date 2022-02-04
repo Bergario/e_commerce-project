@@ -1,33 +1,26 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, Route } from "react-router-dom";
 import { LockOutlined, Copyright } from "@material-ui/icons";
 import {
-  Button,
-  Grid,
   CssBaseline,
-  FormControlLabel,
-  Link,
   Box,
   Typography,
   Container,
   Avatar,
-  Checkbox,
 } from "@material-ui/core";
 import useStyles from "./styles";
 
-import { commerce } from "../../lib/commerce";
 import Login from "./Login";
 import SignUp from "./SignUp";
-import Snackbar from "../Snackbar/Snackbar";
 import * as actions from "../../store/actions/";
 import Spinner from "../../Utils/Spinner";
 
 const Auth = () => {
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useCallback(useDispatch());
   const method = useForm();
   const classes = useStyles();
   const [singupError, setSingupError] = useState();
@@ -44,9 +37,8 @@ const Auth = () => {
   const onAuthFail = (error) => dispatch(actions.authFail(error));
 
   //REDUCER
-  const { isLoading, error } = useSelector((state) => ({
+  const { isLoading } = useSelector((state) => ({
     isLoading: state.auth.loading,
-    error: state.auth.error,
   }));
 
   const onLogin = async (data) => {
@@ -114,7 +106,8 @@ const Auth = () => {
             className={classes.form}
             onSubmit={method.handleSubmit((data) =>
               path === "/auth/login" ? onLogin(data) : onSignup(data)
-            )}>
+            )}
+          >
             {/* FORM LOGIN & SIGNUP */}
 
             <Route
@@ -132,4 +125,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default React.memo(Auth);

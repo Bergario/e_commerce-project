@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
   Badge,
-  MenuItem,
-  Menu,
   Typography,
 } from "@material-ui/core";
 import { ShoppingCart } from "@material-ui/icons";
@@ -21,9 +19,17 @@ const NavBar = () => {
   const classes = useStyles();
   const Location = useLocation();
 
-  const { cart } = useSelector((state) => ({
-    cart: state.cart.cart,
-  }));
+  const { cart, isAuth } = useCallback(
+    useSelector((state) => ({
+      cart: state.cart.cart,
+      isAuth: state.auth.token !== null,
+    })),
+    []
+  );
+
+  const NavMenu = useMemo(() => <AccountNav isAuth={isAuth} />, [isAuth]);
+
+  console.log("Nav rendering...");
 
   return (
     <>
@@ -59,7 +65,7 @@ const NavBar = () => {
               </IconButton>
             )}
           </div>
-          <AccountNav />
+          {NavMenu}
         </Toolbar>
       </AppBar>
     </>

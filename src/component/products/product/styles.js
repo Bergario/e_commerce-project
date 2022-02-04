@@ -42,14 +42,14 @@ export default makeStyles((theme) => ({
     fontSize: "0.75rem",
     marginTop: theme.spacing(0),
   },
-  animDiv: {
-    backgroundColor: "#c7c7c7",
-    width: "100%",
-    height: "50px",
-  },
-  animP: {
-    width: "100px",
-    height: "5px",
-    backgroundColor: "#c7c7c7",
-  },
+  // animDiv: {
+  //   backgroundColor: "#c7c7c7",
+  //   width: "100%",
+  //   height: "50px",
+  // },
+  // animP: {
+  //   width: "100px",
+  //   height: "5px",
+  //   backgroundColor: "#c7c7c7",
+  // },
 }));

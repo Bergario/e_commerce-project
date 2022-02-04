@@ -7,15 +7,16 @@ import useStyles from "./styles";
 import Spinner from "../../Utils/Spinner";
 
 const Products = () => {
+  const classes = useStyles();
+
   //REDUCER
-  const { products, isLoading, error } = useSelector((state) => ({
+  const { products, isLoading } = useSelector((state) => ({
     products: state.product.product,
     // isLoading: state.product.loading,
     // error: state.cart.error,
   }));
-  const classes = useStyles();
 
-  console.log("dfdsdfs", products);
+  console.log("dfdsdfs");
 
   const Prod = useMemo(
     () => (
@@ -34,7 +35,7 @@ const Products = () => {
     [products]
   );
 
-  if (isLoading) return <Spinner />;
+  // if (isLoading) return <Spinner />;
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
@@ -48,6 +49,7 @@ const Products = () => {
             );
           })}
         </Grid> */}
+
         {Prod}
       </Container>
     </main>

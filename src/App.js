@@ -1,23 +1,14 @@
-import React, {
-  useState,
-  useEffect,
-  Suspense,
-  lazy,
-  useCallback,
-  useMemo,
-} from "react";
-import { commerce } from "./lib/commerce";
+import React, { useEffect, Suspense, lazy, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 
 import Navbar from "./component/Navigation/Navbar";
-import Products from "./component/products/Products";
-import Cart from "./component/Cart/Cart";
-import Dashboard from "./component/Admin/dashboard/Dashboard";
-import PaymentDetail from "./component/Payment/paymentDetail";
-import Checkout from "./component/CheckoutForm/Checkout/Checkout";
-import Orders from "./component/Order/Orders";
-import Auth from "./component/Auth/Auth";
+// import Products from "./component/products/Products";
+// import Cart from "./component/Cart/Cart";
+// import Dashboard from "./component/Admin/dashboard/Dashboard";
+// import PaymentDetail from "./component/Payment/paymentDetail";
+// import Checkout from "./component/CheckoutForm/Checkout/Checkout";
+// import Orders from "./component/Order/Orders";
+// import Auth from "./component/Auth/Auth";
 
 import { Switch, Route, Redirect, useLocation } from "react-router-dom";
 import * as actions from "./store/actions/index";
@@ -33,37 +24,44 @@ const App = () => {
     () => dispatch(actions.authCheckState),
     []
   );
-  const onProductFetch = useCallback(() => dispatch(actions.product), []);
-  const onFetchCart = useCallback(() => dispatch(actions.fetchCart()), []);
+  const onProductFetch = useCallback(
+    () => dispatch(actions.product),
+    [actions.product]
+  );
+  const onFetchCart = useCallback(
+    () => dispatch(actions.fetchCart()),
+    [actions.fetchCart]
+  );
   const onAuthTimeout = useCallback(
     (timeout) => dispatch(actions.authTimeout(timeout)),
     []
   );
 
-  const { isAuth } = useSelector((state) => ({
-    isAuth: state.auth.token !== null,
-  }));
+  const { isAuth } = useCallback(
+    useSelector((state) => ({
+      isAuth: state.auth.token !== null,
+    })),
+    []
+  );
 
-  // const Navbar = lazy(() => import("./component/Navigation/Navbar"));
-  // const Products = lazy(() => import("./component/products/Products"));
-  // const Dashboard = lazy(() => import("./component/Admin/dashboard/Dashboard"));
-  // const PaymentDetail = lazy(() => import("./component/Payment/paymentDetail"));
-  // const Orders = lazy(() => import("./component/Order/Orders"));
-  // const Checkout = lazy(() =>
-  //   import("./component/CheckoutForm/Checkout/Checkout")
-  // );
-  // const Cart = lazy(() => import("./component/Cart/Cart"));
-  // const Auth = lazy(() => import("./component/Auth/Auth"));
+  const Products = lazy(() => import("./component/products/Products"));
+  const Dashboard = lazy(() => import("./component/Admin/dashboard/Dashboard"));
+  const PaymentDetail = lazy(() => import("./component/Payment/paymentDetail"));
+  const Orders = lazy(() => import("./component/Order/Orders"));
+  const Checkout = lazy(() =>
+    import("./component/CheckoutForm/Checkout/Checkout")
+  );
+  const Cart = lazy(() => import("./component/Cart/Cart"));
+  const Auth = lazy(() => import("./component/Auth/Auth"));
 
   useEffect(() => {
     dispatch(onProductFetch());
   }, []);
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   onFetchCart();
-    // }, 2000);
-    onFetchCart();
+    setTimeout(() => {
+      onFetchCart();
+    }, 1500);
   }, [isAuth]);
 
   useEffect(() => {
@@ -86,7 +84,7 @@ const App = () => {
         <Redirect to="/" />
       </Switch>
     ),
-    []
+    [location.pathname, isAuth]
   );
 
   if (isAuth) {
@@ -109,10 +107,10 @@ const App = () => {
   return (
     <div>
       <Navbar />
-      {/* <Suspense fallback={<div></div>}>{routes}</Suspense> */}
-      {routes}
+      <Suspense fallback={<div></div>}>{routes}</Suspense>
+      {/* {routes} */}
     </div>
   );
 };
 
-export default App;
+export default React.memo(App);

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const SimpleModal = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
   const { modal } = useSelector((state) => ({
     modal: state.modal.modal,
   }));
@@ -32,14 +33,17 @@ const SimpleModal = () => {
   //REDUX
   const onModalClose = useCallback(() => dispatch(actions.modalClose()), []);
 
-  const body = (
-    <div className={classes.paper}>
-      <h4 id="simple-modal-title">You are loggout!</h4>
-      <button onClick={onModalClose}>OK</button>
-    </div>
+  const body = useMemo(
+    () => (
+      <div className={classes.paper}>
+        <h4 id="simple-modal-title">You are loggout!</h4>
+        <button onClick={onModalClose}>OK</button>
+      </div>
+    ),
+    [modal]
   );
 
-  console.log("Modsal", modal);
+  console.log("Modal rendering ...", modal);
 
   return (
     <div>

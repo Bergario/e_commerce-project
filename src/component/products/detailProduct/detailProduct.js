@@ -1,5 +1,13 @@
 import React from "react";
-import { Modal, Grid, Box, Backdrop, Fade } from "@material-ui/core";
+import {
+  Modal,
+  Grid,
+  Box,
+  Backdrop,
+  Fade,
+  Typography,
+  Button,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -10,14 +18,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   frame: {
-    height: "240px",
-    width: "200px",
-    border: "1px solid #ddd",
+    height: "340px",
+    width: "300px",
+    borderRight: "1px solid #ddd",
     position: "relative",
   },
   img: {
-    maxWidth: "200px",
-    maxHeight: "240px",
+    maxWidth: "300px",
+    maxHeight: "340px",
     display: "inline-block",
     margin: "auto",
     position: "absolute",
@@ -34,6 +42,11 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #fff",
     outlineColor: "#f3f3f3",
     borderRadius: "3px",
+  },
+  productName: {
+    margin: "10px",
+    color: "#302b2b",
+    fontWeight: "600",
   },
 }));
 
@@ -57,7 +70,7 @@ const DetailProduct = ({ product, open, handleClose }) => {
         <Fade in={open}>
           <Box className={classes.style}>
             <Grid className={classes.card}>
-              <Grid item xs={4}>
+              <Grid item xs={6} sm={7} md={7} lg={8}>
                 <div className={classes.frame}>
                   <img
                     className={classes.img}
@@ -66,8 +79,32 @@ const DetailProduct = ({ product, open, handleClose }) => {
                   />
                 </div>
               </Grid>
-              <Grid item xs={8}>
+              <Grid
+                className={classes.productName}
+                item
+                xs={6}
+                sm={8}
+                md={8}
+                lg={10}
+              >
                 <h3>{product.name}</h3>
+                <p>Rp. 500000</p>
+                <Typography>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut
+                  id debitis soluta magnam, molestias nulla nobis tempore fugit,
+                  non deleniti aliquam velit explicabo ab
+                </Typography>
+                <Typography>Category : Sepatu</Typography>
+                <Grid>
+                  <Button
+                    type="button"
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Add to cart
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Box>

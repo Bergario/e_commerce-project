@@ -28,6 +28,8 @@ const logger = (store) => {
   };
 };
 
+console.log("index");
+
 // const composeEnchancers =
 //   process.env.NODE_ENV === "development"
 //     ? window._REDUX_DEVTOOLS_EXTENSION_COMPOSE__

@@ -38,7 +38,8 @@ const Login = ({ error }) => {
         fullWidth
         variant="contained"
         color="primary"
-        className={classes.submit}>
+        className={classes.submit}
+      >
         Sign in
       </Button>
       <Grid container>
@@ -52,4 +53,4 @@ const Login = ({ error }) => {
   );
 };
 
-export default Login;
+export default React.memo(Login);

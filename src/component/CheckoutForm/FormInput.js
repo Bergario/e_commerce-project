@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TextField, Grid } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { useFormContext, Controller } from "react-hook-form";
 
 const FormInput = ({
@@ -40,7 +40,8 @@ const FormInput = ({
             size={size}
             margin={Margin}
             autoComplete={autoComplete}
-            error={error ? true : false}>
+            error={error ? true : false}
+          >
             {children}
           </TextField>
         );
