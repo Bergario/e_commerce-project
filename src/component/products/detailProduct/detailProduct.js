@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Grid,
@@ -8,7 +8,9 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, styled } from "@material-ui/core/styles";
+
+import { priceFormat } from "../../../Utils/Utilities";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     height: "340px",
     width: "300px",
     borderRight: "1px solid #ddd",
+    borderBottom: "1px solid #ddd",
     position: "relative",
   },
   img: {
@@ -48,10 +51,39 @@ const useStyles = makeStyles((theme) => ({
     color: "#302b2b",
     fontWeight: "600",
   },
+  sideView: {
+    width: "5rem",
+    height: "4rem",
+    objectFit: "cover",
+    cursor: "pointer",
+    margin: "0.3rem",
+    boxSizing: "border-box",
+    "&:active": {
+      border: "2px solid blue",
+    },
+  },
+}));
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText("#e3cf25"),
+  backgroundColor: "#e3cf25",
+  color: "#3e3e3ede",
+  fontWeight: "600",
+  "&:hover": {
+    backgroundColor: "#c9b406",
+  },
 }));
 
 const DetailProduct = ({ product, open, handleClose }) => {
   const classes = useStyles();
+
+  const [image, setImage] = useState();
+
+  const viewImageHandler = (e) => {
+    const img = e.target.currentSrc;
+    setImage(img);
+    console.log(e.target.currentSrc);
+  };
 
   // console.log("detailproduct rendering");
   return (
@@ -74,8 +106,25 @@ const DetailProduct = ({ product, open, handleClose }) => {
                 <div className={classes.frame}>
                   <img
                     className={classes.img}
-                    src={product.productImage}
+                    src={image ? image : product.productImage}
                     alt={product.name}
+                  />
+                </div>
+                <div>
+                  <img
+                    onClick={viewImageHandler}
+                    className={classes.sideView}
+                    src="http://placekitten.com/200/126"
+                  />
+                  <img
+                    onClick={viewImageHandler}
+                    className={classes.sideView}
+                    src="http://placekitten.com/200/126"
+                  />
+                  <img
+                    onClick={viewImageHandler}
+                    className={classes.sideView}
+                    src="http://placekitten.com/200/126"
                   />
                 </div>
               </Grid>
@@ -88,22 +137,24 @@ const DetailProduct = ({ product, open, handleClose }) => {
                 lg={10}
               >
                 <h3>{product.name}</h3>
-                <p>Rp. 500000</p>
+                <h3>{priceFormat(product.price)}</h3>
                 <Typography>
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ut
                   id debitis soluta magnam, molestias nulla nobis tempore fugit,
                   non deleniti aliquam velit explicabo ab
                 </Typography>
-                <Typography>Category : Sepatu</Typography>
+                <Typography style={{ padding: "1.3rem 0" }}>
+                  <span style={{ fontWeight: "bold" }}>Category: </span>Sepatu
+                </Typography>
                 <Grid>
-                  <Button
+                  <ColorButton
                     type="button"
                     size="small"
                     variant="contained"
-                    color="primary"
+                    // color="primary"
                   >
                     Add to cart
-                  </Button>
+                  </ColorButton>
                 </Grid>
               </Grid>
             </Grid>

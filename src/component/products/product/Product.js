@@ -71,7 +71,7 @@ const Product = ({ product }) => {
       {LazyImage}
 
       {/* </AnimationDiv> */}
-      <CardContent>
+      <CardContent className={classes.cardContent}>
         {/* <AnimationP classes={classes.animP}> */}
         <Typography className={classes.title} gutterBottom>
           {product.name}

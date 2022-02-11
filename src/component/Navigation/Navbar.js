@@ -14,6 +14,8 @@ import useStyles from "./styles";
 
 import logo from "../../assets/logo.png";
 import AccountNav from "./AccountNav";
+import MenuToggle from "./SideBar/menuToggle";
+import SideBar from "./SideBar/sideBar";
 
 const NavBar = () => {
   const classes = useStyles();
@@ -35,6 +37,7 @@ const NavBar = () => {
     <>
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
+          <SideBar />
           <Typography
             component={Link}
             to="/"

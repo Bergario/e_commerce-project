@@ -13,22 +13,31 @@ const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(1),
   },
+  img: {
+    maxWidth: "100%",
+    height: "200px",
+    marginTop: "20px",
+  },
 }));
 
 const AddProductForm = () => {
   const method = useForm();
   const classes = useStyles();
 
+  const defaultImg = null;
+
   const [selectedFile, setSelectedFile] = useState();
   const [category, setCategory] = useState();
 
   const fileSelectedHandler = (e) => {
+    console.log(e.target.files);
     new Compressor(e.target.files[0], {
       quality: 0.6,
       success: (imgFile) => setSelectedFile(imgFile),
     });
   };
-  console.log(selectedFile);
+
+  console.log();
 
   useEffect(() => {
     let isMounted = true;
@@ -159,6 +168,14 @@ const AddProductForm = () => {
                 onChange={fileSelectedHandler}
               />
             </Button>
+            <img
+              className={classes.img}
+              src={
+                selectedFile
+                  ? URL.createObjectURL(selectedFile)
+                  : "../../noProduct.jpg"
+              }
+            />
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
