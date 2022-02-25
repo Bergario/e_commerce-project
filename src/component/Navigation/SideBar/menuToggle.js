@@ -42,4 +42,4 @@ const MenuToggle = ({ toggle }) => {
   );
 };
 
-export default MenuToggle;
+export default React.memo(MenuToggle);

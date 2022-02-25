@@ -1,7 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import { motion, useCycle } from "framer-motion";
+import { Backdrop } from "@material-ui/core";
+
 import MenuToggle from "./menuToggle";
 import useStyles from "./styles";
+import MenuItems from "./menuItems";
 
 const useDimensions = (ref) => {
   const dimensions = useRef({ width: 0, height: 0 });
@@ -23,7 +26,7 @@ const sidebar = {
     },
   }),
   closed: {
-    clipPath: "circle(30px at 40px 40px)",
+    clipPath: "circle(0px at 40px 34px)",
     transition: {
       delay: 0.5,
       type: "spring",
@@ -44,12 +47,18 @@ const Sidebar = () => {
       animate={isOpen ? "open" : "closed"}
       custom={height}
       ref={containerRef}
+      className={classes.nav}
     >
+      <Backdrop
+        sx={{ color: "#fff", zIndex: 1 }}
+        open={isOpen}
+        onClick={() => toggleOpen()}
+      ></Backdrop>
       <motion.div className={classes.background} variants={sidebar} />
-      {/* <Navigation /> */}
+      <MenuItems />
       <MenuToggle toggle={() => toggleOpen()} />
     </motion.nav>
   );
 };
 
-export default Sidebar;
+export default React.memo(Sidebar);

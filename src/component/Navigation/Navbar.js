@@ -14,28 +14,30 @@ import useStyles from "./styles";
 
 import logo from "../../assets/logo.png";
 import AccountNav from "./AccountNav";
-import MenuToggle from "./SideBar/menuToggle";
 import SideBar from "./SideBar/sideBar";
+import SearchBox from "../../Utils/searchBox";
 
 const NavBar = () => {
   const classes = useStyles();
   const Location = useLocation();
 
-  const { cart, isAuth } = useCallback(
-    useSelector((state) => ({
-      cart: state.cart.cart,
-      isAuth: state.auth.token !== null,
-    })),
-    []
-  );
+  const { cart, isAuth } = useSelector((state) => ({
+    cart: state.cart.cart,
+    isAuth: state.auth.token !== null,
+  }));
 
-  const NavMenu = useMemo(() => <AccountNav isAuth={isAuth} />, [isAuth]);
+  const NavMenu = useMemo(() => <AccountNav isAuth={isAuth} />, []);
 
   console.log("Nav rendering...");
 
   return (
     <>
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
+      <AppBar
+        position="fixed"
+        className={classes.appBar}
+        color="inherit"
+        // style={{ paddingRight: "0 !important" }}
+      >
         <Toolbar>
           <SideBar />
           <Typography
@@ -54,6 +56,7 @@ const NavBar = () => {
             Ripai Shop
           </Typography>
           <div className={classes.grow} />
+          <SearchBox />
           <div className={classes.menuButton}>
             {Location.pathname === "/" && (
               <IconButton

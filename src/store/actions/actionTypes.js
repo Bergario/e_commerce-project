@@ -24,3 +24,5 @@ export const EMPTY_CART_SUCCESS = "EMPTY_CART_SUCCESS";
 
 export const MODAL_CLOSE = "MODAL_CLOSE";
 export const MODAL_OPEN = "MODAL_OPEN";
+
+export const FETCH_CATEGORY = "FETCH_CATEGORY";

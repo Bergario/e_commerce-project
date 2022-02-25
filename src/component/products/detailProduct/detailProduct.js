@@ -95,6 +95,7 @@ const DetailProduct = ({ product, open, handleClose }) => {
         onClose={() => handleClose()}
         closeAfterTransition
         BackdropComponent={Backdrop}
+        sx={{ zIndex: -1 }}
         BackdropProps={{
           timeout: 500,
         }}

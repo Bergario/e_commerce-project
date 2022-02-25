@@ -74,16 +74,16 @@ export const fetchCart = () => {
   };
 };
 
-export const cartLoad = (cartId) => {
-  return (dispatch) => {
-    axios
-      .get(`http://localhost:9000/cart/${cartId}`)
-      .then((response) => {
-        dispatch(fetchCart(cartId));
-      })
-      .catch((err) => err);
-  };
-};
+// export const cartLoad = (cartId) => {
+//   return (dispatch) => {
+//     axios
+//       .get(`http://localhost:9000/cart/${cartId}`)
+//       .then((response) => {
+//         dispatch(fetchCart(cartId));
+//       })
+//       .catch((err) => err);
+//   };
+// };
 
 export const addCart = (productId) => {
   console.log("productId", productId);

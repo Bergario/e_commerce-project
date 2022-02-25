@@ -12,7 +12,7 @@ export {
 
 export {
   fetchCart,
-  cartLoad,
+  // cartLoad,
   addCart,
   updateCart,
   deleteCart,
@@ -25,5 +25,7 @@ export {
   productFecthFail,
   product,
 } from "./product";
+
+export { fetchCategory } from "./category";
 
 export { modalClose, modalOpen } from "./modal";

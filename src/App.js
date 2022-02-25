@@ -32,6 +32,10 @@ const App = () => {
     () => dispatch(actions.fetchCart()),
     [actions.fetchCart]
   );
+  const onFetchCategory = useCallback(
+    () => dispatch(actions.fetchCategory()),
+    [actions.fetchCategory]
+  );
   const onAuthTimeout = useCallback(
     (timeout) => dispatch(actions.authTimeout(timeout)),
     []
@@ -56,6 +60,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(onProductFetch());
+    onFetchCategory();
   }, []);
 
   useEffect(() => {
