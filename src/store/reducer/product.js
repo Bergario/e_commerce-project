@@ -27,6 +27,13 @@ const fetchProductFail = (state, action) => {
   });
 };
 
+const productSearch = (state, action) => {
+  return objectUpdate(state, {
+    product: action.product,
+    loading: false,
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_PRODUCT_START:
@@ -35,6 +42,8 @@ const reducer = (state = initialState, action) => {
       return fetchProductSuccess(state, action);
     case actionTypes.FETCH_PRODUCT_FAIL:
       return fetchProductFail(state, action);
+    case actionTypes.PRODUCT_SEARCH:
+      return productSearch(state, action);
 
     default:
       return state;

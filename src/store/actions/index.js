@@ -23,6 +23,7 @@ export {
   productFecthStart,
   productFecthSuccess,
   productFecthFail,
+  productSearch,
   product,
 } from "./product";
 

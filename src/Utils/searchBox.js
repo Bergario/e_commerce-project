@@ -1,11 +1,44 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import * as actions from "../store/actions/index";
 import SearchIcon from "@material-ui/icons/Search";
 import "./searchBox.css";
 
 const SearchBox = () => {
+  const dispatch = useDispatch();
+
+  const onProductSearch = (keyWords) => {
+    dispatch(actions.productSearch(keyWords));
+  };
+  const onFetchProducts = () => {
+    dispatch(actions.product());
+  };
+
+  const [keyWords, setKeyWords] = useState(null);
+
+  const searchHandler = useCallback((e) => {
+    console.log(e.target.value);
+    setKeyWords(e.target.value);
+  });
+
+  useEffect(() => {
+    !keyWords && onFetchProducts();
+  }, [keyWords]);
+
+  const removeValueHandler = () => {
+    setKeyWords(null);
+    document.getElementById("search-input").reset();
+  };
+
   return (
     <div class="box">
-      <form name="search" style={{ height: " 28px" }} spellCheck="false">
+      <form
+        id="search-input"
+        name="search"
+        style={{ height: " 28px" }}
+        spellCheck="false"
+        onChange={(e) => searchHandler(e)}
+      >
         <input
           type="text"
           class="input"
@@ -13,12 +46,19 @@ const SearchBox = () => {
           placeholder="search..."
           onmouseout="document.search.txt.value = ''"
         />
-        {/* <div class="icon">
-          <SearchIcon fontSize="small" style={{ color: "#6c6b6b" }} />
-        </div> */}
+        <div class="icon">
+          {/* <div> */}
+          {keyWords && <p onClick={() => removeValueHandler()}>x</p>}
+          {/* </div> */}
+          <SearchIcon
+            onClick={() => keyWords && onProductSearch(keyWords)}
+            color="action"
+            // fontSize="small"
+          />
+        </div>
       </form>
     </div>
   );
 };
 
-export default SearchBox;
+export default React.memo(SearchBox);

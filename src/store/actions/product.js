@@ -20,6 +20,13 @@ export const productFecthFail = (error) => {
   };
 };
 
+const productSearchSuccess = (product) => {
+  return {
+    type: actionTypes.PRODUCT_SEARCH,
+    product,
+  };
+};
+
 export const product = () => {
   return (dispatch) => {
     dispatch(productFecthStart());
@@ -28,8 +35,20 @@ export const product = () => {
         withCredentials: true,
       })
       .then((response) => {
+        console.log(response.data.product);
         dispatch(productFecthSuccess(response.data.product));
       })
+      .catch((err) => dispatch(productFecthFail(err)));
+  };
+};
+
+export const productSearch = (keyWords) => {
+  return (dispatch) => {
+    axios
+      .post("http://localhost:9000/product/search/prod", {
+        pencarian: keyWords,
+      })
+      .then((res) => dispatch(productSearchSuccess(res.data)))
       .catch((err) => dispatch(productFecthFail(err)));
   };
 };
