@@ -23,7 +23,7 @@ const Auth = () => {
   const dispatch = useCallback(useDispatch());
   const method = useForm();
   const classes = useStyles();
-  const [singupError, setSingupError] = useState();
+  const [signupError, setSignupError] = useState();
   const [loginError, setLoginError] = useState();
   const path = history.location.pathname;
 
@@ -40,6 +40,7 @@ const Auth = () => {
   const { isLoading } = useSelector((state) => ({
     isLoading: state.auth.loading,
   }));
+  console.log("hsitory", history);
 
   const onLogin = async (data) => {
     try {
@@ -55,6 +56,7 @@ const Auth = () => {
           // localStorage.setItem("customer_id", user.customer_id);
           localStorage.setItem("customer_token", token);
           dispatch(onAuthSuccess(token));
+
           history.push("/");
         });
     } catch (error) {
@@ -79,13 +81,13 @@ const Auth = () => {
       .catch((error) => {
         const err = error.response.data.errors;
         console.log(err);
-        setSingupError("Jancok");
+        setSignupError("Jancok");
         dispatch(onAuthSignupFail(err));
       });
   };
 
   const signup = useMemo(() => {
-    return <SignUp error={singupError} />;
+    return <SignUp error={signupError} />;
   }, []);
 
   return isLoading ? (

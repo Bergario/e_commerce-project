@@ -45,7 +45,7 @@ const App = () => {
     useSelector((state) => ({
       isAuth: state.auth.token !== null,
     })),
-    []
+    [location.pathname]
   );
 
   const Products = lazy(() => import("./component/products/Products"));
@@ -59,15 +59,17 @@ const App = () => {
   const Auth = lazy(() => import("./component/Auth/Auth"));
 
   useEffect(() => {
-    dispatch(onProductFetch());
+    // dispatch(onProductFetch());
     onFetchCategory();
   }, []);
+
+  console.log(isAuth);
 
   useEffect(() => {
     setTimeout(() => {
       onFetchCart();
-    }, 1500);
-  }, [isAuth]);
+    }, 1000);
+  }, [isAuth, location.pathname]);
 
   useEffect(() => {
     const expired = new Date(localStorage.getItem("expiredTime")).getTime();
@@ -80,9 +82,9 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={() => <Products />} />
         <Route path="/cart" component={() => <Cart />} />
-        <Route path="/admin" component={Dashboard} />
-        <Route path="/status?order_id=:id" component={PaymentDetail} />
-        <Route path="/status" component={PaymentDetail} />
+        {/* <Route path="/admin" component={Dashboard} /> */}
+        {/* <Route path="/status?order_id=:id" component={PaymentDetail} /> */}
+        {/* <Route path="/status" component={PaymentDetail} /> */}
         <Route path={"/auth/login"} component={() => <Auth />} />
         <Route path={"/auth/signup"} component={() => <Auth />} />
         <Route path={"/order"} component={() => <Orders />} />

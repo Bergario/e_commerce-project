@@ -26,9 +26,9 @@ const NavBar = () => {
     isAuth: state.auth.token !== null,
   }));
 
-  const NavMenu = useMemo(() => <AccountNav isAuth={isAuth} />, []);
+  const NavMenu = useMemo(() => <AccountNav isAuth={isAuth} />, [isAuth]);
 
-  console.log("Nav rendering...");
+  console.log("Nav rendering...", isAuth);
 
   return (
     <>

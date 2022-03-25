@@ -132,9 +132,9 @@ const Cart = () => {
               variant="contained"
               color="primary"
               component={Link}
-              to="/checkout"
+              to={isAuth ? "/checkout" : "/auth/login"}
             >
-              Checkout
+              {isAuth ? "checkout" : "login to checkout"}
             </Button>
           </div>
         </div>

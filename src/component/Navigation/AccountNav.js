@@ -36,6 +36,7 @@ const AccountNav = ({ isAuth }) => {
   //   })),
   //   [useSelector]
   // );
+  console.log(isAuth);
 
   let menuItem = useMemo(() => {
     return (
