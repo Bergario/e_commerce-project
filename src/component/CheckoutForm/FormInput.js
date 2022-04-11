@@ -16,6 +16,7 @@ const FormInput = ({
   children,
   select,
   multiline,
+  id,
 }) => {
   const { control } = useFormContext();
   const variants = variant && variant;
@@ -41,6 +42,7 @@ const FormInput = ({
             margin={Margin}
             autoComplete={autoComplete}
             error={error ? true : false}
+            id={id}
           >
             {children}
           </TextField>

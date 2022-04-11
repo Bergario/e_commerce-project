@@ -48,7 +48,7 @@ const AccountNav = ({ isAuth }) => {
 
   if (isAuth)
     menuItem = [
-      <MenuItem key="1" onClick={handleClose}>
+      <MenuItem key="1" component={Link} to="/admin" onClick={handleClose}>
         Profile
       </MenuItem>,
       <MenuItem key="2" component={Link} to="/order" onClick={handleClose}>

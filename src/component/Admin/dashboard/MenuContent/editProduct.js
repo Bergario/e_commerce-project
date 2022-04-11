@@ -171,6 +171,14 @@ const AddProductForm = () => {
       </li>
     ));
 
+  const ListCategory = () =>
+    category &&
+    category.map((res) => (
+      <MenuItem key={res.category_id} value={res.category_id}>
+        {res.category}
+      </MenuItem>
+    ));
+
   useEffect(() => {
     let isMounted = true;
     axios
@@ -231,16 +239,6 @@ const AddProductForm = () => {
               <ListTags />
             </ul>
             <input placeholder="Tags" className={classes.inputTags} />
-            {/* <FormInput
-              fullWidth
-              id="tags"
-              label="Tags"
-              name="tag"
-              autoComplete="tag"
-              multiline
-              autoFocus
-              onKeyUp={addTagsHandler}
-            /> */}
             <button
               className={classes.addTagsButton}
               onClick={(e) => addTagsHandler(e)}
@@ -269,14 +267,7 @@ const AddProductForm = () => {
               autoFocus
             >
               <MenuItem value="">-</MenuItem>
-              {category &&
-                category.map((res) => {
-                  return (
-                    <MenuItem key={res.category_id} value={res.category_id}>
-                      {res.category}
-                    </MenuItem>
-                  );
-                })}
+              <ListCategory />
             </FormInput>
           </Grid>
           <Grid item xs={12} sm={12}>

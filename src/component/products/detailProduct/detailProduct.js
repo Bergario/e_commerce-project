@@ -82,7 +82,6 @@ const DetailProduct = ({ product, open, handleClose }) => {
   const viewImageHandler = (e) => {
     const img = e.target.currentSrc;
     setImage(img);
-    console.log(e.target.currentSrc);
   };
 
   // console.log("detailproduct rendering");
@@ -107,7 +106,7 @@ const DetailProduct = ({ product, open, handleClose }) => {
                 <div className={classes.frame}>
                   <img
                     className={classes.img}
-                    src={image ? image : product.productImage}
+                    src={image ? image : product.productImage[0]}
                     alt={product.name}
                   />
                 </div>
@@ -115,12 +114,12 @@ const DetailProduct = ({ product, open, handleClose }) => {
                   <img
                     onClick={viewImageHandler}
                     className={classes.sideView}
-                    src="http://placekitten.com/200/126"
+                    src={product.productImage[0]}
                   />
                   <img
                     onClick={viewImageHandler}
                     className={classes.sideView}
-                    src="http://placekitten.com/200/126"
+                    src={product.productImage[1]}
                   />
                   <img
                     onClick={viewImageHandler}

@@ -41,7 +41,7 @@ const Product = ({ product }) => {
       <div>
         <LazyLoadImage
           effect="blur"
-          src={product.productImage}
+          src={product.productImage[0]}
           alt={product.name}
           className={classes.media}
           wrapperClassName={classes.lazyImg}

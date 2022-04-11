@@ -41,12 +41,13 @@ const App = () => {
     []
   );
 
-  const { isAuth } = useCallback(
+  const { isAuth } =
+    // useCallback(
     useSelector((state) => ({
       isAuth: state.auth.token !== null,
-    })),
-    [location.pathname]
-  );
+    }));
+  //   [location.pathname]
+  // );
 
   const Products = lazy(() => import("./component/products/Products"));
   const Dashboard = lazy(() => import("./component/Admin/dashboard/Dashboard"));
@@ -82,12 +83,12 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={() => <Products />} />
         <Route path="/cart" component={() => <Cart />} />
-        {/* <Route path="/admin" component={Dashboard} /> */}
+        <Route path="/admin" component={Dashboard} />
         {/* <Route path="/status?order_id=:id" component={PaymentDetail} /> */}
         {/* <Route path="/status" component={PaymentDetail} /> */}
         <Route path={"/auth/login"} component={() => <Auth />} />
         <Route path={"/auth/signup"} component={() => <Auth />} />
-        <Route path={"/order"} component={() => <Orders />} />
+        {/* <Route path={"/order"} component={() => <Orders />} /> */}
         <Redirect to="/" />
       </Switch>
     ),
