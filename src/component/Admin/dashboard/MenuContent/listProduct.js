@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   Link,
   Grid,
@@ -13,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Title from "../Title";
 import ActionMenu from "./actionMenu";
+import { priceFormat } from "../../../../Utils/Utilities";
 
 function preventDefault(event) {
   event.preventDefault();
@@ -29,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
   product: {
     display: "flex",
     alignItems: "center",
+  },
+  tableRow: {
+    "& td": {
+      fontSize: "12px",
+      fontWeight: 600,
+    },
   },
 }));
 
@@ -54,18 +62,20 @@ const ListProduct = () => {
         </TableHead>
         <TableBody>
           {products.map((product) => (
-            <TableRow key={product.id}>
+            <TableRow className={classes.tableRow} key={product.id}>
               <TableCell>
                 <Grid className={classes.product}>
-                  <img
-                    className={classes.img}
-                    src={product.productImage}
-                    alt=""
-                  />
+                  <div>
+                    <img
+                      className={classes.img}
+                      src={product.productImage[0]}
+                      alt=""
+                    />
+                  </div>
                   {product.name}
                 </Grid>
               </TableCell>
-              <TableCell>{product.price}</TableCell>
+              <TableCell>{priceFormat(product.price)}</TableCell>
               <TableCell>{product.stock}</TableCell>
               <TableCell>{product.category}</TableCell>
               <TableCell align="right">
@@ -77,7 +87,7 @@ const ListProduct = () => {
       </Table>
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
-          See more orders
+          See more products
         </Link>
       </div>
     </React.Fragment>

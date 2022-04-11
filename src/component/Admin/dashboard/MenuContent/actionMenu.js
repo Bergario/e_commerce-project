@@ -1,9 +1,12 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { Link } from "react-router-dom";
+
+import EditProduct from "./editProduct";
 
 const StyledMenu = withStyles({
   paper: {
@@ -25,8 +28,22 @@ const StyledMenu = withStyles({
   />
 ));
 
+const useStyles = makeStyles(() => ({
+  edit: {
+    fontSize: "12px",
+    color: "#d18c36",
+    fontWeight: 600,
+  },
+  delete: {
+    fontSize: "12px",
+    color: "red",
+    fontWeight: 600,
+  },
+}));
+
 export default function CustomizedMenus() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const classes = useStyles();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -43,7 +60,8 @@ export default function CustomizedMenus() {
         aria-haspopup="true"
         variant="contained"
         color="inherit"
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         <MoreHorizIcon />
       </IconButton>
       <StyledMenu
@@ -51,9 +69,14 @@ export default function CustomizedMenus() {
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}>
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        onClose={handleClose}
+      >
+        <MenuItem className={classes.edit} component={Link}>
+          Edit
+        </MenuItem>
+        <MenuItem className={classes.delete} onClick={handleClose}>
+          Delete
+        </MenuItem>
       </StyledMenu>
     </div>
   );
