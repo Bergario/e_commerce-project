@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
@@ -9,10 +10,16 @@ import cookie from "js-cookie";
 
 import Title from "../Title";
 import FormInput from "../../../CheckoutForm/FormInput";
+import * as actions from "../../../../store/actions/index";
+import { PanoramaFishEyeRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(1),
+  },
+  input: {
+    color: "red",
+    fontFamily: "system-ui !important",
   },
   img: {
     maxWidth: "100%",
@@ -72,16 +79,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddProductForm = () => {
+const EditProductForm = () => {
+  const { product } = useSelector((state) => ({
+    product: state.product.productById,
+  }));
+
+  //   REDUX
+  const dispatch = useDispatch();
+  const onEditFormHandler = () => {
+    dispatch(actions.showEditProductForm());
+  };
+
   const method = useForm();
   const classes = useStyles();
 
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedFile, setSelectedFile] = useState([]);
+  const [oldFile, setOldFile] = useState([]);
   const [category, setCategory] = useState();
   const [tags, setTags] = useState([]);
+  console.log("ID", product);
+
+  useEffect(() => {
+    setSelectedCategory(product.category.category_id);
+    setTags([...product.tags]);
+    const images = product.productImage;
+    images.map((image) => {
+      setOldFile((prevFile) => [...prevFile, image]);
+    });
+  }, [product]);
+
+  console.log(oldFile);
 
   const fileSelectedHandler = (e) => {
     const imageFiles = e.target.files;
+    console.log(imageFiles);
     for (let i = 0; i <= imageFiles.length - 1; i++) {
       new Compressor(imageFiles[i], {
         quality: 0.6,
@@ -89,6 +121,11 @@ const AddProductForm = () => {
           setSelectedFile((prevFile) => [...prevFile, imgFile]),
       });
     }
+  };
+
+  const categoryChangeHandler = (cat) => {
+    console.log(cat);
+    setSelectedCategory(cat);
   };
 
   const addTagsHandler = (e) => {
@@ -111,9 +148,17 @@ const AddProductForm = () => {
 
     const dataProduct = new FormData();
 
-    //Input images array to form data
+    // Input product ID
+    dataProduct.append("productId", product.id);
+
+    //Input new images array to form data
     selectedFile.map((imageFile) => {
       dataProduct.append("productImage", imageFile);
+    });
+
+    //Input old images array to form data
+    oldFile.map((imageFile) => {
+      dataProduct.append("oldProductImage", imageFile);
     });
 
     //Input tags array to form data
@@ -121,13 +166,16 @@ const AddProductForm = () => {
       dataProduct.append("tags", tag);
     });
 
+    // Input Category to form data
+    dataProduct.append("category", selectedCategory);
+
     //input data from table to form data
     for (const key in data) {
       dataProduct.append(key, data[key]);
     }
     console.log(data);
     axios
-      .post("http://localhost:9000/product/", dataProduct, {
+      .patch("http://localhost:9000/product/", dataProduct, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -137,6 +185,7 @@ const AddProductForm = () => {
         setSelectedFile([]);
         setTags([]);
         setCategory();
+        onEditFormHandler();
         // document.getElementById("product-form").reset();
         console.log(response.data);
       })
@@ -154,7 +203,7 @@ const AddProductForm = () => {
       />
       <img
         className={classes.img}
-        src={!img ? "../../noProduct.jpg" : URL.createObjectURL(img)}
+        // src={!img ? "../../noProduct.jpg" : URL.createObjectURL(img)}
       />
     </Button>
   );
@@ -169,14 +218,6 @@ const AddProductForm = () => {
           className={classes.closeIcon}
         />
       </li>
-    ));
-
-  const ListCategory = () =>
-    category &&
-    category.map((res) => (
-      <MenuItem key={res.category_id} value={res.category_id}>
-        {res.category}
-      </MenuItem>
     ));
 
   useEffect(() => {
@@ -197,8 +238,9 @@ const AddProductForm = () => {
         id="product-form"
         className={classes.form}
         onSubmit={method.handleSubmit((data) => uploadProductHandler(data))}
+        // onSubmit={method.handleSubmit((data) => console.log(data))}
       >
-        <Title>Tambah product</Title>
+        <Title>Edit product</Title>
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -210,6 +252,7 @@ const AddProductForm = () => {
               name="name"
               autoComplete="productName"
               autoFocus
+              defaultValue={product.name}
             />
           </Grid>
           <Grid item xs={12}>
@@ -221,10 +264,12 @@ const AddProductForm = () => {
               name="price"
               autoComplete="price"
               autoFocus
+              defaultValue={product.price}
             />
           </Grid>
           <Grid item xs={12}>
             <FormInput
+              className={classes.input}
               required
               fullWidth
               id="stock"
@@ -232,6 +277,7 @@ const AddProductForm = () => {
               name="stock"
               autoComplete="stock"
               autoFocus
+              defaultValue={product.stock}
             />
           </Grid>
           <Grid item xs={12}>
@@ -254,6 +300,7 @@ const AddProductForm = () => {
               name="description"
               // multiline
               autoFocus
+              defaultValue={product.description}
             />
           </Grid>
           <Grid item xs={12}>
@@ -262,12 +309,20 @@ const AddProductForm = () => {
               id="category"
               label="Kategori"
               select
-              name="category"
+              name=""
               autoComplete="category"
-              autoFocus
+              value={selectedCategory}
             >
-              <MenuItem value="">-</MenuItem>
-              <ListCategory />
+              {category &&
+                category.map((res) => (
+                  <MenuItem
+                    onClick={() => categoryChangeHandler(res.category_id)}
+                    key={res.category_id}
+                    value={res.category_id}
+                  >
+                    {res.category}
+                  </MenuItem>
+                ))}
             </FormInput>
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -289,4 +344,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default EditProductForm;
