@@ -25,6 +25,7 @@ export {
   productFecthFail,
   productSearch,
   product,
+  showEditProductForm,
 } from "./product";
 
 export { fetchCategory } from "./category";

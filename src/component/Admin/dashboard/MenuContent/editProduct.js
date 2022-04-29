@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
-import { Grid, Button, MenuItem } from "@material-ui/core";
+import { Grid, Button, MenuItem, IconButton, Popover } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import cookie from "js-cookie";
 
 import Title from "../Title";
 import FormInput from "../../../CheckoutForm/FormInput";
+
 import * as actions from "../../../../store/actions/index";
 import { PanoramaFishEyeRounded } from "@material-ui/icons";
 
@@ -22,15 +24,21 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "system-ui !important",
   },
   img: {
-    maxWidth: "100%",
+    // width: "100%",
     height: "100px",
+    display: "block",
+    "&:hover": {
+      transition: 0.5,
+      opacity: 0.2,
+    },
   },
   imgButton: {
-    color: "transparent",
+    // color: "transparent",
     backgroundColor: "transparent",
     borderColor: "transparent",
     padding: 0,
-    marginRight: "30px",
+    marginRight: "17px",
+    position: "absolute",
   },
   ul: {
     listStyleType: "none",
@@ -77,6 +85,18 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "2px solid #4c5dbd",
     },
   },
+  actionImage: {
+    position: "absolute",
+    bottom: "75%",
+    left: "80%",
+  },
+  overflowImage: {
+    overflow: "auto",
+    whiteSpace: "nowrap",
+    position: "sticky",
+    width: "100%",
+  },
+  //   }
 }));
 
 const EditProductForm = () => {
@@ -98,7 +118,8 @@ const EditProductForm = () => {
   const [oldFile, setOldFile] = useState([]);
   const [category, setCategory] = useState();
   const [tags, setTags] = useState([]);
-  console.log("ID", product);
+  const [anchorEl, setAnchorEl] = useState(null);
+  console.log("ID", anchorEl);
 
   useEffect(() => {
     setSelectedCategory(product.category.category_id);
@@ -109,7 +130,9 @@ const EditProductForm = () => {
     });
   }, [product]);
 
-  console.log(oldFile);
+  selectedFile.map((a) => {
+    console.log(typeof a == "string");
+  });
 
   const fileSelectedHandler = (e) => {
     const imageFiles = e.target.files;
@@ -122,6 +145,16 @@ const EditProductForm = () => {
       });
     }
   };
+
+  const handleOpen = useCallback((event) => {
+    setAnchorEl(event.currentTarget);
+    console.log(event.currentTarget);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+    console.log("apala");
+  }, []);
 
   const categoryChangeHandler = (cat) => {
     console.log(cat);
@@ -192,33 +225,61 @@ const EditProductForm = () => {
       .catch((err) => console.log(err.response.data));
   };
 
-  const AddImageButton = ({ img }) => (
-    <Button component="label" variant="contained" className={classes.imgButton}>
-      <input
-        name="productImage"
-        type="file"
-        hidden
-        multiple
-        onChange={fileSelectedHandler}
-      />
-      <img
-        className={classes.img}
-        // src={!img ? "../../noProduct.jpg" : URL.createObjectURL(img)}
-      />
-    </Button>
+  const PreviewImage = ({ img }) => (
+    <div style={{ marginRight: "10px", display: "inline-block" }}>
+      <div onMouseEnter={handleOpen} onMouseLeave={handleClose}>
+        <img
+          className={classes.img}
+          src={typeof img == "string" ? img : URL.createObjectURL(img)}
+        />
+      </div>
+      {/* <MoreHorizIcon
+        anchorEl={anchorEl}
+        aria-hiddden={false}
+        style={{
+          position: "absolute",
+            display: Boolean(!anchorEl) && "none",
+        }}
+      /> */}
+    </div>
+  );
+
+  const AddImageButton = useCallback(
+    () => (
+      <Button
+        component="label"
+        variant="contained"
+        className={classes.imgButton}
+      >
+        <input
+          name="productImage"
+          type="file"
+          hidden
+          multiple
+          onChange={fileSelectedHandler}
+        />
+        <div>
+          <img className={classes.img} src="../../noProduct.jpg" />
+        </div>
+      </Button>
+    ),
+    [anchorEl, product]
   );
 
   const ListTags = () =>
     tags &&
-    tags.map((tag, i) => (
-      <li key={i} className={classes.listTags}>
-        <span>{tag}</span>
-        <CancelIcon
-          onClick={() => removeTagsHandler(i)}
-          className={classes.closeIcon}
-        />
-      </li>
-    ));
+    tags.map(
+      (tag, i) => (
+        <li key={i} className={classes.listTags}>
+          <span>{tag}</span>
+          <CancelIcon
+            onClick={() => removeTagsHandler(i)}
+            className={classes.closeIcon}
+          />
+        </li>
+      ),
+      []
+    );
 
   useEffect(() => {
     let isMounted = true;
@@ -325,13 +386,18 @@ const EditProductForm = () => {
                 ))}
             </FormInput>
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid className={classes.overflowImage}>
+            {/* <Grid item xs={12} sm={12}> */}
+            {!oldFile.length ||
+              oldFile.map((img) => {
+                return <PreviewImage img={img} />;
+              })}
             {!selectedFile.length ||
               selectedFile.map((img) => {
-                return <AddImageButton img={img} />;
+                return <PreviewImage img={img} />;
               })}
-            {selectedFile.length < 4 && <AddImageButton img={null} />}
-            {/* {<AddImageButton img={selectedFile} />} */}
+            {selectedFile.length + oldFile.length < 4 && <AddImageButton />}
+            {/* </Grid> */}
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">

@@ -5,6 +5,8 @@ const initialState = {
   product: [],
   loading: false,
   error: null,
+  showEditForm: false,
+  productById: {},
 };
 
 const fetchProductStart = (state, action) => {
@@ -44,6 +46,12 @@ const reducer = (state = initialState, action) => {
       return fetchProductFail(state, action);
     case actionTypes.PRODUCT_SEARCH:
       return productSearch(state, action);
+    case actionTypes.SHOW_EDIT_PRODUCT:
+      return {
+        showEditForm: !state.showEditForm,
+        product: state.product,
+        productById: action.productById,
+      };
 
     default:
       return state;

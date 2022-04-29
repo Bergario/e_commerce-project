@@ -60,7 +60,7 @@ const App = () => {
   const Auth = lazy(() => import("./component/Auth/Auth"));
 
   useEffect(() => {
-    // dispatch(onProductFetch());
+    dispatch(onProductFetch());
     onFetchCategory();
   }, []);
 

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import * as actions from "../../../../store/actions/index";
+import Popover from "@material-ui/core/Popover";
 
 const StyledMenu = withStyles({
   paper: {
@@ -45,54 +45,57 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function CustomizedMenus({ product }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+const CustomizedMenus = ({ children, anchor }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(anchor);
 
-  //REDUX
-  const onEditFormHandler = (product) => {
-    dispatch(actions.showEditProductForm(product));
-    setAnchorEl(null);
-  };
+  useEffect(() => {
+    setAnchorEl(anchorEl);
+  }, [anchor]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  console.log(anchor);
+  const handleOpen = () => {
+    setAnchorEl(anchor);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const open = Boolean(anchorEl);
+  //   console.log(open);
+
   return (
     <div>
-      <IconButton
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="inherit"
-        onClick={handleClick}
-      >
-        <MoreHorizIcon />
-      </IconButton>
-      <StyledMenu
-        id="customized-menu"
+      {children}
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: "none",
+        }}
         anchorEl={anchorEl}
-        keepMounted
+        // keepMounted
+        disableRestoreFocus
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        // onMouseLeave={handleClose}
       >
         <MenuItem className={classes.details}>Details</MenuItem>
-        <MenuItem
-          className={classes.edit}
-          onClick={() => onEditFormHandler(product)}
-        >
-          Edit
-        </MenuItem>
+        <MenuItem className={classes.edit}>Edit</MenuItem>
         <MenuItem className={classes.delete} onClick={handleClose}>
           Delete
         </MenuItem>
-      </StyledMenu>
+      </Popover>
     </div>
   );
-}
+};
+
+export default React.memo(CustomizedMenus);

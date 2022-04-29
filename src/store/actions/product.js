@@ -27,6 +27,14 @@ const productSearchSuccess = (product) => {
   };
 };
 
+export const showEditProductForm = (productById) => {
+  console.log(productById);
+  return {
+    type: actionTypes.SHOW_EDIT_PRODUCT,
+    productById,
+  };
+};
+
 export const product = () => {
   return (dispatch) => {
     dispatch(productFecthStart());

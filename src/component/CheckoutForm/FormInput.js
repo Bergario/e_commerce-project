@@ -17,6 +17,8 @@ const FormInput = ({
   select,
   multiline,
   id,
+  defaultValue,
+  value,
 }) => {
   const { control } = useFormContext();
   const variants = variant && variant;
@@ -26,6 +28,8 @@ const FormInput = ({
     <Controller
       control={control}
       name={name}
+      defaultValue={defaultValue && defaultValue}
+      value={value && value}
       render={({ field }) => {
         return (
           <TextField
@@ -43,6 +47,8 @@ const FormInput = ({
             autoComplete={autoComplete}
             error={error ? true : false}
             id={id}
+            defaultValue={defaultValue && defaultValue}
+            value={value && value}
           >
             {children}
           </TextField>
@@ -53,4 +59,4 @@ const FormInput = ({
   );
 };
 
-export default FormInput;
+export default React.memo(FormInput);
