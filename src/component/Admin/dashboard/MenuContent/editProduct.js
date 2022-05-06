@@ -11,6 +11,7 @@ import cookie from "js-cookie";
 
 import Title from "../Title";
 import FormInput from "../../../CheckoutForm/FormInput";
+import ActionImage from "./actionImage";
 
 import * as actions from "../../../../store/actions/index";
 import { PanoramaFishEyeRounded } from "@material-ui/icons";
@@ -24,13 +25,16 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "system-ui !important",
   },
   img: {
-    // width: "100%",
     height: "100px",
-    display: "block",
-    "&:hover": {
-      transition: 0.5,
-      opacity: 0.2,
-    },
+    // display: "block",
+    // "&:hover": {
+    //   transition: 0.5,
+    //   opacity: 0.2,
+    // },
+  },
+  AddImage: {
+    height: "100px",
+    overflow: "hidden",
   },
   imgButton: {
     // color: "transparent",
@@ -118,8 +122,7 @@ const EditProductForm = () => {
   const [oldFile, setOldFile] = useState([]);
   const [category, setCategory] = useState();
   const [tags, setTags] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  console.log("ID", anchorEl);
+  const [showMenuAction, setShowMenuAction] = useState(-1);
 
   useEffect(() => {
     setSelectedCategory(product.category.category_id);
@@ -145,16 +148,6 @@ const EditProductForm = () => {
       });
     }
   };
-
-  const handleOpen = useCallback((event) => {
-    setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-    console.log("apala");
-  }, []);
 
   const categoryChangeHandler = (cat) => {
     console.log(cat);
@@ -225,22 +218,30 @@ const EditProductForm = () => {
       .catch((err) => console.log(err.response.data));
   };
 
-  const PreviewImage = ({ img }) => (
+  const PreviewImage = ({ img, index }) => (
     <div style={{ marginRight: "10px", display: "inline-block" }}>
-      <div onMouseEnter={handleOpen} onMouseLeave={handleClose}>
+      <div
+        style={{ position: "relative" }}
+        onMouseEnter={() => setShowMenuAction(index)}
+        // onMouseLeave={() => setShowMenuAction(-1)}
+      >
         <img
           className={classes.img}
           src={typeof img == "string" ? img : URL.createObjectURL(img)}
+          style={{ opacity: showMenuAction == index && "0.7" }}
         />
+        <ActionImage showMenuAction={showMenuAction} index={index} />
+        {/* <MoreHorizIcon
+          aria-hiddden={false}
+          color="action"
+          style={{
+            position: "absolute",
+            right: "5%",
+            display: anchorEl == index || "none",
+            cursor: "pointer",
+          }}
+        /> */}
       </div>
-      {/* <MoreHorizIcon
-        anchorEl={anchorEl}
-        aria-hiddden={false}
-        style={{
-          position: "absolute",
-            display: Boolean(!anchorEl) && "none",
-        }}
-      /> */}
     </div>
   );
 
@@ -258,12 +259,12 @@ const EditProductForm = () => {
           multiple
           onChange={fileSelectedHandler}
         />
-        <div>
-          <img className={classes.img} src="../../noProduct.jpg" />
+        <div className={classes.AddImage}>
+          <img className={classes.img} src="../../Add_product.png" />
         </div>
       </Button>
     ),
-    [anchorEl, product]
+    [showMenuAction, product]
   );
 
   const ListTags = () =>
@@ -389,12 +390,12 @@ const EditProductForm = () => {
           <Grid className={classes.overflowImage}>
             {/* <Grid item xs={12} sm={12}> */}
             {!oldFile.length ||
-              oldFile.map((img) => {
-                return <PreviewImage img={img} />;
+              oldFile.map((img, i) => {
+                return <PreviewImage img={img} index={i} />;
               })}
             {!selectedFile.length ||
-              selectedFile.map((img) => {
-                return <PreviewImage img={img} />;
+              selectedFile.map((img, i) => {
+                return <PreviewImage img={img} index={i} />;
               })}
             {selectedFile.length + oldFile.length < 4 && <AddImageButton />}
             {/* </Grid> */}
