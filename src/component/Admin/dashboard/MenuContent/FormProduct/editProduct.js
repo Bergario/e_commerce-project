@@ -9,11 +9,12 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import cookie from "js-cookie";
 
-import Title from "../Title";
-import FormInput from "../../../CheckoutForm/FormInput";
+import Title from "../../Title";
+import FormInput from "../../../../CheckoutForm/FormInput";
 import ActionImage from "./actionImage";
+import PreviewImage from "./ImagePreview";
 
-import * as actions from "../../../../store/actions/index";
+import * as actions from "../../../../../store/actions/index";
 import { PanoramaFishEyeRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -122,9 +123,10 @@ const EditProductForm = () => {
   const [oldFile, setOldFile] = useState([]);
   const [category, setCategory] = useState();
   const [tags, setTags] = useState([]);
-  const [showMenuAction, setShowMenuAction] = useState(-1);
 
+  console.log("start rendering");
   useEffect(() => {
+    console.log("useEffect");
     setSelectedCategory(product.category.category_id);
     setTags([...product.tags]);
     const images = product.productImage;
@@ -133,41 +135,46 @@ const EditProductForm = () => {
     });
   }, [product]);
 
-  selectedFile.map((a) => {
-    console.log(typeof a == "string");
-  });
+  const fileSelectedHandler = useCallback(
+    (e) => {
+      const imageFiles = e.target.files;
+      console.log(imageFiles);
+      for (let i = 0; i <= imageFiles.length - 1; i++) {
+        new Compressor(imageFiles[i], {
+          quality: 0.6,
+          success: (imgFile) =>
+            setSelectedFile((prevFile) => [...prevFile, imgFile]),
+        });
+      }
+    },
+    [selectedFile]
+  );
 
-  const fileSelectedHandler = (e) => {
-    const imageFiles = e.target.files;
-    console.log(imageFiles);
-    for (let i = 0; i <= imageFiles.length - 1; i++) {
-      new Compressor(imageFiles[i], {
-        quality: 0.6,
-        success: (imgFile) =>
-          setSelectedFile((prevFile) => [...prevFile, imgFile]),
-      });
-    }
-  };
-
-  const categoryChangeHandler = (cat) => {
+  const categoryChangeHandler = useCallback((cat) => {
     console.log(cat);
     setSelectedCategory(cat);
-  };
+  }, []);
 
-  const addTagsHandler = (e) => {
-    e.preventDefault();
-    const tag = e.target.form[3].value;
-    const whiteSpace = "^\\s+$";
-    if (!tag.match(whiteSpace) && tag.length !== 0) {
-      setTags([...tags, tag]);
-    }
-    e.target.form[3].value = "";
-  };
+  const addTagsHandler = useCallback(
+    (e) => {
+      e.preventDefault();
+      const tag = e.target.form[3].value;
+      const whiteSpace = "^\\s+$";
+      if (!tag.match(whiteSpace) && tag.length !== 0) {
+        setTags([...tags, tag]);
+      }
+      e.target.form[3].value = "";
+    },
+    [tags]
+  );
 
-  const removeTagsHandler = (index) => {
-    tags.splice(index, 1);
-    setTags([...tags]);
-  };
+  const removeTagsHandler = useCallback(
+    (index) => {
+      tags.splice(index, 1);
+      setTags([...tags]);
+    },
+    [tags]
+  );
 
   const uploadProductHandler = (data) => {
     const token = cookie.get("token");
@@ -218,32 +225,35 @@ const EditProductForm = () => {
       .catch((err) => console.log(err.response.data));
   };
 
-  const PreviewImage = ({ img, index }) => (
-    <div style={{ marginRight: "10px", display: "inline-block" }}>
-      <div
-        style={{ position: "relative" }}
-        onMouseEnter={() => setShowMenuAction(index)}
-        // onMouseLeave={() => setShowMenuAction(-1)}
-      >
-        <img
-          className={classes.img}
-          src={typeof img == "string" ? img : URL.createObjectURL(img)}
-          style={{ opacity: showMenuAction == index && "0.7" }}
-        />
-        <ActionImage showMenuAction={showMenuAction} index={index} />
-        {/* <MoreHorizIcon
-          aria-hiddden={false}
-          color="action"
-          style={{
-            position: "absolute",
-            right: "5%",
-            display: anchorEl == index || "none",
-            cursor: "pointer",
-          }}
-        /> */}
-      </div>
-    </div>
-  );
+  // const PreviewImage = useCallback(
+  //   ({ img, index }) => (
+  //     <div style={{ marginRight: "10px", display: "inline-block" }}>
+  //       <div
+  //         style={{ position: "relative" }}
+  //         onMouseEnter={() => handleOpenMenuAction(index)}
+  //         onMouseLeave={() => handleCloseMenuAction()}
+  //       >
+  //         <img
+  //           className={classes.img}
+  //           src={typeof img == "string" ? img : URL.createObjectURL(img)}
+  //           style={{ opacity: showMenuAction == index && "0.7" }}
+  //         />
+  //         {/* <ActionImage showMenuAction={showMenuAction} index={index} /> */}
+  //         <MoreHorizIcon
+  //           aria-hiddden={false}
+  //           color="action"
+  //           style={{
+  //             position: "absolute",
+  //             right: "5%",
+  //             display: showMenuAction == index || "none",
+  //             cursor: "pointer",
+  //           }}
+  //         />
+  //       </div>
+  //     </div>
+  //   ),
+  //   []
+  // );
 
   const AddImageButton = useCallback(
     () => (
@@ -264,7 +274,7 @@ const EditProductForm = () => {
         </div>
       </Button>
     ),
-    [showMenuAction, product]
+    [product]
   );
 
   const ListTags = () =>
@@ -411,4 +421,4 @@ const EditProductForm = () => {
   );
 };
 
-export default EditProductForm;
+export default React.memo(EditProductForm);

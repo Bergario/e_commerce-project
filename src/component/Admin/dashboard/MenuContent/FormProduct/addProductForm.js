@@ -7,8 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import cookie from "js-cookie";
 
-import Title from "../Title";
-import FormInput from "../../../CheckoutForm/FormInput";
+import Title from "../../Title";
+import FormInput from "../../../../CheckoutForm/FormInput";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -298,4 +298,4 @@ const AddProductForm = () => {
   );
 };
 
-export default AddProductForm;
+export default React.memo(AddProductForm);

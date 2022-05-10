@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -15,8 +15,8 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import * as actions from "../../../../store/actions/index";
 
 // import Title from "../Title";
-import AddProductForm from "./addProductForm";
-import EditProductForm from "./editProduct";
+import AddProductForm from "./FormProduct/addProductForm";
+import EditProductForm from "./FormProduct/editProduct";
 import ListProduct from "./listProduct";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +48,8 @@ export default function Product() {
     setShowForm((prevState) => !prevState);
   };
 
+  console.log("parent");
+
   const AddProduct = () => (
     <Grid className={classes.addIcon}>
       <Fab color="primary" size="medium" onClick={showHandler}>
@@ -71,22 +73,25 @@ export default function Product() {
     </Grid>
   );
 
-  const EditProduct = () => (
-    <Dialog
-      maxWidth="sm"
-      open={editFormHandler}
-      onClose={onEditFormHandler}
-      aria-labelledby="max-width-dialog-title"
-    >
-      <DialogContent>
-        <EditProductForm />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onEditFormHandler} color="primary">
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
+  const EditProduct = useCallback(
+    () => (
+      <Dialog
+        maxWidth="sm"
+        open={editFormHandler}
+        onClose={onEditFormHandler}
+        aria-labelledby="max-width-dialog-title"
+      >
+        <DialogContent>
+          <EditProductForm />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onEditFormHandler} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    ),
+    [editFormHandler]
   );
 
   return (
