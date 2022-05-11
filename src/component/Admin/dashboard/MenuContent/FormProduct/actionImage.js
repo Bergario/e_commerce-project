@@ -1,10 +1,9 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useRef } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import IconButton from "@material-ui/core/IconButton";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { DeleteForever, Edit } from "@material-ui/icons";
 
 const StyledMenu = withStyles({
   paper: {
@@ -23,7 +22,7 @@ const StyledMenu = withStyles({
     //   vertical: "top",
     //   horizontal: "center",
     // }}
-    style={{ top: "10px" }}
+    style={{ left: "50px", top: "0px" }}
     {...props}
   />
 ));
@@ -47,30 +46,22 @@ const useStyles = makeStyles(() => ({
   actionPapper: {},
 }));
 
-export default function CustomizedMenus({ showMenuAction, index }) {
+export default function CustomizedMenus({ showMenuAction, index, divRef }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const classes = useStyles();
-  const dispatch = useDispatch();
-
-  //REDUX
-  //   const onEditFormHandler = (product) => {
-  //     dispatch(actions.showEditProductForm(product));
-  //     setAnchorEl(null);
-  //   };
+  // const divRef = useRef();
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    console.log(divRef);
+    setAnchorEl(divRef);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  console.log(showMenuAction, index);
-
   return (
-    <>
-      {/* <IconButton> */}
+    <React.Fragment>
       <MoreHorizIcon
         aria-hiddden={false}
         color="action"
@@ -82,27 +73,21 @@ export default function CustomizedMenus({ showMenuAction, index }) {
           cursor: "pointer",
         }}
       />
-      {/* </IconButton> */}
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        // open="true"
         onClose={handleClose}
         className={classes.actionPapper}
       >
-        <MenuItem className={classes.details}>Details</MenuItem>
-        <MenuItem
-          className={classes.edit}
-          //   onClick={() => onEditFormHandler(product)}
-        >
-          Edit
+        <MenuItem className={classes.edit}>
+          <Edit />
         </MenuItem>
         <MenuItem className={classes.delete} onClick={handleClose}>
-          Delete
+          <DeleteForever />
         </MenuItem>
       </StyledMenu>
-    </>
+    </React.Fragment>
   );
 }

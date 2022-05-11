@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import ActionImage from "./actionImage";
 
 const ImagePreview = ({ img, index }) => {
+  const divRef = useRef();
+
   const [showMenuAction, setShowMenuAction] = useState(-1);
 
   const handleOpenMenuAction = (i) => {
@@ -21,10 +22,15 @@ const ImagePreview = ({ img, index }) => {
         onMouseLeave={() => handleCloseMenuAction()}
       >
         <img
+          ref={divRef}
           src={typeof img == "string" ? img : URL.createObjectURL(img)}
           style={{ opacity: showMenuAction == index && "0.7", height: "100px" }}
         />
-        <ActionImage showMenuAction={showMenuAction} index={index} />
+        <ActionImage
+          showMenuAction={showMenuAction}
+          index={index}
+          divRef={divRef.current}
+        />
         {/* <MoreHorizIcon
           aria-hiddden={false}
           color="action"
