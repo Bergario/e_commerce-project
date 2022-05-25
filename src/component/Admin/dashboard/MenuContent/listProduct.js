@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
@@ -43,21 +43,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ListProduct = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const { products } = useSelector((state) => ({
     products: state.product.product,
   }));
-
-  const handleOpen = useCallback((event) => {
-    setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    // setAnchorEl(null);
-    console.log("apala");
-  }, [anchorEl]);
 
   const dispatch = useDispatch();
 
@@ -69,7 +58,6 @@ const ListProduct = () => {
 
   return (
     <React.Fragment>
-      <Title>Daftar Product</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -107,39 +95,7 @@ const ListProduct = () => {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        {/* <Link color="primary" href="#" onClick={preventDefault}>
-          See more products
-        </Link> */}
-        <div>
-          <h2
-            aria-owns={Boolean(anchorEl) ? "mouse-over-popover" : undefined}
-            aria-haspopup="true"
-            onMouseEnter={handleOpen}
-            onMouseLeave={() => handleClose()}
-          >
-            Hover me!
-          </h2>
-        </div>
-        <Popover
-          id="mouse-over-popover"
-          sx={{
-            pointerEvents: "none",
-          }}
-          // open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          // onClose={handleClose}
-          disableRestoreFocus
-        >
-          <h3 sx={{ p: 1 }}>YYeaayyyyy...!!!</h3>
-        </Popover>
+        <div>See more products</div>
       </div>
     </React.Fragment>
   );

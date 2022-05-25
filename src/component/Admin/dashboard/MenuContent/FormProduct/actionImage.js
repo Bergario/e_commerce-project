@@ -8,24 +8,12 @@ import { DeleteForever, Edit } from "@material-ui/icons";
 const StyledMenu = withStyles({
   paper: {
     border: "1px solid #d3d4d5",
-    backgroundColor: "transparent",
+    backgroundColor: "#424b4cd1",
+    "&li": {
+      padding: 0,
+    },
   },
-})((props) => (
-  <Menu
-    // elevation={0}
-    // getContentAnchorEl={null}
-    // anchorOrigin={{
-    //   vertical: "center",
-    //   horizontal: "center",
-    // }}
-    // transformOrigin={{
-    //   vertical: "top",
-    //   horizontal: "center",
-    // }}
-    style={{ left: "50px", top: "0px" }}
-    {...props}
-  />
-));
+})((props) => <Menu style={{ left: "0px", top: "15px" }} {...props} />);
 
 const useStyles = makeStyles(() => ({
   details: {
@@ -46,14 +34,14 @@ const useStyles = makeStyles(() => ({
   actionPapper: {},
 }));
 
-export default function CustomizedMenus({ showMenuAction, index, divRef }) {
+const CustomizedMenus = ({ showMenuAction, index, onDeleteImage, img }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const classes = useStyles();
-  // const divRef = useRef();
+  const divRef = useRef();
 
-  const handleClick = (event) => {
+  const handleClick = () => {
     console.log(divRef);
-    setAnchorEl(divRef);
+    setAnchorEl(divRef.current);
   };
 
   const handleClose = () => {
@@ -63,13 +51,14 @@ export default function CustomizedMenus({ showMenuAction, index, divRef }) {
   return (
     <React.Fragment>
       <MoreHorizIcon
+        ref={divRef}
         aria-hiddden={false}
         color="action"
         onClick={handleClick}
         style={{
           position: "absolute",
           right: "5%",
-          display: showMenuAction == index || "none",
+          visibility: showMenuAction == index || "hidden",
           cursor: "pointer",
         }}
       />
@@ -84,10 +73,18 @@ export default function CustomizedMenus({ showMenuAction, index, divRef }) {
         <MenuItem className={classes.edit}>
           <Edit />
         </MenuItem>
-        <MenuItem className={classes.delete} onClick={handleClose}>
+        <MenuItem
+          className={classes.delete}
+          onClick={() => {
+            onDeleteImage(img, index);
+            handleClose();
+          }}
+        >
           <DeleteForever />
         </MenuItem>
       </StyledMenu>
     </React.Fragment>
   );
-}
+};
+
+export default React.memo(CustomizedMenus);

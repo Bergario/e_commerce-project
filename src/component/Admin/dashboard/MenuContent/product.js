@@ -8,6 +8,8 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  TextField,
+  MenuItem,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
@@ -16,8 +18,9 @@ import * as actions from "../../../../store/actions/index";
 
 // import Title from "../Title";
 import AddProductForm from "./FormProduct/addProductForm";
-import EditProductForm from "./FormProduct/editProduct";
+import EditProductForm from "./FormProduct/editProductForm";
 import ListProduct from "./listProduct";
+import Title from "../Title";
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
@@ -27,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     minHeight: "300px",
+  },
+  test: {
+    width: "25ch",
   },
 }));
 
@@ -49,9 +55,42 @@ export default function Product() {
   };
 
   console.log("parent");
+  const MenuCategory = () => (
+    <TextField
+      id="outlined-select-currency"
+      select
+      label="category"
+      // value={currency}
+      // onChange={handleChange}
+      // helperText="Please select your currency"
+      variant="outlined"
+      size="small"
+      SelectProps={{
+        native: true,
+      }}
+      className={classes.test}
+    >
+      <option key="tesdt" value="test">
+        Jambu
+      </option>
+      <option key="tesdt" value="test">
+        Apel
+      </option>
+      <option key="tesdt" value="test">
+        Mangga
+      </option>
+    </TextField>
+  );
 
   const AddProduct = () => (
     <Grid className={classes.addIcon}>
+      <TextField
+        id="outlined-basic"
+        label="Search"
+        variant="outlined"
+        size="small"
+      />
+      <MenuCategory />
       <Fab color="primary" size="medium" onClick={showHandler}>
         {showForm ? <RemoveIcon /> : <AddIcon />}
       </Fab>
@@ -97,6 +136,7 @@ export default function Product() {
   return (
     <React.Fragment>
       <Grid className={classes.container}>
+        <Title>Daftar Product</Title>
         <AddProduct />
         <EditProduct />
         <ListProduct />

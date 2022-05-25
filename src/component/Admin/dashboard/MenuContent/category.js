@@ -15,6 +15,7 @@ import {
   DialogActions,
   Button,
   DialogContent,
+  TextField,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   addIcon: {
     marginBottom: theme.spacing(3),
     display: "flex",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
   },
   container: {
     minHeight: "300px",
@@ -81,7 +82,14 @@ const Category = React.memo(() => {
   return (
     <React.Fragment>
       <Grid className={classes.container}>
+        <Title>Daftar Kategori</Title>
         <Grid className={classes.addIcon}>
+          <TextField
+            id="outlined-basic"
+            label="Search"
+            variant="outlined"
+            size="small"
+          />
           <Fab color="primary" size="medium" onClick={showHandler}>
             {showForm ? <RemoveIcon /> : <AddIcon />}
           </Fab>
@@ -89,7 +97,8 @@ const Category = React.memo(() => {
             maxWidth="sm"
             open={showForm}
             onClose={showHandler}
-            aria-labelledby="max-width-dialog-title">
+            aria-labelledby="max-width-dialog-title"
+          >
             <DialogContent>
               <FormProvider {...method}>
                 <form
@@ -97,8 +106,9 @@ const Category = React.memo(() => {
                   className={classes.form}
                   onSubmit={method.handleSubmit((data) =>
                     uploadCategoryHandler(data)
-                  )}>
-                  <Title>Tambah product</Title>
+                  )}
+                >
+                  <Title>Tambah category</Title>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <FormInput
@@ -138,13 +148,13 @@ const Category = React.memo(() => {
             </DialogActions>
           </Dialog>
         </Grid>
-        <Title>Daftar Kategori</Title>
+
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Kategori</TableCell>
-              <TableCell>Deskripsi</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell>CATEGORY</TableCell>
+              <TableCell>DESCRIPTION</TableCell>
+              <TableCell align="right">ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

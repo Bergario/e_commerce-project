@@ -3,74 +3,13 @@ import axios from "axios";
 import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
 import { Grid, Button, MenuItem } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import CancelIcon from "@material-ui/icons/Cancel";
 import cookie from "js-cookie";
 
 import Title from "../../Title";
 import FormInput from "../../../../CheckoutForm/FormInput";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    marginTop: theme.spacing(1),
-  },
-  img: {
-    maxWidth: "100%",
-    height: "100px",
-  },
-  imgButton: {
-    color: "transparent",
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-    padding: 0,
-    marginRight: "30px",
-  },
-  ul: {
-    listStyleType: "none",
-    display: "flex",
-  },
-  listTags: {
-    marginRight: "10px",
-    marginBottom: "10px",
-    backgroundColor: "#425be5",
-    color: "#fff",
-    padding: "3px",
-    borderRadius: "5px",
-    fontSize: "11px",
-  },
-  closeIcon: {
-    fontSize: "0.7rem ",
-    cursor: "pointer",
-    verticalAlign: "text-bottom",
-    marginLeft: "2px",
-  },
-  addTagsButton: {
-    backgroundColor: "#425be5",
-    border: "none",
-    borderRadius: "3px",
-    color: "#fff",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "#3651e3",
-    },
-  },
-  inputTags: {
-    width: "100%",
-    boxSizing: " border-box",
-    border: "none",
-    paddingBottom: "5px",
-    borderBottom: "1px solid #949494",
-    "&:focus-visible": {
-      outline: "none",
-    },
-    "&:hover": {
-      borderBottom: "2px solid #141313",
-    },
-    "&:focus": {
-      borderBottom: "2px solid #4c5dbd",
-    },
-  },
-}));
+import PreviewImage from "./ImagePreview";
+import useStyles from "./styles";
 
 const AddProductForm = () => {
   const method = useForm();
@@ -89,6 +28,12 @@ const AddProductForm = () => {
           setSelectedFile((prevFile) => [...prevFile, imgFile]),
       });
     }
+  };
+
+  const deleteImageHandler = (img, index) => {
+    console.log("new image", index);
+    selectedFile.splice(index, 1);
+    setSelectedFile([...selectedFile]);
   };
 
   const addTagsHandler = (e) => {
@@ -143,7 +88,7 @@ const AddProductForm = () => {
       .catch((err) => console.log(err.response.data));
   };
 
-  const AddImageButton = ({ img }) => (
+  const AddImageButton = () => (
     <Button component="label" variant="contained" className={classes.imgButton}>
       <input
         name="productImage"
@@ -152,10 +97,9 @@ const AddProductForm = () => {
         multiple
         onChange={fileSelectedHandler}
       />
-      <img
-        className={classes.img}
-        src={!img ? "../../noProduct.jpg" : URL.createObjectURL(img)}
-      />
+      <div className={classes.AddImage}>
+        <img className={classes.img} src="../../noProduct.jpg" />
+      </div>
     </Button>
   );
 
@@ -279,10 +223,16 @@ const AddProductForm = () => {
                 })}
             </FormInput>
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid className={classes.overflowImage}>
             {!selectedFile.length ||
-              selectedFile.map((img) => {
-                return <AddImageButton img={img} />;
+              selectedFile.map((img, i) => {
+                return (
+                  <PreviewImage
+                    img={img}
+                    ndex={i}
+                    onDeleteImage={(img, i) => deleteImageHandler(img, i)}
+                  />
+                );
               })}
             {selectedFile.length < 4 && <AddImageButton img={null} />}
             {/* {<AddImageButton img={selectedFile} />} */}

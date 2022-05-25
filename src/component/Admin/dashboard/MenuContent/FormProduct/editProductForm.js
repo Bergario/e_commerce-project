@@ -3,106 +3,16 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
-import { Grid, Button, MenuItem, IconButton, Popover } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Grid, Button, MenuItem } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import cookie from "js-cookie";
 
 import Title from "../../Title";
 import FormInput from "../../../../CheckoutForm/FormInput";
-import ActionImage from "./actionImage";
 import PreviewImage from "./ImagePreview";
 
 import * as actions from "../../../../../store/actions/index";
-import { PanoramaFishEyeRounded } from "@material-ui/icons";
-
-const useStyles = makeStyles((theme) => ({
-  form: {
-    marginTop: theme.spacing(1),
-  },
-  input: {
-    color: "red",
-    fontFamily: "system-ui !important",
-  },
-  img: {
-    height: "100px",
-    // display: "block",
-    // "&:hover": {
-    //   transition: 0.5,
-    //   opacity: 0.2,
-    // },
-  },
-  AddImage: {
-    height: "100px",
-    overflow: "hidden",
-  },
-  imgButton: {
-    // color: "transparent",
-    backgroundColor: "transparent",
-    borderColor: "transparent",
-    padding: 0,
-    marginRight: "17px",
-    position: "absolute",
-  },
-  ul: {
-    listStyleType: "none",
-    display: "flex",
-  },
-  listTags: {
-    marginRight: "10px",
-    marginBottom: "10px",
-    backgroundColor: "#425be5",
-    color: "#fff",
-    padding: "3px",
-    borderRadius: "5px",
-    fontSize: "11px",
-  },
-  closeIcon: {
-    fontSize: "0.7rem ",
-    cursor: "pointer",
-    verticalAlign: "text-bottom",
-    marginLeft: "2px",
-  },
-  addTagsButton: {
-    backgroundColor: "#425be5",
-    border: "none",
-    borderRadius: "3px",
-    color: "#fff",
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: "#3651e3",
-    },
-  },
-  inputTags: {
-    width: "100%",
-    boxSizing: " border-box",
-    border: "none",
-    paddingBottom: "5px",
-    borderBottom: "1px solid #949494",
-    "&:focus-visible": {
-      outline: "none",
-    },
-    "&:hover": {
-      borderBottom: "2px solid #141313",
-    },
-    "&:focus": {
-      borderBottom: "2px solid #4c5dbd",
-    },
-  },
-  actionImage: {
-    position: "absolute",
-    bottom: "75%",
-    left: "80%",
-  },
-  overflowImage: {
-    overflow: "auto",
-    whiteSpace: "nowrap",
-    position: "sticky",
-    width: "100%",
-  },
-  //   }
-}));
+import useStyles from "./styles";
 
 const EditProductForm = () => {
   const { product } = useSelector((state) => ({
@@ -149,6 +59,17 @@ const EditProductForm = () => {
     },
     [selectedFile]
   );
+  const deleteImageHandler = (img, index) => {
+    if (typeof img == "string") {
+      console.log("old Image", index);
+      oldFile.splice(index, 1);
+      setOldFile([...oldFile]);
+    } else {
+      console.log("new image", index);
+      selectedFile.splice(index, 1);
+      setSelectedFile([...selectedFile]);
+    }
+  };
 
   const categoryChangeHandler = useCallback((cat) => {
     console.log(cat);
@@ -225,36 +146,6 @@ const EditProductForm = () => {
       .catch((err) => console.log(err.response.data));
   };
 
-  // const PreviewImage = useCallback(
-  //   ({ img, index }) => (
-  //     <div style={{ marginRight: "10px", display: "inline-block" }}>
-  //       <div
-  //         style={{ position: "relative" }}
-  //         onMouseEnter={() => handleOpenMenuAction(index)}
-  //         onMouseLeave={() => handleCloseMenuAction()}
-  //       >
-  //         <img
-  //           className={classes.img}
-  //           src={typeof img == "string" ? img : URL.createObjectURL(img)}
-  //           style={{ opacity: showMenuAction == index && "0.7" }}
-  //         />
-  //         {/* <ActionImage showMenuAction={showMenuAction} index={index} /> */}
-  //         <MoreHorizIcon
-  //           aria-hiddden={false}
-  //           color="action"
-  //           style={{
-  //             position: "absolute",
-  //             right: "5%",
-  //             display: showMenuAction == index || "none",
-  //             cursor: "pointer",
-  //           }}
-  //         />
-  //       </div>
-  //     </div>
-  //   ),
-  //   []
-  // );
-
   const AddImageButton = useCallback(
     () => (
       <Button
@@ -274,7 +165,7 @@ const EditProductForm = () => {
         </div>
       </Button>
     ),
-    [product]
+    []
   );
 
   const ListTags = () =>
@@ -401,13 +292,29 @@ const EditProductForm = () => {
             {/* <Grid item xs={12} sm={12}> */}
             {!oldFile.length ||
               oldFile.map((img, i) => {
-                return <PreviewImage img={img} index={i} />;
+                return (
+                  <PreviewImage
+                    img={img}
+                    index={i}
+                    onDeleteImage={(img, i) => deleteImageHandler(img, i)}
+                  />
+                );
               })}
             {!selectedFile.length ||
               selectedFile.map((img, i) => {
-                return <PreviewImage img={img} index={i} />;
+                return (
+                  <PreviewImage
+                    img={img}
+                    index={i}
+                    onDeleteImage={(img, i) => deleteImageHandler(img, i)}
+                  />
+                );
               })}
-            {selectedFile.length + oldFile.length < 4 && <AddImageButton />}
+            {!(oldFile.length == 0 && selectedFile.length == 0) ? (
+              selectedFile.length + oldFile.length < 5 && <AddImageButton />
+            ) : (
+              <AddImageButton />
+            )}
             {/* </Grid> */}
           </Grid>
           <Grid item xs={12}>

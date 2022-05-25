@@ -1,18 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 import ActionImage from "./actionImage";
 
-const ImagePreview = ({ img, index }) => {
-  const divRef = useRef();
-
+const ImagePreview = ({ img, index, onDeleteImage }) => {
   const [showMenuAction, setShowMenuAction] = useState(-1);
 
   const handleOpenMenuAction = (i) => {
     setShowMenuAction(i);
+    console.log("test open");
   };
   const handleCloseMenuAction = (i) => {
     setShowMenuAction(-1);
+    console.log("test close");
   };
+  console.log(showMenuAction);
 
   return (
     <div style={{ marginRight: "10px", display: "inline-block" }}>
@@ -22,25 +23,15 @@ const ImagePreview = ({ img, index }) => {
         onMouseLeave={() => handleCloseMenuAction()}
       >
         <img
-          ref={divRef}
           src={typeof img == "string" ? img : URL.createObjectURL(img)}
           style={{ opacity: showMenuAction == index && "0.7", height: "100px" }}
         />
         <ActionImage
+          onDeleteImage={onDeleteImage}
           showMenuAction={showMenuAction}
           index={index}
-          divRef={divRef.current}
+          img={img}
         />
-        {/* <MoreHorizIcon
-          aria-hiddden={false}
-          color="action"
-          style={{
-            position: "absolute",
-            right: "5%",
-            display: showMenuAction == index || "none",
-            cursor: "pointer",
-          }}
-        /> */}
       </div>
     </div>
   );
