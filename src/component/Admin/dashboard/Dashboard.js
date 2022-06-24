@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { Route } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,7 +12,13 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
+import {
+  Grid,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -24,8 +30,9 @@ import ListMenu from "./ListItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
-import Product from "./MenuContent/product";
-import Category from "./MenuContent/category";
+import Product from "./MenuContent/Product/Product";
+import Category from "./MenuContent/Category/Category";
+import SearchBar from "./MenuContent/Search/searchBar";
 
 function Copyright() {
   return (
@@ -43,7 +50,13 @@ function Copyright() {
 const Dashboard = React.memo(() => {
   console.log("Dasboard");
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+
+  const showHandler = () => {
+    setShowForm((prevState) => !prevState);
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -57,7 +70,8 @@ const Dashboard = React.memo(() => {
       <CssBaseline />
       <AppBar
         position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}>
+        className={clsx(classes.appBar, open && classes.appBarShift)}
+      >
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
@@ -67,7 +81,8 @@ const Dashboard = React.memo(() => {
             className={clsx(
               classes.menuButton,
               open && classes.menuButtonHidden
-            )}>
+            )}
+          >
             <MenuIcon />
           </IconButton>
           <Typography
@@ -75,7 +90,8 @@ const Dashboard = React.memo(() => {
             variant="h6"
             color="inherit"
             noWrap
-            className={classes.title}>
+            className={classes.title}
+          >
             Dashboard
           </Typography>
           <IconButton color="inherit">
@@ -90,7 +106,8 @@ const Dashboard = React.memo(() => {
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}
-        open={open}>
+        open={open}
+      >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
@@ -142,9 +159,11 @@ const Dashboard = React.memo(() => {
               path="/admin/product"
               component={() => (
                 <Grid item xs={12}>
-                  <Paper className={classes.paper}>
-                    <Product />
-                  </Paper>
+                  <Product
+                    showForm={showForm}
+                    showHandler={showHandler}
+                    css={classes}
+                  />
                 </Grid>
               )}
             />
@@ -152,9 +171,9 @@ const Dashboard = React.memo(() => {
               path="/admin/categories"
               component={() => (
                 <Grid item xs={12}>
-                  <Paper className={classes.paper}>
-                    <Category />
-                  </Paper>
+                  {/* <Paper className={classes.paper}> */}
+                  <Category css={classes} />
+                  {/* </Paper> */}
                 </Grid>
               )}
             />

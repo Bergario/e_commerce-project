@@ -16,7 +16,7 @@ const Products = () => {
     // error: state.cart.error,
   }));
 
-  console.log("dfdsdfs");
+  console.log("dfdsdfs", products);
 
   const Prod = useMemo(
     () => (

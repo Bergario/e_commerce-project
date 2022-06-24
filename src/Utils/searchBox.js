@@ -29,6 +29,7 @@ const SearchBox = () => {
     setKeyWords(null);
     document.getElementById("search-input").reset();
   };
+  console.log("search");
 
   return (
     <div class="box">
@@ -48,10 +49,10 @@ const SearchBox = () => {
         />
         <div class="icon">
           {/* <div> */}
-          {keyWords && <p onClick={() => removeValueHandler()}>x</p>}
+          {keyWords && <p onClick={() => removeValueHandler()}>X</p>}
           {/* </div> */}
           <SearchIcon
-            onClick={() => keyWords && onProductSearch(keyWords)}
+            onClick={() => keyWords && onProductSearch({ pencarian: keyWords })}
             color="action"
             // fontSize="small"
           />

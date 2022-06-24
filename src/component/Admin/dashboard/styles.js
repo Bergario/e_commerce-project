@@ -74,7 +74,7 @@ export default makeStyles((theme) => ({
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column",
+    flexDirection: "column-reverse",
   },
   fixedHeight: {
     height: 240,

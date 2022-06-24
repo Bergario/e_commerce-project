@@ -6,8 +6,8 @@ import { Grid, Button, MenuItem } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 import cookie from "js-cookie";
 
-import Title from "../../Title";
-import FormInput from "../../../../CheckoutForm/FormInput";
+import Title from "../../../Title";
+import FormInput from "../../../../../CheckoutForm/FormInput";
 import PreviewImage from "./ImagePreview";
 import useStyles from "./styles";
 

@@ -3,44 +3,59 @@ import { useSelector, useDispatch } from "react-redux";
 
 import {
   Grid,
-  Fab,
   Button,
   Dialog,
   DialogContent,
   DialogActions,
   TextField,
-  MenuItem,
+  Paper,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
-import * as actions from "../../../../store/actions/index";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import * as actions from "../../../../../store/actions/index";
 
 // import Title from "../Title";
 import AddProductForm from "./FormProduct/addProductForm";
 import EditProductForm from "./FormProduct/editProductForm";
 import ListProduct from "./listProduct";
-import Title from "../Title";
+import Title from "../../Title";
+import SearchBar from "../Search/searchBar";
+
+const StyledOptionMenu = withStyles({
+  MuiOutlinedInputRoot: "10px",
+})((props) => {
+  <TextField {...props}></TextField>;
+});
 
 const useStyles = makeStyles((theme) => ({
   addIcon: {
     marginBottom: theme.spacing(3),
     display: "flex",
     justifyContent: "flex-end",
+    whiteSpace: "nowrap",
+    minWidth: "520px",
   },
   container: {
     minHeight: "300px",
   },
   test: {
-    width: "25ch",
+    "& .MuiOutlinedInput-root": { marginRight: "10px" },
+    width: "20ch",
+  },
+  icon: {
+    transform: "translateY(-4px)",
+  },
+  root: {
+    "& .MuiOutlinedInput-root": { marginRight: "10px" },
   },
 }));
 
-export default function Product() {
+function Product({ css }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { editFormHandler } = useSelector((state) => ({
+  //Redux
+  const { editFormHandler, category } = useSelector((state) => ({
     editFormHandler: state.product.showEditForm,
+    category: state.category.category,
   }));
 
   const [showForm, setShowForm] = useState(false);
@@ -49,51 +64,22 @@ export default function Product() {
   const onEditFormHandler = () => {
     dispatch(actions.showEditProductForm());
   };
+  const onFetchProducts = () => {
+    dispatch(actions.product());
+  };
+  const onProductSearch = (keyWords) => {
+    dispatch(actions.productSearch(keyWords));
+  };
+  console.log("KENOPO");
 
   const showHandler = () => {
     setShowForm((prevState) => !prevState);
   };
 
-  console.log("parent");
-  const MenuCategory = () => (
-    <TextField
-      id="outlined-select-currency"
-      select
-      label="category"
-      // value={currency}
-      // onChange={handleChange}
-      // helperText="Please select your currency"
-      variant="outlined"
-      size="small"
-      SelectProps={{
-        native: true,
-      }}
-      className={classes.test}
-    >
-      <option key="tesdt" value="test">
-        Jambu
-      </option>
-      <option key="tesdt" value="test">
-        Apel
-      </option>
-      <option key="tesdt" value="test">
-        Mangga
-      </option>
-    </TextField>
-  );
+  console.log("parent", editFormHandler, category, showForm);
 
-  const AddProduct = () => (
-    <Grid className={classes.addIcon}>
-      <TextField
-        id="outlined-basic"
-        label="Search"
-        variant="outlined"
-        size="small"
-      />
-      <MenuCategory />
-      <Fab color="primary" size="medium" onClick={showHandler}>
-        {showForm ? <RemoveIcon /> : <AddIcon />}
-      </Fab>
+  const AddProductDialog = useCallback(
+    () => (
       <Dialog
         maxWidth="sm"
         open={showForm}
@@ -109,10 +95,11 @@ export default function Product() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Grid>
+    ),
+    [showForm]
   );
 
-  const EditProduct = useCallback(
+  const EditProductDialog = useCallback(
     () => (
       <Dialog
         maxWidth="sm"
@@ -135,12 +122,22 @@ export default function Product() {
 
   return (
     <React.Fragment>
-      <Grid className={classes.container}>
-        <Title>Daftar Product</Title>
-        <AddProduct />
-        <EditProduct />
-        <ListProduct />
-      </Grid>
+      <Title>Daftar Product</Title>
+      <SearchBar
+        showHandler={showHandler}
+        showForm={showForm}
+        fetchAll={onFetchProducts}
+        searchAction={(keyword) => onProductSearch(keyword)}
+      />
+      <Paper classes={css.paper}>
+        <Grid className={classes.container}>
+          <AddProductDialog />
+          <EditProductDialog />
+          <ListProduct />
+        </Grid>
+      </Paper>
     </React.Fragment>
   );
 }
+
+export default React.memo(Product);

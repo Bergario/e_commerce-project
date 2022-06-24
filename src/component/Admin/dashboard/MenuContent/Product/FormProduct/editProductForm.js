@@ -3,20 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { useForm, FormProvider } from "react-hook-form";
-import { Grid, Button, MenuItem } from "@material-ui/core";
+import {
+  Grid,
+  Button,
+  MenuItem,
+  Dialog,
+  DialogContent,
+  DialogActions,
+} from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 import cookie from "js-cookie";
 
-import Title from "../../Title";
-import FormInput from "../../../../CheckoutForm/FormInput";
+import Title from "../../../Title";
+import FormInput from "../../../../../CheckoutForm/FormInput";
 import PreviewImage from "./ImagePreview";
 
-import * as actions from "../../../../../store/actions/index";
+import * as actions from "../../../../../../store/actions/index";
 import useStyles from "./styles";
 
 const EditProductForm = () => {
-  const { product } = useSelector((state) => ({
+  const { product, editFormHandler } = useSelector((state) => ({
     product: state.product.productById,
+    editFormHandler: state.product.showEditForm,
   }));
 
   //   REDUX
@@ -34,12 +42,15 @@ const EditProductForm = () => {
   const [category, setCategory] = useState();
   const [tags, setTags] = useState([]);
 
-  console.log("start rendering");
+  console.log("start rendering", product);
+
   useEffect(() => {
     console.log("useEffect");
     setSelectedCategory(product.category.category_id);
     setTags([...product.tags]);
+
     const images = product.productImage;
+
     images.map((image) => {
       setOldFile((prevFile) => [...prevFile, image]);
     });

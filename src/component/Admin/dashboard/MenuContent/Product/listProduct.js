@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Link,
@@ -12,10 +12,10 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Title from "../Title";
-import ActionMenu from "./actionMenu";
-import { priceFormat } from "../../../../Utils/Utilities";
-import * as actions from "../../../../store/actions/index";
+import Title from "../../Title";
+import ActionMenu from "../actionMenu";
+import { priceFormat } from "../../../../../Utils/Utilities";
+import * as actions from "../../../../../store/actions/index";
 
 function preventDefault(event) {
   event.preventDefault();
@@ -27,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
   },
   img: {
     width: "50px",
+    height: "50px",
+    borderRadius: "50%",
     marginRight: theme.spacing(3),
   },
   product: {
@@ -50,11 +52,16 @@ const ListProduct = () => {
 
   const dispatch = useDispatch();
 
-  // const onProductFetch = () => dispatch(actions.product);
+  const onProductSearch = (keyWords) => {
+    dispatch(actions.productSearch(keyWords));
+  };
+
+  const [keyWords, setKeyWords] = useState(null);
 
   // useEffect(() => {
   //   onProductFetch();
   // }, []);
+  console.log("LIST", products);
 
   return (
     <React.Fragment>
