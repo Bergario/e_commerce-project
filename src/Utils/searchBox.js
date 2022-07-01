@@ -17,7 +17,6 @@ const SearchBox = () => {
   const [keyWords, setKeyWords] = useState(null);
 
   const searchHandler = useCallback((e) => {
-    console.log(e.target.value);
     setKeyWords(e.target.value);
   });
 

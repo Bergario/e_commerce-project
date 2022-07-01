@@ -25,10 +25,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchBar = ({ showHandler, showForm, searchAction, fetchAll }) => {
+const SearchBar = ({
+  showHandler,
+  showForm,
+  searchAction,
+  fetchAll,
+  skipPage,
+}) => {
   const classes = useStyles();
-  const [keyWords, setKeyWords] = useState(null);
+  const [keyWords, setKeyWords] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [sortPrice, setSortPrice] = useState(1);
 
   const { category } = useSelector((state) => ({
     category: state.category.category,
@@ -37,30 +44,40 @@ const SearchBar = ({ showHandler, showForm, searchAction, fetchAll }) => {
   useEffect(() => {
     let mount = true;
     console.log("trtr");
-    keyWords ? searchAction({ pencarian: keyWords }) : fetchAll();
+    // keyWords
+    //   ?
+    searchAction({
+      pencarian: keyWords,
+      category: selectedCategory,
+      sort: sortPrice,
+      skipPage,
+    });
+    // : fetchAll();
     return () => (mount = false);
-  }, [keyWords]);
+  }, [keyWords, selectedCategory, sortPrice, skipPage]);
 
   const searchHandler = (e) => {
     e.preventDefault();
     setKeyWords(e.target.value);
   };
 
-  const categoryHandler = useCallback(
-    (value) => {
-      console.log(value);
-      setSelectedCategory(value);
-    },
-    [selectedCategory]
-  );
+  const categoryHandler = useCallback((e) => {
+    setSelectedCategory(e.target.value);
+  }, []);
 
-  const MenuCategory = (props) => (
+  const changePriceHandler = (e) => {
+    console.log(e.target.value);
+    setSortPrice(e.target.value);
+  };
+
+  console.log(selectedCategory);
+  const MenuOptions = (props) => (
     <TextField
-      // onChange={() => props.onCategoryHandler("test")}
+      onChange={(e) => props.onChangeHandler(e)}
       id="outlined-select-currency"
       select
       label={props.label}
-      // value={keyWords}
+      value={props.keyword}
       // onChange={handleChange}
       // helperText="Please select your currency"
       variant="outlined"
@@ -70,13 +87,10 @@ const SearchBar = ({ showHandler, showForm, searchAction, fetchAll }) => {
       }}
       className={classes.test}
     >
+      {props.optionAll && <option value="0">All</option>}
       {props.menu &&
         props.menu.map((menu) => (
-          <option
-            onClick={() => props.onCategoryHandler(menu.category_id)}
-            key={menu.category}
-            value={menu.category_id}
-          >
+          <option key={menu.category} value={menu.category_id}>
             {menu.category}
           </option>
         ))}
@@ -94,14 +108,21 @@ const SearchBar = ({ showHandler, showForm, searchAction, fetchAll }) => {
         className={classes.root}
         onChange={(e) => searchHandler(e)}
       />
-      <MenuCategory
+      <MenuOptions
         label="Category"
         menu={category}
-        onCategoryHandler={categoryHandler}
+        onChangeHandler={categoryHandler}
+        optionAll="All"
+        keyword={selectedCategory}
       />
-      <MenuCategory
+      <MenuOptions
         label="Price"
-        menu={[{ category: "High to Low" }, { category: "Low to High" }]}
+        menu={[
+          { category: "High to Low", category_id: -1 },
+          { category: "Low to High", category_id: 1 },
+        ]}
+        onChangeHandler={changePriceHandler}
+        keyword={sortPrice}
       />
       <CustomButton
         // className={classes.icon}

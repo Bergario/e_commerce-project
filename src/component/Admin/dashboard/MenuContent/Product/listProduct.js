@@ -10,6 +10,7 @@ import {
   TableRow,
   Popover,
 } from "@material-ui/core";
+import Pagination from "@material-ui/lab/Pagination";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Title from "../../Title";
@@ -43,12 +44,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ListProduct = () => {
+const ListProduct = ({ products }) => {
   const classes = useStyles();
-
-  const { products } = useSelector((state) => ({
-    products: state.product.product,
-  }));
 
   const dispatch = useDispatch();
 
@@ -56,11 +53,6 @@ const ListProduct = () => {
     dispatch(actions.productSearch(keyWords));
   };
 
-  const [keyWords, setKeyWords] = useState(null);
-
-  // useEffect(() => {
-  //   onProductFetch();
-  // }, []);
   console.log("LIST", products);
 
   return (
@@ -75,6 +67,7 @@ const ListProduct = () => {
             <TableCell align="right">Action</TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {products &&
             products.map((product) => (
@@ -101,9 +94,6 @@ const ListProduct = () => {
             ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
-        <div>See more products</div>
-      </div>
     </React.Fragment>
   );
 };

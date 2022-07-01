@@ -51,12 +51,19 @@ export const product = () => {
 };
 
 export const productSearch = (keyWords) => {
-  console.log(keyWords.pencarian);
+  let idCategory = keyWords.category;
+  if (keyWords.category == 0) {
+    idCategory = "";
+  }
+  console.log(idCategory);
+
   return (dispatch) => {
     axios
       .post("http://localhost:9000/product/search/prod", {
         pencarian: keyWords.pencarian,
-        category: "",
+        category: idCategory,
+        sort: keyWords.sort,
+        skip: keyWords.skipPage,
       })
       .then((res) => dispatch(productSearchSuccess(res.data)))
       .catch((err) => dispatch(productFecthFail(err)));
