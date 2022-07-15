@@ -51,7 +51,13 @@ const SearchBox = () => {
           {keyWords && <p onClick={() => removeValueHandler()}>X</p>}
           {/* </div> */}
           <SearchIcon
-            onClick={() => keyWords && onProductSearch({ pencarian: keyWords })}
+            onClick={() =>
+              keyWords &&
+              onProductSearch({
+                pencarian: keyWords,
+                skipPage: 0,
+              })
+            }
             color="action"
             // fontSize="small"
           />

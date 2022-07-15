@@ -31,6 +31,7 @@ const SearchBar = ({
   searchAction,
   fetchAll,
   skipPage,
+  clearPageState,
 }) => {
   const classes = useStyles();
   const [keyWords, setKeyWords] = useState("");
@@ -43,31 +44,43 @@ const SearchBar = ({
 
   useEffect(() => {
     let mount = true;
-    console.log("trtr");
-    // keyWords
-    //   ?
+    console.log(
+      "trtr",
+      keyWords,
+      "cat",
+      selectedCategory,
+      "sort",
+      sortPrice,
+      "skip",
+      skipPage
+    );
+
+    // mount &&
     searchAction({
       pencarian: keyWords,
       category: selectedCategory,
       sort: sortPrice,
       skipPage,
     });
-    // : fetchAll();
+    // fetchAll();
     return () => (mount = false);
   }, [keyWords, selectedCategory, sortPrice, skipPage]);
 
   const searchHandler = (e) => {
     e.preventDefault();
     setKeyWords(e.target.value);
+    clearPageState();
   };
 
   const categoryHandler = useCallback((e) => {
     setSelectedCategory(e.target.value);
+    clearPageState();
   }, []);
 
   const changePriceHandler = (e) => {
     console.log(e.target.value);
     setSortPrice(e.target.value);
+    clearPageState();
   };
 
   console.log(selectedCategory);
@@ -138,4 +151,4 @@ const SearchBar = ({
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

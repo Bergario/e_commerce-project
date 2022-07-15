@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, lazy, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "./component/Navigation/Navbar";
+import BottomNav from "./component/Navigation/BottomNavigation/BottomNav";
 // import Products from "./component/products/Products";
 // import Cart from "./component/Cart/Cart";
 // import Dashboard from "./component/Admin/dashboard/Dashboard";
@@ -25,9 +26,10 @@ const App = () => {
     []
   );
   const onProductFetch = useCallback(
-    () => dispatch(actions.product),
-    [actions.product]
+    (query) => dispatch(actions.product(query)),
+    []
   );
+
   const onFetchCart = useCallback(
     () => dispatch(actions.fetchCart()),
     [actions.fetchCart]
@@ -60,7 +62,7 @@ const App = () => {
   const Auth = lazy(() => import("./component/Auth/Auth"));
 
   useEffect(() => {
-    dispatch(onProductFetch());
+    // onProductFetch();
     onFetchCategory();
   }, []);
 
@@ -82,23 +84,6 @@ const App = () => {
     () => (
       <Switch>
         <Route exact path="/" component={() => <Products />} />
-        <Route path="/cart" component={() => <Cart />} />
-        <Route path="/admin" component={Dashboard} />
-        {/* <Route path="/status?order_id=:id" component={PaymentDetail} /> */}
-        {/* <Route path="/status" component={PaymentDetail} /> */}
-        <Route path={"/auth/login"} component={() => <Auth />} />
-        <Route path={"/auth/signup"} component={() => <Auth />} />
-        {/* <Route path={"/order"} component={() => <Orders />} /> */}
-        <Redirect to="/" />
-      </Switch>
-    ),
-    [location.pathname, isAuth]
-  );
-
-  if (isAuth) {
-    routes = (
-      <Switch>
-        <Route exact path="/" component={() => <Products />} />
         <Route path="/order" component={() => <Orders />} />
         <Route
           path="/status?order_id=:id"
@@ -110,6 +95,23 @@ const App = () => {
         <Route path="/admin" component={Dashboard} />
         <Redirect to="/" />
       </Switch>
+    ),
+    [location.pathname, isAuth]
+  );
+
+  if (!isAuth) {
+    routes = (
+      <Switch>
+        <Route exact path="/" component={() => <Products />} />
+        <Route path="/cart" component={() => <Cart />} />
+        {/* <Route path="/admin" component={Dashboard} /> */}
+        {/* <Route path="/status?order_id=:id" component={PaymentDetail} /> */}
+        {/* <Route path="/status" component={PaymentDetail} /> */}
+        <Route path={"/auth/login"} component={() => <Auth />} />
+        <Route path={"/auth/signup"} component={() => <Auth />} />
+        {/* <Route path={"/order"} component={() => <Orders />} /> */}
+        <Redirect to="/" />
+      </Switch>
     );
   }
   return (
@@ -117,6 +119,7 @@ const App = () => {
       <Navbar />
       <Suspense fallback={<div></div>}>{routes}</Suspense>
       {/* {routes} */}
+      <BottomNav onFetchProducts={onProductFetch} />
     </div>
   );
 };

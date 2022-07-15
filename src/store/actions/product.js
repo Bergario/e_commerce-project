@@ -35,11 +35,13 @@ export const showEditProductForm = (productById) => {
   };
 };
 
-export const product = () => {
+export const product = (query) => {
+  console.log("store", query);
+  const skip = query && query.skip;
   return (dispatch) => {
     dispatch(productFecthStart());
     axios
-      .get("http://localhost:9000/product/", {
+      .get(`http://localhost:9000/product?limit=6&skip=${skip}`, {
         withCredentials: true,
       })
       .then((response) => {

@@ -211,6 +211,7 @@ const AddProductForm = () => {
               name="category"
               autoComplete="category"
               autoFocus
+              value={category}
             >
               <MenuItem value="">-</MenuItem>
               {category &&

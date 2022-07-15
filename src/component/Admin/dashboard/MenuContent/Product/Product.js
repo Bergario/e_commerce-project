@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -20,6 +20,7 @@ import ListProduct from "./listProduct";
 import Title from "../../Title";
 import SearchBar from "../Search/searchBar";
 import Pagination from "@material-ui/lab/Pagination";
+import PageComponent from "../../../../../Utils/Pagination";
 
 const StyledOptionMenu = withStyles({
   MuiOutlinedInputRoot: "10px",
@@ -79,25 +80,29 @@ function Product({ css }) {
   const onProductSearch = (keyWords) => {
     dispatch(actions.productSearch(keyWords));
   };
-  console.log("KENOPO");
+
+  // Pagination
+  const totalProducts = products.length != 0 ? products[0].countProduct : 6;
 
   const showHandler = () => {
     setShowForm((prevState) => !prevState);
   };
 
-  const change = (e, value) => {
+  useEffect(() => {
+    console.log("apage", page);
+    setSkipPage(page * 6 - 6);
+  }, [page]);
+
+  const changePage = useCallback((e, value) => {
     setPage(value);
-    setSkipPage(value * 5 - 5);
+  }, []);
+  console.log(page);
+
+  const clearPageState = () => {
+    setPage(1);
   };
 
-  // Pagination
-  const totalProducts = products.length != 0 ? products[0].countProduct : 5;
-  let countPage = Math.floor(totalProducts / 5);
-  if (totalProducts % 5 !== 0) {
-    countPage += 1;
-  }
-
-  console.log("parent", editFormHandler, category, showForm);
+  console.log("parent", editFormHandler, category, showForm, skipPage);
 
   const AddProductDialog = useCallback(
     () => (
@@ -150,18 +155,19 @@ function Product({ css }) {
         fetchAll={onFetchProducts}
         searchAction={(keyword) => onProductSearch(keyword)}
         skipPage={skipPage}
+        clearPageState={clearPageState}
       />
       <Paper classes={css.paper}>
         <Grid className={classes.container}>
           <AddProductDialog />
           <EditProductDialog />
           <ListProduct products={products} />
-          {totalProducts >= 10 && (
-            <Pagination
-              className={classes.paging}
-              count={countPage}
+          {totalProducts >= 7 && (
+            <PageComponent
+              paging={classes.paging}
               page={page}
-              onChange={change}
+              changePage={changePage}
+              products={products}
             />
           )}
         </Grid>
