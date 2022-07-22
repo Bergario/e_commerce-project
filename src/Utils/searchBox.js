@@ -4,28 +4,26 @@ import * as actions from "../store/actions/index";
 import SearchIcon from "@material-ui/icons/Search";
 import "./searchBox.css";
 
-const SearchBox = () => {
+const SearchBox = ({ searchHandler, keywords, skipPage }) => {
   const dispatch = useDispatch();
 
-  const onProductSearch = (keyWords) => {
+  const onSearchProduct = (keyWords) => {
     dispatch(actions.productSearch(keyWords));
   };
   const onFetchProducts = () => {
     dispatch(actions.product());
   };
 
-  const [keyWords, setKeyWords] = useState(null);
-
-  const searchHandler = useCallback((e) => {
-    setKeyWords(e.target.value);
-  });
+  // const searchHandler = useCallback((e) => {
+  //   setKeyWords(e.target.value);
+  // });
 
   useEffect(() => {
-    !keyWords && onFetchProducts();
-  }, [keyWords]);
+    !keywords && onFetchProducts();
+  }, [keywords]);
 
   const removeValueHandler = () => {
-    setKeyWords(null);
+    // setKeyWords(null);
     document.getElementById("search-input").reset();
   };
   console.log("search");
@@ -48,14 +46,14 @@ const SearchBox = () => {
         />
         <div class="icon">
           {/* <div> */}
-          {keyWords && <p onClick={() => removeValueHandler()}>X</p>}
+          {keywords && <p onClick={() => removeValueHandler()}>X</p>}
           {/* </div> */}
           <SearchIcon
             onClick={() =>
-              keyWords &&
-              onProductSearch({
-                pencarian: keyWords,
-                skipPage: 0,
+              keywords &&
+              onSearchProduct({
+                pencarian: keywords,
+                skipPage: skipPage,
               })
             }
             color="action"

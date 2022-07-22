@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Grid, Container, Backdrop } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import Product from "./product/Product";
 import BottomNav from "../Navigation/BottomNavigation/BottomNav";
@@ -9,27 +9,23 @@ import Spinner from "../../Utils/Spinner";
 import PageComponent from "../../Utils/Pagination";
 import * as actions from "../../store/actions/index";
 
-const Products = () => {
+const Products = ({ onFetchProducts }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   const [page, setPage] = useState(1);
-  const [skipPage, setSkipPage] = useState();
-
-  //REDUCER
-  const onFetchProducts = (query) => dispatch(actions.product(query));
   const { products, isLoading } = useSelector((state) => ({
     products: state.product.product,
     // isLoading: state.product.loading,
     // error: state.cart.error,
   }));
 
-  useEffect(() => {
-    console.log(page);
-    console.log(skipPage);
-  }, [page]);
+  const changePage = useCallback((e, value) => {
+    console.log("cyeegg", value);
+    setPage(value);
+    onFetchProducts({ skip: value * 6 - 6 });
+  }, []);
 
-  console.log("dfdsdfs", products);
+  console.log("dfdsdfs", page);
 
   const Prod = useMemo(
     () => (
@@ -64,8 +60,12 @@ const Products = () => {
         </Grid> */}
 
         {Prod}
-        {/* <BottomNav onFetchProducts={onFetchProducts} /> */}
       </Container>
+      {/* <BottomNav
+        page={page}
+        changePage={changePage}
+        onFetchProducts={onFetchProducts}
+      /> */}
       {/* <PageComponent products={products} changePage={changePage} page={page} /> */}
     </main>
   );

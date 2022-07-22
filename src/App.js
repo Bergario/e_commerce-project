@@ -80,10 +80,14 @@ const App = () => {
     dispatch(onAuthCheckState());
   }, [location.pathname]);
 
-  let routes = useMemo(
+  const RoutesAuth = useMemo(
     () => (
       <Switch>
-        <Route exact path="/" component={() => <Products />} />
+        <Route
+          exact
+          path="/"
+          component={() => <Products onFetchProducts={onProductFetch} />}
+        />
         <Route path="/order" component={() => <Orders />} />
         <Route
           path="/status?order_id=:id"
@@ -99,10 +103,14 @@ const App = () => {
     [location.pathname, isAuth]
   );
 
-  if (!isAuth) {
-    routes = (
+  const Routes = useMemo(
+    () => (
       <Switch>
-        <Route exact path="/" component={() => <Products />} />
+        <Route
+          exact
+          path="/"
+          component={() => <Products onFetchProducts={onProductFetch} />}
+        />
         <Route path="/cart" component={() => <Cart />} />
         {/* <Route path="/admin" component={Dashboard} /> */}
         {/* <Route path="/status?order_id=:id" component={PaymentDetail} /> */}
@@ -112,14 +120,19 @@ const App = () => {
         {/* <Route path={"/order"} component={() => <Orders />} /> */}
         <Redirect to="/" />
       </Switch>
-    );
-  }
+    ),
+    [location.pathname, isAuth]
+  );
+
   return (
     <div>
-      <Navbar />
-      <Suspense fallback={<div></div>}>{routes}</Suspense>
-      {/* {routes} */}
-      <BottomNav onFetchProducts={onProductFetch} />
+      <Navbar>
+        <Suspense fallback={<div></div>}>
+          {isAuth ? RoutesAuth : Routes}
+        </Suspense>
+        {/* {routes} */}
+        {/* <BottomNav /> */}
+      </Navbar>
     </div>
   );
 };

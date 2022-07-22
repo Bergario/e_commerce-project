@@ -7,19 +7,16 @@ const PageComponent = (props) => {
     product: state.product.product,
   }));
 
-  useEffect(() => {
-    console.log("page", props.page);
-  }, [product]);
+  console.log(props.page);
 
   // Pagination
-  const totalProducts =
-    props.products.length != 0 ? props.products[0].countProduct : 6;
+  const totalProducts = product.length != 0 ? product[0].countProduct : 6;
   let countPage = Math.floor(totalProducts / 6);
   if (totalProducts % 6 !== 0) {
     countPage += 1;
   }
 
-  return (
+  return totalProducts <= 6 ? null : (
     <Pagination
       defaultPage={1}
       count={countPage}

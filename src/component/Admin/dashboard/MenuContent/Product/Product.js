@@ -162,14 +162,12 @@ function Product({ css }) {
           <AddProductDialog />
           <EditProductDialog />
           <ListProduct products={products} />
-          {totalProducts >= 7 && (
-            <PageComponent
-              paging={classes.paging}
-              page={page}
-              changePage={changePage}
-              products={products}
-            />
-          )}
+          <PageComponent
+            paging={classes.paging}
+            page={page}
+            changePage={changePage}
+            products={products}
+          />
         </Grid>
       </Paper>
     </React.Fragment>
